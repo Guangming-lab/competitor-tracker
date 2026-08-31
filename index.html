@@ -120,7 +120,10 @@
   .log-entry .log-desc { font-size:12px; }
   .log-entry .log-del { position:absolute; top:6px; right:6px; background:none; border:none; cursor:pointer; color:var(--red); font-size:13px; opacity:0.5; }
   .log-entry .log-del:hover { opacity:1; }
-  .log-empty { text-align:center; padding:24px; color:var(--text-secondary); font-size:12px; }
+  .log-entry.auto { border-left-color:var(--teal); background:var(--teal-bg); }
+  .badge-auto { background:#f2f3f5; color:#86909c; border:1px dashed var(--border-strong); }
+  .log-summary { font-size:11px; color:var(--text-secondary); padding:6px 10px; background:var(--gray-bg); border-radius:6px; margin-bottom:10px; }
+  .log-empty { text-align:center; padding:24px; color:var(--text-secondary); font-size:12px; line-height:1.8; }
   .action-cell { white-space:nowrap; }
   .action-cell button { margin-right:3px; }
   .dynamic-text { font-size:11px; line-height:1.5; color:#4e5969; }
@@ -231,7 +234,7 @@
 </div>
 
 <div class="footer">
-  <span>提示：双击单元格可编辑 | 点击表头可排序 | 点击「日志」记录竞品动态</span>
+  <span>提示：双击单元格可编辑 | 点击表头可排序 | 点击「日志」查看每周自动同步的竞品动态，也可手动补充</span>
   <span id="footerCount"></span>
 </div>
 
@@ -364,8 +367,8 @@ function getWebsiteCell(url) {
   return '<a href="'+url+'" target="_blank" class="website-link">'+url.replace(/^https?:\/\//,'').replace(/\/$/,'').substring(0,30)+'</a>';
 }
 function getLogButton(company) {
-  const count = (logs[company.id] || []).length;
-  return '<button class="btn-sm '+ (count>0?'btn-primary':'btn-outline') +'" onclick="openLogModal('+company.id+')">日志'+(count>0?'('+count+')':'')+'</button>';
+  const count = getMergedLogs(company.id).length;
+  return '<button class="btn-sm '+ (count>0?'btn-primary':'btn-outline') +'" onclick="openLogModal('+company.id+')" title="查看动态跟踪日志">日志'+(count>0?'('+count+')':'')+'</button>';
 }
 function getDeleteButton(company) {
   if(company.isMyCompany) return '';
@@ -404,6 +407,7 @@ function updateStats(data) {
   document.getElementById('statLaser').textContent = companies.filter(c=>c.tech && c.tech.includes('激光')).length;
   let totalLogs = 0;
   Object.values(logs).forEach(arr => totalLogs += arr.length);
+  companies.forEach(c => totalLogs += parseDynamicsLogs(c).length);
   document.getElementById('statLogs').textContent = totalLogs;
 }
 
@@ -513,23 +517,62 @@ function deleteLog(cid, ts) {
   renderLogList(cid);
   applyFilters();
 }
+// ===== 自动日志：把「近期动态」列解析为结构化日志 =====
+function guessLogType(text) {
+  if(/中标|候选人|入围|成交/.test(text)) return '中标';
+  if(/专利|知识产权/.test(text)) return '专利';
+  if(/融资|挂牌|IPO|轮投资/.test(text)) return '融资';
+  if(/新品|发布|推出|首发|量产|新增产品|升级/.test(text)) return '新品发布';
+  if(/展|大会|论坛|峰会|交流会/.test(text)) return '展会';
+  if(/合作|签约|战略|联合|共建/.test(text)) return '合作';
+  if(/营收|业绩|财报|净利|毛利|订单/.test(text)) return '财报';
+  if(/招标|投标|采购/.test(text)) return '招投标';
+  if(/认证|认定|获奖|入选|称号|荣誉|资质|榜单|专精特新|高新/.test(text)) return '资质荣誉';
+  return '其他';
+}
+function parseDynamicsLogs(company) {
+  if(!company.dynamics) return [];
+  return company.dynamics.split(/；|;/).map(function(s){ return s.trim(); })
+    .filter(function(s){ return s.length > 0; })
+    .map(function(s, i) {
+      var m = s.match(/^(\d{4})[.\-年](\d{1,2})/);
+      var date = '', desc = s;
+      if(m) {
+        date = m[1] + '-' + (m[2].length===1?'0'+m[2]:m[2]);
+        desc = s.slice(m[0].length).replace(/^[月\s]*/, '');
+      }
+      var ts = date ? new Date(date.split('-')[0] + '/' + date.split('-')[1] + '/01').getTime() : 0;
+      return { date: date || '时间未标注', type: guessLogType(desc), desc: desc, auto: true, ts: ts + i };
+    });
+}
+function getMergedLogs(id) {
+  var c = companies.find(function(x){ return x.id===id; });
+  var auto = c ? parseDynamicsLogs(c) : [];
+  var manual = (logs[id] || []).map(function(l){ return Object.assign({}, l, {manual:true}); });
+  return auto.concat(manual).sort(function(a,b){ return (b.ts||0) - (a.ts||0); });
+}
 function renderLogList(id) {
-  const list = logs[id] || [];
+  var list = getMergedLogs(id);
   const container = document.getElementById('logList');
+  const typeColors = {'新品发布':'badge-blue','中标':'badge-green','融资':'badge-purple','专利':'badge-teal','招投标':'badge-orange','官网更新':'badge-gray','人员变动':'badge-orange','合作':'badge-blue','展会':'badge-teal','财报':'badge-purple','资质荣誉':'badge-orange','其他':'badge-gray'};
   if(list.length === 0) {
-    container.innerHTML = '<div class="log-empty">暂无动态日志，点击上方添加第一条</div>';
+    container.innerHTML = '<div class="log-empty">暂无动态日志。<br>每周一自动扫描的竞品动态会同步到这里，也可以在上方手动添加。</div>';
     return;
   }
-  const typeColors = {'新品发布':'badge-blue','中标':'badge-green','融资':'badge-purple','专利':'badge-teal','招投标':'badge-orange','官网更新':'badge-gray','人员变动':'badge-orange','合作':'badge-blue','展会':'badge-teal','其他':'badge-gray'};
-  container.innerHTML = list.map(l => {
+  var autoCount = list.filter(function(l){ return l.auto; }).length;
+  var manualCount = list.length - autoCount;
+  container.innerHTML = '<div class="log-summary">共 '+list.length+' 条 ｜ 自动同步 '+autoCount+' 条 ｜ 手动记录 '+manualCount+' 条</div>' +
+    list.map(function(l) {
     const tc = typeColors[l.type] || 'badge-gray';
-    return '<div class="log-entry">' +
+    const delBtn = l.auto ? '' : '<button class="log-del" onclick="deleteLog('+id+','+l.ts+')" title="删除">✕</button>';
+    return '<div class="log-entry'+(l.auto?' auto':'')+'">' +
       '<div class="log-meta">' +
         '<span class="log-date">'+l.date+'</span>' +
         '<span class="badge '+tc+'">'+l.type+'</span>' +
+        (l.auto ? '<span class="badge badge-auto">自动同步</span>' : '') +
       '</div>' +
-      '<div class="log-desc">'+l.desc.replace(/</g,'&lt;')+'</div>' +
-      '<button class="log-del" onclick="deleteLog('+id+','+l.ts+')">✕</button>' +
+      '<div class="log-desc">'+String(l.desc).replace(/</g,'&lt;')+'</div>' +
+      delBtn +
     '</div>';
   }).join('');
 }
