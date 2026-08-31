@@ -122,6 +122,25 @@
   .log-entry .log-del:hover { opacity:1; }
   .log-entry.auto { border-left-color:var(--teal); background:var(--teal-bg); }
   .badge-auto { background:#f2f3f5; color:#86909c; border:1px dashed var(--border-strong); }
+  .badge-latest { background:var(--red-bg); color:var(--red); font-weight:600; }
+  .log-entry.latest { border-left-color:var(--red); border-left-width:4px; box-shadow:0 0 0 2px rgba(245,63,63,0.12); }
+
+  /* 近期动态：最新一条高亮 */
+  .dyn-latest { background:linear-gradient(180deg, transparent 55%, #ffe9cc 55%); color:#a4491f; font-weight:600; padding:0 2px; border-radius:2px; }
+  .dyn-new-tag { display:inline-block; background:var(--orange); color:#fff; font-size:9px; font-weight:700; padding:0 4px; border-radius:3px; margin-right:4px; vertical-align:1px; letter-spacing:0.5px; }
+
+  /* 专利明细 */
+  .patent-btn { display:block; margin:3px auto 0; padding:1px 6px; font-size:10px; line-height:1.5; border-radius:10px; border:1px solid var(--border-strong); background:#fff; color:var(--text-secondary); cursor:pointer; white-space:nowrap; }
+  .patent-btn.has { border-color:var(--purple); color:var(--purple); background:var(--purple-bg); font-weight:600; }
+  .patent-btn:hover { opacity:0.8; }
+  .patent-entry { border-left:3px solid var(--purple); padding:8px 12px; margin-bottom:8px; background:var(--purple-bg); border-radius:0 6px 6px 0; }
+  .patent-entry.latest { border-left-color:var(--red); border-left-width:4px; box-shadow:0 0 0 2px rgba(245,63,63,0.12); }
+  .patent-entry-meta { display:flex; align-items:center; gap:6px; margin-bottom:3px; flex-wrap:wrap; }
+  .patent-idx { width:16px; height:16px; line-height:16px; text-align:center; border-radius:50%; background:var(--purple); color:#fff; font-size:10px; font-weight:700; }
+  .patent-date { font-size:11px; color:var(--text-secondary); }
+  .patent-name { font-size:12px; line-height:1.6; color:var(--text); word-break:break-word; }
+  .patent-footer { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
+  .patent-footer .btn { font-size:11px; padding:5px 10px; text-decoration:none; }
   .log-summary { font-size:11px; color:var(--text-secondary); padding:6px 10px; background:var(--gray-bg); border-radius:6px; margin-bottom:10px; }
   .log-empty { text-align:center; padding:24px; color:var(--text-secondary); font-size:12px; line-height:1.8; }
   .action-cell { white-space:nowrap; }
@@ -274,6 +293,20 @@
   </div>
 </div>
 
+<!-- Patent Modal -->
+<div class="modal-overlay" id="patentModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="patentModalTitle">代表专利</h2>
+      <button class="modal-close" onclick="closePatentModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="patentList"></div>
+      <div id="patentFooter" class="patent-footer"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ===== DATA =====
 const companies = [
@@ -335,6 +368,74 @@ const companies = [
   {id:56, name:"艾科感知科技（我司）", location:"", relation:"我司", tech:"", listed:"", products:"", patents:"", fields:"", threat:"", dynamics:"我司", website:"", isMyCompany:true}
 ];
 
+// ===== 代表专利明细（近五条，来源：国家知识产权局/天眼查/企查查公开检索） =====
+// 格式：[日期, 专利名称, 专利类型]
+const patentData = {
+  1:  [["2025.05","全景影像与风向风速仪结合的气体检测定位辅助装置","发明授权"],
+       ["2020.11","一种激光甲烷遥测仪 CN211927688U","实用新型"],
+       ["2020.11","一种无人机载激光甲烷泄漏巡检仪 CN211927677U","实用新型"]],
+  3:  [["2026.05","加热型激光甲烷探测报警装置 CN224303559U","实用新型授权"],
+       ["2025.12","一种带参考光路的激光甲烷气体传感器 CN202423140326","实用新型"],
+       ["2025.12","一种适用于工业场所的激光气体传感器 CN202520255632","实用新型"],
+       ["2025.11","一种基于光纤漏光的激光波长校准装置 CN202422646481","实用新型"],
+       ["2025.11","一种本质安全型云台扫描式激光气体遥测装置 CN202423126356","实用新型"]],
+  4:  [["2026.07","一种地埋式网管泄露检测装置","实用新型授权"],
+       ["2025.12","一种车载顶置式激光甲烷遥测云台系统 CN223652309U","实用新型"],
+       ["2023.01","基于云台固定式激光甲烷遥测设备的LNG卸车联动系统 CN218331212U","实用新型"],
+       ["2020.11","一种振镜成像的激光遥测仪及气体浓度信息成像方法 CN111929275A","发明专利"]],
+  5:  [["2025.06","一种基于MEMS光学系统的自适应激光甲烷传感器 CN119804337B","发明授权"],
+       ["2025.06","激光甲烷遥测仪(YZ-RX-Ultra) CN309318139S","外观设计"],
+       ["2025.06","激光甲烷遥测仪(YZ-RX-Pro) CN309318140S","外观设计"],
+       ["2025.05","点式激光甲烷探头(YZ-MFS-100L) CN309294593S","外观设计"],
+       ["2025.05","点式激光甲烷探头(YZ-MF-100L) CN309294594S","外观设计"]],
+  8:  [["2026.03","一种基于正交调制的光致热弹多组分气体检测装置及方法 CN121678528A","发明专利"],
+       ["2026.01","一种多气体组分激光点式检测传感模组 CN223770065U","实用新型"],
+       ["2025.12","矿用激光甲烷检测报警仪 CN309651177S","外观设计"],
+       ["2025.11","激光甲烷遥测仪(国际版) CN309630587S","外观设计"],
+       ["2025.09","一种微型一氧化碳气体传感模组 CN223389644U","实用新型"]],
+  14: [["2026.04","自校准激光型气体报警器（激光波长自校准）","发明专利申请"],
+       ["2024.07","一种气体报警器性能检测用密封气瓶及气瓶充气装置 CN221443978U","实用新型"],
+       ["2024.07","一种具有自检测功能的激光型气体报警器 CN221261782U","实用新型"],
+       ["2024.01","一种激光气体报警器及其便捷式性能自检测方法 CN117351662A","发明专利"],
+       ["2023.11","燃气检测对接方法､系统､终端及计算机可读存储介质 CN117131962A","发明专利"]],
+  16: [["2025.10","一种光斑可调型激光遥测光机系统 CN120405622B","发明授权"],
+       ["2025.08","一种车载云台激光遥测扫描式燃气泄漏定位系统 CN120176937B","发明授权"]],
+  24: [["2026.05","一种激光甲烷检测器的光功率自适应调节方法及系统 CN121577539B","发明授权"],
+       ["2025.12","基于北斗技术的激光检测器防盗定位方法和系统","发明专利"],
+       ["2024.01","一种用于云台式激光甲烷检测器的云台支架 CN202321287512","实用新型"],
+       ["2019","美国发明专利 US10113956B1（第一代甲烷激光检测器）","美国专利"]],
+  28: [["2026.05","气体远程监测终端(GTQ-WX200mini) CN309974957S","外观设计"],
+       ["2026.02","一种高效的地埋管线位置及深度查找装置及查找方法 CN121522576A","发明专利"],
+       ["2026.01","一种管道四氢噻吩加臭剂在线检测装置 CN223808418U","实用新型"],
+       ["2025.11","一种燃气管道防泄漏监测装置 CN223550299U","实用新型"],
+       ["2025.10","激光甲烷遥测仪(WS100mini) CN309566132S","外观设计"]],
+  30: [["2026.02","一种可自校准激光器中心波长的气体检测方法及装置 CN120869989B","发明授权"],
+       ["2025.09","线型光束可燃气体探测器 XT-TDLScan200（TDLAS线型光束）","产品专利群"]],
+  47: [["2026.06","一种用于地下密闭空间可燃气体监测装置 CN116087422B","发明授权"],
+       ["2026.05","一种家用可燃气体探测器 CN116052383B","发明授权"],
+       ["2026.03","一种可燃气体监测终端","发明专利公布"]],
+  48: [["2026.06","大语言模型的自适应控制方法及系统 CN121996781B","发明授权"],
+       ["2026.05","表具的预警方法､装置及电子设备 CN122090603A","发明专利"],
+       ["2026.04","燃气安全隐患识别方法､装置和设备 CN121982035A","发明专利"],
+       ["2026.03","管网测试桩布点优化方法､装置及设备 CN121766814A","发明专利"],
+       ["2025.11","可燃气体探测装置 CN202422627352（激光发射接收+参考气室）","实用新型授权"]],
+  49: [["2026.07","《基于量子传感的激光雷达气体遥测系统》","发明专利公开"],
+       ["2026.05","一种基于光波导的耐高温漫反射气体测量装置","发明专利公开"],
+       ["2026.01","一种高速温度测量及激光气体传感浓度修正方法和产品 CN119619064B","发明授权"],
+       ["2025.12","一种基于激光器非线性输出的激光气体测量方法和产品 CN119738380B","发明授权"],
+       ["2025.03","基于干涉抑制的提升激光气体传感测量精度方法及装置","发明专利公开"]],
+  51: [["2026.04","可燃气体监测仪 EN500-CG（TDLAS激光光谱燃气泄漏识别）","核心专利群"],
+       ["2025","基于激光窨井水位及加速度井盖位移的传感器组件","国家专利"],
+       ["2025","窨井上测量井盖位移和管网水位的智能传感器组件和井盖","国家专利"],
+       ["2025","一种城市级排水管网增强扫描方法及系统","国家专利"],
+       ["2025","GNSS基准站最优选择方法及高精度定位系统","国家专利"]],
+  54: [["2026.07","激光甲烷检测中水汽谱线重叠干扰的逐线计算扣除方法 CN122117157B","发明授权"],
+       ["2025.10","激光器的温度调整方法及装置 CN120855073A","发明公布"],
+       ["2025.05","激光气体传感器 CN222887667U","实用新型"]],
+  55: [["2022","一种基于VCSEL的低功耗气体检测方法及装置（山东省专利奖三等奖）","发明授权"],
+       ["2020","激光甲烷移动智能检测终端 JJB100M（济南市首台套）","首台套装备"]]
+};
+
 let currentSort = {key:'id', asc:true};
 let logs = JSON.parse(localStorage.getItem('competitorLogs') || '{}');
 let currentLogCompanyId = null;
@@ -358,9 +459,37 @@ function getListedBadge(listed) {
   if(listed === '否') return '<span class="badge badge-gray">否</span>';
   return '<span class="patent-unknown">-</span>';
 }
-function getPatentCell(patents) {
-  if(!patents) return '<span class="patent-unknown">未知</span>';
-  return '<span class="patent-num">'+patents+'</span>';
+function getPatentCell(company) {
+  const c = company;
+  const list = patentData[c.id] || [];
+  const numHtml = c.patents ? '<div class="patent-num">'+c.patents+'</div>' : '<span class="patent-unknown">未知</span>';
+  const btn = list.length
+    ? '<button class="patent-btn has" onclick="openPatentModal('+c.id+')" title="查看最近'+list.length+'条具体专利">专利明细 '+list.length+'</button>'
+    : (c.patents && c.patents !== '未知' ? '<button class="patent-btn" onclick="openPatentModal('+c.id+')" title="暂未收录明细，点击去外部查询">查明细</button>' : '');
+  return numHtml + btn;
+}
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+// 高亮「近期动态」中日期最新的一条
+function getDynamicsCell(c) {
+  const raw = c.dynamics || '';
+  if(!raw) return '';
+  const parts = raw.split(/；|;/);
+  let bestIdx = -1, bestTs = -1;
+  parts.forEach(function(s, i) {
+    const m = s.trim().match(/^(\d{4})[.\-年](\d{1,2})/);
+    if(m) {
+      const mm = m[2].length === 1 ? '0'+m[2] : m[2];
+      const ts = new Date(m[1] + '/' + mm + '/01').getTime();
+      if(ts > bestTs) { bestTs = ts; bestIdx = i; }
+    }
+  });
+  return parts.map(function(s, i) {
+    return i === bestIdx
+      ? '<span class="dyn-latest"><span class="dyn-new-tag">最新</span>'+escHtml(s.trim())+'</span>'
+      : escHtml(s.trim());
+  }).join('；');
 }
 function getWebsiteCell(url) {
   if(!url) return '<span class="no-website">暂无官网</span>';
@@ -387,10 +516,10 @@ function renderTable(data) {
       '<td class="product-text">'+(c.tech||'-')+'</td>' +
       '<td style="text-align:center">'+getListedBadge(c.listed)+'</td>' +
       '<td class="product-text" contenteditable="true">'+(c.products||'')+'</td>' +
-      '<td style="text-align:center">'+getPatentCell(c.patents)+'</td>' +
+      '<td style="text-align:center">'+getPatentCell(c)+'</td>' +
       '<td class="field-text" contenteditable="true">'+(c.fields||'')+'</td>' +
       '<td style="text-align:center">'+getThreatBadge(c.threat)+'</td>' +
-      '<td class="dynamic-text" contenteditable="true">'+(c.dynamics||'')+'</td>' +
+      '<td class="dynamic-text" contenteditable="true">'+getDynamicsCell(c)+'</td>' +
       '<td>'+getWebsiteCell(c.website)+'</td>' +
       '<td class="action-cell">'+getLogButton(c)+getDeleteButton(c)+'</td>' +
     '</tr>';
@@ -498,6 +627,40 @@ function closeLogModal() {
   document.getElementById('logModal').classList.remove('show');
   currentLogCompanyId = null;
 }
+// ===== 专利明细弹窗 =====
+function openPatentModal(id) {
+  const c = companies.find(function(x){ return x.id===id; });
+  const list = patentData[id] || [];
+  document.getElementById('patentModalTitle').textContent = c.name + ' · 代表专利（最近'+list.length+'条）';
+  const container = document.getElementById('patentList');
+  if(list.length === 0) {
+    container.innerHTML = '<div class="log-empty">该企业暂无已收录的专利明细。<br>数据结构：专利总数 '+ (c.patents||'未知') +'，具体条目待补充。</div>';
+  } else {
+    const typeColors = {'发明授权':'badge-purple','发明专利':'badge-blue','实用新型':'badge-teal','实用新型授权':'badge-teal','外观设计':'badge-gray','发明专利申请':'badge-orange','发明专利公布':'badge-orange','美国专利':'badge-red','核心专利群':'badge-purple','国家专利':'badge-teal','首台套装备':'badge-orange'};
+    container.innerHTML = '<div class="log-summary">共收录 '+list.length+' 条代表专利，按时间倒序（来源：国家知识产权局 / 天眼查 / 企查查公开检索）</div>' +
+      list.map(function(p, idx) {
+        const tc = typeColors[p[2]] || 'badge-gray';
+        return '<div class="patent-entry'+(idx===0?' latest':'')+'">' +
+          '<div class="patent-entry-meta">' +
+            '<span class="patent-idx">'+(idx+1)+'</span>' +
+            '<span class="patent-date">'+p[0]+'</span>' +
+            '<span class="badge '+tc+'">'+p[2]+'</span>' +
+            (idx===0 ? '<span class="badge badge-latest">最新</span>' : '') +
+          '</div>' +
+          '<div class="patent-name">'+escHtml(p[1])+'</div>' +
+        '</div>';
+      }).join('');
+  }
+  const q = encodeURIComponent(c.name);
+  document.getElementById('patentFooter').innerHTML =
+    '<a href="https://www.qcc.com/web/search?key='+q+'" target="_blank" class="btn btn-outline">企查查查全部专利</a>' +
+    '<a href="https://www.tianyancha.com/search?key='+q+'" target="_blank" class="btn btn-outline">天眼查查全部专利</a>' +
+    '<a href="https://www.pss-system.gov.cn/sipopublicsearch/portal/uiIndex.shtml" target="_blank" class="btn btn-outline">国家知识产权局检索</a>';
+  document.getElementById('patentModal').classList.add('show');
+}
+function closePatentModal() {
+  document.getElementById('patentModal').classList.remove('show');
+}
 function addLog() {
   const date = document.getElementById('logDate').value;
   const type = document.getElementById('logType').value;
@@ -562,13 +725,14 @@ function renderLogList(id) {
   var autoCount = list.filter(function(l){ return l.auto; }).length;
   var manualCount = list.length - autoCount;
   container.innerHTML = '<div class="log-summary">共 '+list.length+' 条 ｜ 自动同步 '+autoCount+' 条 ｜ 手动记录 '+manualCount+' 条</div>' +
-    list.map(function(l) {
+    list.map(function(l, idx) {
     const tc = typeColors[l.type] || 'badge-gray';
     const delBtn = l.auto ? '' : '<button class="log-del" onclick="deleteLog('+id+','+l.ts+')" title="删除">✕</button>';
-    return '<div class="log-entry'+(l.auto?' auto':'')+'">' +
+    return '<div class="log-entry'+(l.auto?' auto':'')+(idx===0?' latest':'')+'">' +
       '<div class="log-meta">' +
         '<span class="log-date">'+l.date+'</span>' +
         '<span class="badge '+tc+'">'+l.type+'</span>' +
+        (idx===0 ? '<span class="badge badge-latest">最新</span>' : '') +
         (l.auto ? '<span class="badge badge-auto">自动同步</span>' : '') +
       '</div>' +
       '<div class="log-desc">'+String(l.desc).replace(/</g,'&lt;')+'</div>' +
@@ -647,6 +811,12 @@ renderTable(companies);
 // Close modal on overlay click
 document.getElementById('logModal').addEventListener('click', function(e) {
   if(e.target === this) closeLogModal();
+});
+document.getElementById('patentModal').addEventListener('click', function(e) {
+  if(e.target === this) closePatentModal();
+});
+document.addEventListener('keydown', function(e) {
+  if(e.key === 'Escape') { closeLogModal(); closePatentModal(); }
 });
 </script>
 </body>
