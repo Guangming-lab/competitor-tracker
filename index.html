@@ -113,6 +113,15 @@
   .log-form input[type="date"] { width:140px; }
   .log-form select { width:110px; }
   .log-form textarea { width:100%; min-height:50px; resize:vertical; font-family:inherit; }
+  .log-section-title { font-size:12px; font-weight:700; color:var(--text-secondary); margin:16px 0 8px; padding-bottom:6px; border-bottom:1px solid var(--border); letter-spacing:0.5px; }
+  .log-section-title:first-child { margin-top:0; }
+  .log-filter-bar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:8px; }
+  .log-filter-bar select, .log-filter-bar input { padding:5px 8px; border:1px solid var(--border-strong); border-radius:6px; font-size:11px; outline:none; background:#fff; }
+  .log-filter-bar select:focus, .log-filter-bar input:focus { border-color:var(--primary); }
+  .log-filter-bar input { width:150px; }
+  .btn-xs { padding:5px 10px; font-size:11px; }
+  .log-filter-info { font-size:11px; color:var(--text-secondary); margin-bottom:10px; }
+  .log-filter-info b { color:var(--primary); }
   .log-entry { border-left:3px solid var(--primary); padding:8px 12px; margin-bottom:8px; background:var(--primary-light); border-radius:0 6px 6px 0; position:relative; }
   .log-entry .log-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:3px; }
   .log-entry .log-date { font-size:11px; color:var(--text-secondary); }
@@ -265,10 +274,11 @@
       <button class="modal-close" onclick="closeLogModal()">✕</button>
     </div>
     <div class="modal-body">
+      <div class="log-section-title">＋ 手动添加动态</div>
       <div class="log-form">
         <div class="log-form-row">
           <input type="date" id="logDate">
-          <select id="logType">
+          <select id="logType" title="选择要添加的动态类型">
             <option value="新品发布">新品发布</option>
             <option value="中标">中标</option>
             <option value="融资">融资</option>
@@ -278,6 +288,8 @@
             <option value="人员变动">人员变动</option>
             <option value="合作">合作</option>
             <option value="展会">展会</option>
+            <option value="资质荣誉">资质荣誉</option>
+            <option value="财报">财报</option>
             <option value="其他">其他</option>
           </select>
         </div>
@@ -288,6 +300,21 @@
           <button class="btn btn-primary" onclick="addLog()">添加日志</button>
         </div>
       </div>
+
+      <div class="log-section-title">动态列表</div>
+      <div class="log-filter-bar">
+        <select id="logFilterType" onchange="renderLogList(currentLogCompanyId)">
+          <option value="">全部类型</option>
+        </select>
+        <select id="logFilterSource" onchange="renderLogList(currentLogCompanyId)">
+          <option value="">全部来源</option>
+          <option value="auto">自动同步</option>
+          <option value="manual">手动记录</option>
+        </select>
+        <input type="text" id="logFilterKeyword" placeholder="关键词筛选…" oninput="renderLogList(currentLogCompanyId)">
+        <button class="btn btn-outline btn-xs" onclick="clearLogFilter()">清除筛选</button>
+      </div>
+      <div id="logFilterInfo" class="log-filter-info"></div>
       <div id="logList"></div>
     </div>
   </div>
@@ -620,8 +647,28 @@ function openLogModal(id) {
   document.getElementById('logModalTitle').textContent = c.name + ' · 动态跟踪日志';
   document.getElementById('logDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('logDesc').value = '';
+  // 重置筛选
+  document.getElementById('logFilterType').value = '';
+  document.getElementById('logFilterSource').value = '';
+  document.getElementById('logFilterKeyword').value = '';
+  // 按该公司实际存在的类型动态生成筛选项
+  const all = getMergedLogs(id);
+  const types = [];
+  all.forEach(function(l){ if(l.type && types.indexOf(l.type) === -1) types.push(l.type); });
+  const sel = document.getElementById('logFilterType');
+  sel.innerHTML = '<option value="">全部类型(' + all.length + ')</option>' +
+    types.map(function(t){
+      const n = all.filter(function(l){ return l.type === t; }).length;
+      return '<option value="' + t + '">' + t + '(' + n + ')</option>';
+    }).join('');
   renderLogList(id);
   document.getElementById('logModal').classList.add('show');
+}
+function clearLogFilter() {
+  document.getElementById('logFilterType').value = '';
+  document.getElementById('logFilterSource').value = '';
+  document.getElementById('logFilterKeyword').value = '';
+  renderLogList(currentLogCompanyId);
 }
 function closeLogModal() {
   document.getElementById('logModal').classList.remove('show');
@@ -715,24 +762,59 @@ function getMergedLogs(id) {
   return auto.concat(manual).sort(function(a,b){ return (b.ts||0) - (a.ts||0); });
 }
 function renderLogList(id) {
-  var list = getMergedLogs(id);
+  var all = getMergedLogs(id);
   const container = document.getElementById('logList');
+  const info = document.getElementById('logFilterInfo');
   const typeColors = {'新品发布':'badge-blue','中标':'badge-green','融资':'badge-purple','专利':'badge-teal','招投标':'badge-orange','官网更新':'badge-gray','人员变动':'badge-orange','合作':'badge-blue','展会':'badge-teal','财报':'badge-purple','资质荣誉':'badge-orange','其他':'badge-gray'};
-  if(list.length === 0) {
+
+  // ===== 应用筛选 =====
+  var fType = '', fSource = '', fKey = '';
+  const elType = document.getElementById('logFilterType');
+  const elSource = document.getElementById('logFilterSource');
+  const elKey = document.getElementById('logFilterKeyword');
+  if(elType) fType = elType.value || '';
+  if(elSource) fSource = elSource.value || '';
+  if(elKey) fKey = (elKey.value || '').trim().toLowerCase();
+
+  var list = all.filter(function(l) {
+    if(fType && l.type !== fType) return false;
+    if(fSource === 'auto' && !l.auto) return false;
+    if(fSource === 'manual' && !l.manual) return false;
+    if(fKey && String(l.desc).toLowerCase().indexOf(fKey) === -1 && l.type.toLowerCase().indexOf(fKey) === -1 && String(l.date).indexOf(fKey) === -1) return false;
+    return true;
+  });
+
+  const filtering = !!(fType || fSource || fKey);
+  if(info) {
+    info.innerHTML = filtering
+      ? '筛选中：显示 <b>' + list.length + '</b> / 共 ' + all.length + ' 条'
+      : '共 <b>' + all.length + '</b> 条动态' + (all.some(function(l){return l.auto;}) ? '（自动同步 + 手动记录）' : '');
+  }
+
+  if(all.length === 0) {
+    if(info) info.innerHTML = '';
     container.innerHTML = '<div class="log-empty">暂无动态日志。<br>每周一自动扫描的竞品动态会同步到这里，也可以在上方手动添加。</div>';
+    return;
+  }
+  if(list.length === 0) {
+    container.innerHTML = '<div class="log-empty">没有符合筛选条件的动态。<br><button class="btn btn-outline btn-xs" style="margin-top:8px" onclick="clearLogFilter()">清除筛选</button></div>';
     return;
   }
   var autoCount = list.filter(function(l){ return l.auto; }).length;
   var manualCount = list.length - autoCount;
-  container.innerHTML = '<div class="log-summary">共 '+list.length+' 条 ｜ 自动同步 '+autoCount+' 条 ｜ 手动记录 '+manualCount+' 条</div>' +
+  const latestTs = all.length ? all[0].ts : null;
+  var latestMarked = false;
+  container.innerHTML = '<div class="log-summary">当前显示 '+list.length+' 条（共 '+all.length+' 条）｜ 自动同步 '+autoCount+' 条 ｜ 手动记录 '+manualCount+' 条</div>' +
     list.map(function(l, idx) {
     const tc = typeColors[l.type] || 'badge-gray';
     const delBtn = l.auto ? '' : '<button class="log-del" onclick="deleteLog('+id+','+l.ts+')" title="删除">✕</button>';
-    return '<div class="log-entry'+(l.auto?' auto':'')+(idx===0?' latest':'')+'">' +
+    const isLatest = (l.ts === latestTs && !latestMarked);
+    if(isLatest) latestMarked = true;
+    return '<div class="log-entry'+(l.auto?' auto':'')+(isLatest?' latest':'')+'">' +
       '<div class="log-meta">' +
         '<span class="log-date">'+l.date+'</span>' +
         '<span class="badge '+tc+'">'+l.type+'</span>' +
-        (idx===0 ? '<span class="badge badge-latest">最新</span>' : '') +
+        (isLatest ? '<span class="badge badge-latest">最新</span>' : '') +
         (l.auto ? '<span class="badge badge-auto">自动同步</span>' : '') +
       '</div>' +
       '<div class="log-desc">'+String(l.desc).replace(/</g,'&lt;')+'</div>' +
