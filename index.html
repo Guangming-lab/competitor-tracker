@@ -41,6 +41,14 @@
   .toolbar input:focus,.toolbar select:focus { border-color:var(--primary); box-shadow:0 0 0 2px var(--primary-light); }
   .toolbar select { cursor:pointer; }
   .toolbar .spacer { flex:1; }
+  /* ===== 动态分类标签筛选条 ===== */
+  .dyn-filter-bar { display:flex; gap:6px; padding:8px 28px; background:var(--surface); border-bottom:1px solid var(--border); flex-wrap:wrap; align-items:center; }
+  .dyn-filter-label { font-size:11px; color:var(--text-secondary); font-weight:600; margin-right:2px; white-space:nowrap; }
+  .dyn-chip { display:inline-block; padding:3px 10px; font-size:11px; font-weight:500; border:1px solid var(--border-strong); border-radius:14px; background:#fff; color:var(--text); cursor:pointer; transition:all .15s; user-select:none; }
+  .dyn-chip:hover { border-color:var(--primary); color:var(--primary); }
+  .dyn-chip.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+  .dyn-chip .cnt { font-size:10px; opacity:.75; margin-left:2px; }
+  .dyn-chip.zero { opacity:.45; }
   .btn { padding:6px 14px; border:none; border-radius:6px; font-size:12px; cursor:pointer; transition:all 0.2s; font-weight:500; }
   .btn:hover { opacity:0.88; transform:translateY(-1px); }
   .btn-primary { background:var(--primary); color:#fff; }
@@ -278,6 +286,10 @@
   <div class="spacer" data-page-node-id="qr2oyO9GuhVxUCbTwgx9xi"></div>
   <button class="btn btn-outline" onclick="exportCSV()" data-page-node-id="zJRWTkBPISfSIhI7jj1bG1">导出 CSV</button>
   <button class="btn btn-success" onclick="addRow()" data-page-node-id="eLGXrK4kavmZ7LzQWbpK6y">+ 添加竞品</button>
+</div>
+
+<div class="dyn-filter-bar" id="dynFilterBar" data-page-node-id="dynFilterBar1">
+  <span class="dyn-filter-label">按动态类型筛公司：</span>
 </div>
 
 <div class="table-wrapper" id="tableWrapper" data-page-node-id="k8HQmGjj1DIAglSeaHHYiA">
@@ -930,12 +942,49 @@ function saveTags() {
   applyFilters();
 }
 
+// ===== 动态分类标签筛选（复用日志 guessLogType 自动归类） =====
+var DYN_TYPES = ['新品发布','中标','融资','专利','招投标','官网更新','人员变动','合作','展会','资质荣誉','财报','其他'];
+var currentDynType = '';
+function dynTypeSet(c) {
+  // 该公司的动态（自动解析 + 本机手动日志）覆盖哪些类型
+  // 「其他」仅在无任何明确类型时保留，避免定性描述条目把几乎所有公司都归入其他
+  var set = {};
+  getMergedLogs(c.id).forEach(function(l){ set[l.type] = true; });
+  if(set['其他'] && Object.keys(set).length > 1) delete set['其他'];
+  return set;
+}
+function initDynFilter() {
+  var bar = document.getElementById('dynFilterBar');
+  if(!bar) return;
+  // 统计每个类型覆盖的公司数
+  var counts = {};
+  DYN_TYPES.forEach(function(t){ counts[t] = 0; });
+  companies.forEach(function(c){
+    if(c.isMyCompany) return;
+    Object.keys(dynTypeSet(c)).forEach(function(t){ if(counts[t] !== undefined) counts[t]++; });
+  });
+  var h = '<span class="dyn-filter-label">按动态类型筛公司：</span>';
+  h += '<span class="dyn-chip'+(currentDynType===''?' active':'')+'" onclick="toggleDynFilter(\'\')">全部</span>';
+  DYN_TYPES.forEach(function(t){
+    var n = counts[t] || 0;
+    h += '<span class="dyn-chip'+(currentDynType===t?' active':'')+(n===0?' zero':'')+'" onclick="toggleDynFilter(\''+t+'\')" title="筛选动态中包含「'+t+'」的公司">'+t+'<span class="cnt">'+n+'</span></span>';
+  });
+  bar.innerHTML = h;
+}
+function toggleDynFilter(t) {
+  currentDynType = (currentDynType === t) ? '' : t;
+  initDynFilter();
+  applyFilters();
+}
+
 // ===== FILTERS =====
 function resetFilters() {
   const si = document.getElementById('searchInput'); if(si) si.value = '';
   ['filterLocation','filterListed','filterThreat','filterRelation','filterTech','filterProduct'].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = '';
   });
+  currentDynType = '';
+  initDynFilter();
   applyFilters();
 }
 function applyFilters() {
@@ -959,6 +1008,10 @@ function applyFilters() {
     if(fRel && c.relation !== fRel) return false;
     if(fTech && !(c.tech && c.tech.includes(fTech))) return false;
     if(fProd && !tagHit(getTags(c), fProd)) return false;
+    if(currentDynType) {
+      var dt = dynTypeSet(c);
+      if(!dt[currentDynType]) return false;
+    }
     return true;
   });
   renderTable(filtered);
@@ -1092,6 +1145,7 @@ function addLog() {
   document.getElementById('logDesc').value = '';
   document.getElementById('logSource').value = '';
   renderLogList(currentLogCompanyId);
+  initDynFilter();
   applyFilters();
 }
 function deleteLog(cid, ts) {
@@ -1099,6 +1153,7 @@ function deleteLog(cid, ts) {
   logs[cid] = logs[cid].filter(l => l.ts !== ts);
   localStorage.setItem('competitorLogs', JSON.stringify(logs));
   renderLogList(cid);
+  initDynFilter();
   applyFilters();
 }
 // ===== 自动日志：把「近期动态」列解析为结构化日志 =====
@@ -1260,12 +1315,13 @@ function updateHeaderMeta() {
   if(!el) return;
   var d = new Date();
   var y = d.getFullYear(), mo = ('0'+(d.getMonth()+1)).slice(-2), dd = ('0'+d.getDate()).slice(-2);
-  el.innerHTML = '数据版本 v4（'+y+'-'+mo+'-'+dd+'，最新条目来源已补全）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
+  el.innerHTML = '数据版本 v5（'+y+'-'+mo+'-'+dd+'，动态分类筛选）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
 }
 
 // ===== INIT =====
 checkLogin();
 updateHeaderMeta();
+initDynFilter();
 initLocationFilter();
 initProductFilter();
 renderTable(companies);
