@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="zh-CN" data-page-node-id="MsIROrI1XC1NYv8inJ7zUL">
+<head data-page-node-id="3nCSqE4CWlVzefcTkff5eg">
+<meta charset="UTF-8" data-page-node-id="GaCF69VPcpqYJkQNTEUKAr">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="YCv9KOTfspV9uBusbZ3jGA">
 <title>激光气体检测行业 · 竞品跟踪库</title>
 <style>
   :root {
@@ -37,6 +37,7 @@
   .toolbar input { width:200px; }
   .toolbar input:focus,.toolbar select:focus { border-color:var(--primary); box-shadow:0 0 0 2px var(--primary-light); }
   .toolbar select { cursor:pointer; }
+  #filterProduct { max-width:240px; }
   .toolbar .spacer { flex:1; }
   .btn { padding:6px 14px; border:none; border-radius:6px; font-size:12px; cursor:pointer; transition:all 0.2s; font-weight:500; }
   .btn:hover { opacity:0.88; transform:translateY(-1px); }
@@ -179,157 +180,159 @@
   .logout-btn:hover { background:rgba(255,255,255,0.25); }
 </style>
 </head>
-<body>
+<body data-page-node-id="3EsrnUrbosXc2vmFm5LwmW">
 
 <!-- Login Overlay -->
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-box">
-    <h2>激光气体检测行业 · 竞品跟踪库</h2>
-    <div class="login-sub">请登录后查看</div>
-    <div class="login-field">
-      <label>用户名</label>
-      <input type="text" id="loginUser" placeholder="请输入用户名" autocomplete="off">
+<div class="login-overlay" id="loginOverlay" data-page-node-id="S6lV4eWEfcYNyAbs8CpN2E">
+  <div class="login-box" data-page-node-id="eAZMUSd9ygimWJr04Xzyq9">
+    <h2 data-page-node-id="9zQxut2pCHpirdHehdC6Ln">激光气体检测行业 · 竞品跟踪库</h2>
+    <div class="login-sub" data-page-node-id="tdLFkfwVCV9f2zrrbCiRYu">请登录后查看</div>
+    <div class="login-field" data-page-node-id="G2j6xMFygp3LgyGjAfNncc">
+      <label data-page-node-id="yDyU61SUepfWMnnhZoXsM9">用户名</label>
+      <input type="text" id="loginUser" placeholder="请输入用户名" autocomplete="off" data-page-node-id="CPwaiC7QzsJ6IKChOXRSGn">
     </div>
-    <div class="login-field">
-      <label>密码</label>
-      <input type="password" id="loginPass" placeholder="请输入密码" autocomplete="off">
+    <div class="login-field" data-page-node-id="KhqMifB0b9t4VBCCyJTIrr">
+      <label data-page-node-id="lGhjW6ulCTt6utn83mcSss">密码</label>
+      <input type="password" id="loginPass" placeholder="请输入密码" autocomplete="off" data-page-node-id="4ku393L9gQvSKNuLW6dfUG">
     </div>
-    <button class="login-btn" onclick="doLogin()">登 录</button>
-    <div class="login-error" id="loginError">用户名或密码错误，请重试</div>
-    <div class="login-hint">默认账号：admin ｜ 密码：aico2026</div>
+    <button class="login-btn" onclick="doLogin()" data-page-node-id="iRv8BSsAsrwD3DMk23hTwE">登 录</button>
+    <div class="login-error" id="loginError" data-page-node-id="oIDlnl5vnRluGqPpUrKDIJ">用户名或密码错误，请重试</div>
+    <div class="login-hint" data-page-node-id="vm0o37LC1dCyQDXIE01fot">默认账号：admin ｜ 密码：aico2026</div>
   </div>
 </div>
 
-<div class="header">
-  <div class="header-top">
-    <div>
-      <h1>激光气体检测行业 · 竞品跟踪库</h1>
-      <div class="meta">数据更新：2026-09-07 ｜ 共 83 家竞品企业 ｜ 深度调研 30+ 家</div>
+<div class="header" data-page-node-id="nwMxevVAOviC2lZuGYrxsP">
+  <div class="header-top" data-page-node-id="XdKm7RtQ0C8KSi562nrh91">
+    <div data-page-node-id="bTGRBLxepHSfVt3av6Sro5">
+      <h1 data-page-node-id="T5CSkQCtk2kHaw3fkioQrg">激光气体检测行业 · 竞品跟踪库</h1>
+      <div class="meta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-09-07 ｜ 共 83 家竞品企业 ｜ 深度调研 30+ 家</div>
     </div>
-    <div style="display:flex; gap:8px; align-items:center;">
-      <div class="company-tag">我司：艾科感知科技</div>
-      <button class="logout-btn" onclick="doLogout()">退出登录</button>
+    <div style="display:flex; gap:8px; align-items:center;" data-page-node-id="CzYOWNHJSKetGCmayk28y4">
+      <div class="company-tag" data-page-node-id="xilrpaNCrIAZ6fswNnKGDj">我司：艾科感知科技</div>
+      <button class="logout-btn" onclick="doLogout()" data-page-node-id="ab3Z87hfR7JOshPUEpKXhw">退出登录</button>
     </div>
   </div>
 </div>
 
-<div class="stats-bar" id="statsBar">
-  <div class="stat-card"><div class="num" id="statTotal">0</div><div class="label">竞品总数</div></div>
-  <div class="stat-card"><div class="num" id="statListed">0</div><div class="label">上市/挂牌</div></div>
-  <div class="stat-card highlight"><div class="num" id="statHigh">0</div><div class="label">高威胁</div></div>
-  <div class="stat-card"><div class="num" id="statDirect">0</div><div class="label">直接竞品</div></div>
-  <div class="stat-card"><div class="num" id="statLaser">0</div><div class="label">激光技术路线</div></div>
-  <div class="stat-card purple"><div class="num" id="statLogs">0</div><div class="label">动态日志条数</div></div>
+<div class="stats-bar" id="statsBar" data-page-node-id="ivFgKMvSWZBFc71hkK8nyb">
+  <div class="stat-card" data-page-node-id="jVG36E1GIAAgsAEF8t3VQu"><div class="num" id="statTotal" data-page-node-id="4A5MkjdbwpgWYepIlLcslA">0</div><div class="label" data-page-node-id="6vT4F7UMHuyiRCiGtsOWHK">竞品总数</div></div>
+  <div class="stat-card" data-page-node-id="oJF5THz7d2G8YE2ESeVsTN"><div class="num" id="statListed" data-page-node-id="CesC5F0O3y9D40pDBRYdQ9">0</div><div class="label" data-page-node-id="HrefiFrHEhiGCsk4SKHcUP">上市/挂牌</div></div>
+  <div class="stat-card highlight" data-page-node-id="hTA77hz5hdXEhaeCyrayPZ"><div class="num" id="statHigh" data-page-node-id="4Bqz9wXwGskHMmM2jEFCQz">0</div><div class="label" data-page-node-id="pV4mosAq4VyWSgqGF0hr4f">高威胁</div></div>
+  <div class="stat-card" data-page-node-id="ZcKutz7wyz3Oov7NdkKyXF"><div class="num" id="statDirect" data-page-node-id="L00JmSFAqsqhciZI7k1Xi2">0</div><div class="label" data-page-node-id="o8AKyNjxGUD4lS9YWWAhiq">直接竞品</div></div>
+  <div class="stat-card" data-page-node-id="aj1u9zEJYxI995vJwPnXRq"><div class="num" id="statLaser" data-page-node-id="5hxDtrrNBW4voil2D0fY2x">0</div><div class="label" data-page-node-id="lpzUk6X9huIwtqVqUtxAZ8">激光技术路线</div></div>
+  <div class="stat-card purple" data-page-node-id="dMektQLx2vJkDgLMLWb1kl"><div class="num" id="statLogs" data-page-node-id="ROJzFPFL78BlYZA2NVwOOv">0</div><div class="label" data-page-node-id="z44JomBTpMs1ZVAjpH07QY">动态日志条数</div></div>
 </div>
 
-<div class="toolbar">
-  <input type="text" id="searchInput" placeholder="搜索公司名称、产品、技术路线、动态..." oninput="applyFilters()">
-  <select id="filterLocation" onchange="applyFilters()"><option value="">全部地区</option></select>
-  <select id="filterListed" onchange="applyFilters()"><option value="">全部上市状态</option><option value="是">已上市/挂牌</option><option value="否">非上市</option></select>
-  <select id="filterThreat" onchange="applyFilters()"><option value="">全部威胁等级</option><option value="高">高威胁</option><option value="中">中威胁</option><option value="低">低威胁</option><option value="未评估">未评估</option></select>
-  <select id="filterRelation" onchange="applyFilters()"><option value="">全部竞争关系</option><option value="直接竞品">直接竞品</option><option value="间接竞品">间接竞品</option><option value="待评估">待评估</option></select>
-  <select id="filterTech" onchange="applyFilters()"><option value="">全部技术路线</option><option value="TDLAS">TDLAS</option><option value="激光遥测">激光遥测</option><option value="激光光谱">激光光谱</option><option value="光纤传感">光纤传感</option><option value="电化学">电化学</option><option value="红外NDIR">红外NDIR</option><option value="其他">其他</option></select>
-  <div class="spacer"></div>
-  <button class="btn btn-outline" onclick="exportCSV()">导出 CSV</button>
-  <button class="btn btn-success" onclick="addRow()">+ 添加竞品</button>
+<div class="toolbar" data-page-node-id="L4DO3SdutcGg6fHGSNf9Jp">
+  <input type="text" id="searchInput" placeholder="搜索公司名称、产品、技术路线、动态..." oninput="applyFilters()" data-page-node-id="DkWUFOCwhtjN5jnDmg6x3h">
+  <select id="filterLocation" onchange="applyFilters()" data-page-node-id="QbFIMklVQA6lNP0GFpYNf0"><option value="" data-page-node-id="kQnEeX8xnMEVU7vNtzFydx">全部地区</option></select>
+  <select id="filterListed" onchange="applyFilters()" data-page-node-id="YwJmJS6HiV3Hd3dElPQXYj"><option value="" data-page-node-id="GBnuUkg7KDkuWA8GQJX9Vt">全部上市状态</option><option value="是" data-page-node-id="a4rDU4QjMCUGygRNuANdV9">已上市/挂牌</option><option value="否" data-page-node-id="F6dAJ06mLKg3QbqInML873">非上市</option></select>
+  <select id="filterThreat" onchange="applyFilters()" data-page-node-id="U86SuAvkuAxPuy8cmbL6a2"><option value="" data-page-node-id="GwuAJQp7FNsxXmj0pmXsDJ">全部威胁等级</option><option value="高" data-page-node-id="XccN028gJ6CkZXzZhASvbt">高威胁</option><option value="中" data-page-node-id="6YgD8cqf4EkJqYHViikFK9">中威胁</option><option value="低" data-page-node-id="FscamyvPc6wk8qjFvCM9y9">低威胁</option><option value="未评估" data-page-node-id="mMIV4ZJSFXGMX4r9p7z1KL">未评估</option></select>
+  <select id="filterRelation" onchange="applyFilters()" data-page-node-id="7iBQfqXeKI3gjURQl3ku6x"><option value="" data-page-node-id="g4uMH08IWEf6KF3cHy7dCQ">全部竞争关系</option><option value="直接竞品" data-page-node-id="BWkfHv56tUxocQ2HHevXBK">直接竞品</option><option value="间接竞品" data-page-node-id="Heb452yRHWNuBqO4Yd5iyX">间接竞品</option><option value="待评估" data-page-node-id="vy0TToe84LsNYiHPXKKRGd">待评估</option></select>
+  <select id="filterTech" onchange="applyFilters()" data-page-node-id="nE7gQ9hJqs7riDLQWlxXTh"><option value="" data-page-node-id="Pz7AH3DzEJhlPxtWAab1vu">全部技术路线</option><option value="TDLAS" data-page-node-id="p2DPKhlSFqWJ6Empjes0rw">TDLAS</option><option value="激光遥测" data-page-node-id="jp9CiV7bydaj9NDRX8g2eh">激光遥测</option><option value="激光光谱" data-page-node-id="MwEvw5seW0ZGIIqZ0hmo9X">激光光谱</option><option value="光纤传感" data-page-node-id="p0qlFuNpt49VBX4TIeC9Yw">光纤传感</option><option value="电化学" data-page-node-id="bcqpELPJYWjC5CDuiMUetA">电化学</option><option value="红外NDIR" data-page-node-id="HCSDjnjF65tsUJuUg7y2Yc">红外NDIR</option><option value="其他" data-page-node-id="HxOunOYzF15Gg9lB6DWSuE">其他</option></select>
+  <select id="filterProduct" onchange="applyFilters()"><option value="">全部产品品类</option></select>
+  <button class="btn btn-outline btn-xs" onclick="resetFilters()" title="清除所有筛选条件">重置</button>
+  <div class="spacer" data-page-node-id="qr2oyO9GuhVxUCbTwgx9xi"></div>
+  <button class="btn btn-outline" onclick="exportCSV()" data-page-node-id="zJRWTkBPISfSIhI7jj1bG1">导出 CSV</button>
+  <button class="btn btn-success" onclick="addRow()" data-page-node-id="eLGXrK4kavmZ7LzQWbpK6y">+ 添加竞品</button>
 </div>
 
-<div class="table-wrapper" id="tableWrapper">
-  <table id="dataTable">
-    <thead>
-      <tr>
-        <th onclick="sortBy('id')" style="width:40px">序号<span class="sort-icon">▼</span></th>
-        <th onclick="sortBy('name')" style="width:160px">公司名称<span class="sort-icon">▼</span></th>
-        <th onclick="sortBy('location')" style="width:90px">总部<span class="sort-icon">▼</span></th>
-        <th onclick="sortBy('relation')" style="width:80px">竞争层级<span class="sort-icon">▼</span></th>
-        <th onclick="sortBy('tech')" style="width:120px">核心技术<span class="sort-icon">▼</span></th>
-        <th onclick="sortBy('listed')" style="width:60px">上市<span class="sort-icon">▼</span></th>
-        <th style="width:280px">代表产品</th>
-        <th onclick="sortBy('patents')" style="width:60px">专利<span class="sort-icon">▼</span></th>
-        <th style="width:150px">应用领域</th>
-        <th onclick="sortBy('threat')" style="width:60px">威胁<span class="sort-icon">▼</span></th>
-        <th style="width:320px">近期动态</th>
-        <th style="width:130px">官网</th>
-        <th style="width:140px" class="action-cell">操作</th>
+<div class="table-wrapper" id="tableWrapper" data-page-node-id="k8HQmGjj1DIAglSeaHHYiA">
+  <table id="dataTable" data-page-node-id="pYuTpff4n2PExDuARmh6RL">
+    <thead data-page-node-id="hr6DItwtRbFW3xDeQtAKRS">
+      <tr data-page-node-id="z5En4L2NWlKe1VGR7iEGlW">
+        <th onclick="sortBy('id')" style="width:40px" data-page-node-id="H6N2ZyV06MBI48dgpcjxun">序号<span class="sort-icon" data-page-node-id="xpcHsCLCP0i6WHGDVllDak">▼</span></th>
+        <th onclick="sortBy('name')" style="width:160px" data-page-node-id="ks5lBoiED5AAbgdnMoZxag">公司名称<span class="sort-icon" data-page-node-id="kYODKhJ9DcI1uJrNdqRdCO">▼</span></th>
+        <th onclick="sortBy('location')" style="width:90px" data-page-node-id="jJ7jBCHbZCJUYCg2rtvktn">总部<span class="sort-icon" data-page-node-id="WVc30tkwYPTbDVnGeCzINn">▼</span></th>
+        <th onclick="sortBy('relation')" style="width:80px" data-page-node-id="lFTHMt782aAOr4kSxlmFtK">竞争层级<span class="sort-icon" data-page-node-id="vuU3XgAoBh5eG4RCM7KFph">▼</span></th>
+        <th onclick="sortBy('tech')" style="width:120px" data-page-node-id="AY2b1aO0qBqWkj3Y1D2IXZ">核心技术<span class="sort-icon" data-page-node-id="YMgauIOBz0Ht7RY6307spd">▼</span></th>
+        <th onclick="sortBy('listed')" style="width:60px" data-page-node-id="VroFaPc0CeASyQVVVnJhjL">上市<span class="sort-icon" data-page-node-id="UaplcvGdOBHJBkdg1mqtC0">▼</span></th>
+        <th style="width:280px" data-page-node-id="YDVRxw29kOWLk3izy3F54k">代表产品</th>
+        <th onclick="sortBy('patents')" style="width:60px" data-page-node-id="WX3g0OtbK0SRsWZ6wMoi8F">专利<span class="sort-icon" data-page-node-id="TbMQZaDii9FvZNUILFY2lQ">▼</span></th>
+        <th style="width:150px" data-page-node-id="1m925sAP4wIuW6R9Q6PVZH">应用领域</th>
+        <th onclick="sortBy('threat')" style="width:60px" data-page-node-id="j5C6sxruaMY2gdYmUBWxPh">威胁<span class="sort-icon" data-page-node-id="ScFRsOMGwTZQ9xIcrqq89u">▼</span></th>
+        <th style="width:320px" data-page-node-id="l1dkFnu7mtUUBPpZ8xKUnl">近期动态</th>
+        <th style="width:130px" data-page-node-id="n718a7M7Ex1lYuBz34puW7">官网</th>
+        <th style="width:140px" class="action-cell" data-page-node-id="ovmqfS4YA7m7wUQ4fuW08b">操作</th>
       </tr>
     </thead>
-    <tbody id="tableBody"></tbody>
+    <tbody id="tableBody" data-page-node-id="EBYBkfMmn5ItHzTHLEZSxf"></tbody>
   </table>
 </div>
 
-<div class="h-scrollbar-track" id="hScrollBar">
-  <div class="h-scrollbar-content" id="hScrollContent"></div>
+<div class="h-scrollbar-track" id="hScrollBar" data-page-node-id="DMHnckt9xSWzNb6Mlzf06R">
+  <div class="h-scrollbar-content" id="hScrollContent" data-page-node-id="7h5DEw6uTrByUbCYtaQ2ZA"></div>
 </div>
 
-<div class="footer">
-  <span>提示：双击单元格可编辑 | 点击表头可排序 | 点击「日志」查看每周自动同步的竞品动态，也可手动补充</span>
-  <span id="footerCount"></span>
+<div class="footer" data-page-node-id="yQD6qFFhjgRKOgHfYGXdnY">
+  <span data-page-node-id="M7TlYphVFlIXxpZdGBSIAK">提示：双击单元格可编辑 | 点击表头可排序 | 点击「日志」查看每周自动同步的竞品动态，也可手动补充</span>
+  <span id="footerCount" data-page-node-id="UTVW3gbnxqxjijjf66JEEp"></span>
 </div>
 
 <!-- Log Modal -->
-<div class="modal-overlay" id="logModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="logModalTitle">动态跟踪日志</h2>
-      <button class="modal-close" onclick="closeLogModal()">✕</button>
+<div class="modal-overlay" id="logModal" data-page-node-id="u0naUXCSdhEcj2Ea4N2DIC">
+  <div class="modal" data-page-node-id="V8B87sJuGOkKk94ESWdJzu">
+    <div class="modal-header" data-page-node-id="ZbCq9bfbOQAGocTuxmHANg">
+      <h2 id="logModalTitle" data-page-node-id="lVWZpcE56hHfmHSXdjMBFB">动态跟踪日志</h2>
+      <button class="modal-close" onclick="closeLogModal()" data-page-node-id="3qhjwRCPqS6AwwxMUb8enu">✕</button>
     </div>
-    <div class="modal-body">
-      <div class="log-section-title">＋ 手动添加动态</div>
-      <div class="log-form">
-        <div class="log-form-row">
-          <input type="date" id="logDate">
-          <select id="logType" title="选择要添加的动态类型">
-            <option value="新品发布">新品发布</option>
-            <option value="中标">中标</option>
-            <option value="融资">融资</option>
-            <option value="专利">专利</option>
-            <option value="招投标">招投标</option>
-            <option value="官网更新">官网更新</option>
-            <option value="人员变动">人员变动</option>
-            <option value="合作">合作</option>
-            <option value="展会">展会</option>
-            <option value="资质荣誉">资质荣誉</option>
-            <option value="财报">财报</option>
-            <option value="其他">其他</option>
+    <div class="modal-body" data-page-node-id="NuvIBaMnYmP2A1fEQv5OTr">
+      <div class="log-section-title" data-page-node-id="EZILOUWzU8lcS3MMniSf9F">＋ 手动添加动态</div>
+      <div class="log-form" data-page-node-id="mn834ADQuxOPmb3NARhHUZ">
+        <div class="log-form-row" data-page-node-id="btpK6OjkfUHcvijiEoZsLs">
+          <input type="date" id="logDate" data-page-node-id="RgiYehqgAT4VxAxbR4BTGS">
+          <select id="logType" title="选择要添加的动态类型" data-page-node-id="PceUDGmBpStPpa1uFaLqiM">
+            <option value="新品发布" data-page-node-id="ofB78DD03aEXZlbS4XYNLl">新品发布</option>
+            <option value="中标" data-page-node-id="Sf1kCbXEd8KehuoFCDPuht">中标</option>
+            <option value="融资" data-page-node-id="A1P3nczK4f1d9VeZZr52GL">融资</option>
+            <option value="专利" data-page-node-id="7RY8Bw4wG6tbLg1VrporFZ">专利</option>
+            <option value="招投标" data-page-node-id="hsjvEy7K0dN8UAV0gwq4Nd">招投标</option>
+            <option value="官网更新" data-page-node-id="thHTwOBXOSsQYDFGeAz03w">官网更新</option>
+            <option value="人员变动" data-page-node-id="6fuAXflAqkUaKAAB3qG3Ze">人员变动</option>
+            <option value="合作" data-page-node-id="Ey3n6oqwGsU2ux56r8NZtH">合作</option>
+            <option value="展会" data-page-node-id="e0iijHB99ArngABZoKeA1l">展会</option>
+            <option value="资质荣誉" data-page-node-id="2VKjP0Eu4GucmfDATWpsiZ">资质荣誉</option>
+            <option value="财报" data-page-node-id="LE1d6fvkdQ5KKzfr9z9fYr">财报</option>
+            <option value="其他" data-page-node-id="KyizrXkH7T488wygzOiv38">其他</option>
           </select>
         </div>
-        <div class="log-form-row">
+        <div class="log-form-row" data-page-node-id="QEdGWHOwF6gjkWtDzjkgRl">
           <textarea id="logDesc" placeholder="描述动态内容..."></textarea>
         </div>
-        <div class="log-form-row">
-          <button class="btn btn-primary" onclick="addLog()">添加日志</button>
+        <div class="log-form-row" data-page-node-id="NaQU9vYU5Qu0q7l4zeE68t">
+          <button class="btn btn-primary" onclick="addLog()" data-page-node-id="aN6BC2Uu4jHxNxU3yJIkLq">添加日志</button>
         </div>
       </div>
 
-      <div class="log-section-title">动态列表</div>
-      <div class="log-filter-bar">
-        <select id="logFilterType" onchange="renderLogList(currentLogCompanyId)">
-          <option value="">全部类型</option>
+      <div class="log-section-title" data-page-node-id="LQYTz0bKUdKmR7Cxz7oRLY">动态列表</div>
+      <div class="log-filter-bar" data-page-node-id="YPXt9HOWVykubnjc7p9S7Q">
+        <select id="logFilterType" onchange="renderLogList(currentLogCompanyId)" data-page-node-id="7gFshInevsrqdUhzntkOQ0">
+          <option value="" data-page-node-id="eHBIKXRGfdMpq1p8Qa3NZ2">全部类型</option>
         </select>
-        <select id="logFilterSource" onchange="renderLogList(currentLogCompanyId)">
-          <option value="">全部来源</option>
-          <option value="auto">自动同步</option>
-          <option value="manual">手动记录</option>
+        <select id="logFilterSource" onchange="renderLogList(currentLogCompanyId)" data-page-node-id="IglNGRwYFhwW4aYqrBmP38">
+          <option value="" data-page-node-id="UiBAO9xuKDmZNN0TCqWWcJ">全部来源</option>
+          <option value="auto" data-page-node-id="QPDOA2SHwmHLWuJXmILAUo">自动同步</option>
+          <option value="manual" data-page-node-id="CPO1d8pZbhZZsXbeqMs3n3">手动记录</option>
         </select>
-        <input type="text" id="logFilterKeyword" placeholder="关键词筛选…" oninput="renderLogList(currentLogCompanyId)">
-        <button class="btn btn-outline btn-xs" onclick="clearLogFilter()">清除筛选</button>
+        <input type="text" id="logFilterKeyword" placeholder="关键词筛选…" oninput="renderLogList(currentLogCompanyId)" data-page-node-id="5eKUcJNDPkFgjcVbg4ufZN">
+        <button class="btn btn-outline btn-xs" onclick="clearLogFilter()" data-page-node-id="BtL2y8t38KVJAiUcETvMCY">清除筛选</button>
       </div>
-      <div id="logFilterInfo" class="log-filter-info"></div>
-      <div id="logList"></div>
+      <div id="logFilterInfo" class="log-filter-info" data-page-node-id="5LrD0ZEUTZvwNWkUSN3frx"></div>
+      <div id="logList" data-page-node-id="z2KPY1Y3m8rWC11esr0Rp4"></div>
     </div>
   </div>
 </div>
 
 <!-- Patent Modal -->
-<div class="modal-overlay" id="patentModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="patentModalTitle">代表专利</h2>
-      <button class="modal-close" onclick="closePatentModal()">✕</button>
+<div class="modal-overlay" id="patentModal" data-page-node-id="jB1lnePOdwItwWjKjIxaI2">
+  <div class="modal" data-page-node-id="N2NhvZ2YblGWfh6IeW16Jj">
+    <div class="modal-header" data-page-node-id="iyhYvfalYzpe8VwqEDkejd">
+      <h2 id="patentModalTitle" data-page-node-id="AsGAdDaDUAnsNfXcVwAxp6">代表专利</h2>
+      <button class="modal-close" onclick="closePatentModal()" data-page-node-id="n4PtGUWSRr8peNH8d302mL">✕</button>
     </div>
-    <div class="modal-body">
-      <div id="patentList"></div>
-      <div id="patentFooter" class="patent-footer"></div>
+    <div class="modal-body" data-page-node-id="9sLfA6v7HTs6anesoHZofv">
+      <div id="patentList" data-page-node-id="cfZt3IYJ2BfHMq2aixtSE0"></div>
+      <div id="patentFooter" class="patent-footer" data-page-node-id="Qd1vlWuLH7zuRWjRuL4Qhd"></div>
     </div>
   </div>
 </div>
@@ -599,7 +602,68 @@ function updateStats(data) {
   document.getElementById('statLogs').textContent = totalLogs;
 }
 
+// ===== PRODUCT CATEGORY FILTER =====
+const PRODUCT_CATEGORIES = [
+  {g:'激光气体检测 · 产品形态', items:[
+    {label:'家用激光可燃气体探测器', kw:['家用','报警器','报警仪','JT-','可燃气体探测器','独立式','住宅','厨房']},
+    {label:'手持/便携激光遥测仪', kw:['手持','便携','遥测仪','巡检仪','检漏仪','检测报警仪','手提','背负']},
+    {label:'云台/固定式激光遥测', kw:['云台','开路式','对射','扫描式','线型','线式','远距离','遥测装置','固定式激光']},
+    {label:'无人机载激光检测', kw:['无人机','机载','多旋翼','系留','机载遥测']},
+    {label:'车载/巡检车/机器人', kw:['车载','巡检车','检测车','巡逻车','无人车','顶置','车顶','巡检机器人','机器狗','机器人']},
+    {label:'阀门井/地下井室监测', kw:['阀门井','阀井','地下井','井室','地下空间','地下管','埋地','窨井','井盖','阀室']},
+    {label:'激光传感模组/芯片/传感器', kw:['模组','模块','芯片','敏感元件','激光器','传感芯片','探头','光源','传感器','核心组件','整机']},
+    {label:'乙烷/多组分/沼气辨识', kw:['乙烷','多组分','双组分','沼气','多气体','组分辨识','辨识']}
+  ]},
+  {g:'其他检测技术', items:[
+    {label:'工业点式/固定式气体探测', kw:['点式','点型','变送器','气体探测器','气体检测仪','固定式气体','有毒气体','可燃气体探测器','报警控制器','气体报警','工商业']},
+    {label:'红外NDIR/催化燃烧/半导体', kw:['NDIR','红外','催化燃烧','半导体','电化学','PID','热导','催化']},
+    {label:'CEMS/环保温室气体监测', kw:['CEMS','烟气','温室气体','排放','VOC','碳监测','扬尘','空气质量','大气']},
+    {label:'火焰探测/火灾报警', kw:['火焰','火灾','烟感','温感','消防报警','消防设备']},
+    {label:'光纤/声波/声学泄漏检测', kw:['光纤','声波','声学','超声','听漏','管道声学','振动']},
+    {label:'煤矿/矿山安全监测', kw:['矿用','矿山','煤矿','瓦斯','矿井','井下','非煤矿']},
+    {label:'安防视频/热成像', kw:['视频监控','热成像','摄像机','成像','安防']}
+  ]},
+  {g:'周边与系统', items:[
+    {label:'燃气表/计量仪表', kw:['燃气表','流量计','计量表','膜式','超声波表','计量']},
+    {label:'监测平台/城市生命线', kw:['平台','城市生命线','监测平台','智慧燃气','物联网平台','软件','大模型','系统解决方案','管网监测','信息化','解决方案']}
+  ]}
+];
+function productMatchText(c) {
+  return ((c.products||'') + ' ' + (c.fields||'') + ' ' + (c.tech||'')).toLowerCase();
+}
+function findProductCat(label) {
+  for(const g of PRODUCT_CATEGORIES) {
+    const it = g.items.find(i => i.label === label);
+    if(it) return it.kw;
+  }
+  return null;
+}
+function initProductFilter() {
+  const sel = document.getElementById('filterProduct');
+  if(!sel) return;
+  PRODUCT_CATEGORIES.forEach(g => {
+    const og = document.createElement('optgroup');
+    og.label = g.g;
+    g.items.forEach(it => {
+      const n = companies.filter(c => it.kw.some(k => productMatchText(c).includes(k.toLowerCase()))).length;
+      if(!n) return;
+      const o = document.createElement('option');
+      o.value = it.label;
+      o.textContent = it.label + ' (' + n + ')';
+      og.appendChild(o);
+    });
+    if(og.children.length) sel.appendChild(og);
+  });
+}
+
 // ===== FILTERS =====
+function resetFilters() {
+  const si = document.getElementById('searchInput'); if(si) si.value = '';
+  ['filterLocation','filterListed','filterThreat','filterRelation','filterTech','filterProduct'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  applyFilters();
+}
 function applyFilters() {
   const search = document.getElementById('searchInput').value.toLowerCase();
   const fLoc = document.getElementById('filterLocation').value;
@@ -607,6 +671,8 @@ function applyFilters() {
   const fThreat = document.getElementById('filterThreat').value;
   const fRel = document.getElementById('filterRelation').value;
   const fTech = document.getElementById('filterTech').value;
+  const fProd = document.getElementById('filterProduct').value;
+  const prodKw = fProd ? findProductCat(fProd) : null;
 
   let filtered = companies.filter(c => {
     if(search) {
@@ -619,6 +685,10 @@ function applyFilters() {
     if(fThreat && c.threat !== fThreat) return false;
     if(fRel && c.relation !== fRel) return false;
     if(fTech && !(c.tech && c.tech.includes(fTech))) return false;
+    if(prodKw) {
+      const pt = productMatchText(c);
+      if(!prodKw.some(k => pt.includes(k.toLowerCase()))) return false;
+    }
     return true;
   });
   renderTable(filtered);
@@ -903,6 +973,7 @@ document.getElementById('loginUser').addEventListener('keydown', function(e) { i
 // ===== INIT =====
 checkLogin();
 initLocationFilter();
+initProductFilter();
 renderTable(companies);
 
 // ===== Sticky horizontal scrollbar sync =====
