@@ -3,6 +3,9 @@
 <head data-page-node-id="3nCSqE4CWlVzefcTkff5eg">
 <meta charset="UTF-8" data-page-node-id="GaCF69VPcpqYJkQNTEUKAr">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="YCv9KOTfspV9uBusbZ3jGA">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" data-page-node-id="cache1">
+<meta http-equiv="Pragma" content="no-cache" data-page-node-id="cache2">
+<meta http-equiv="Expires" content="0" data-page-node-id="cache3">
 <title>激光气体检测行业 · 竞品跟踪库</title>
 <style>
   :root {
@@ -245,7 +248,7 @@
   <div class="header-top" data-page-node-id="XdKm7RtQ0C8KSi562nrh91">
     <div data-page-node-id="bTGRBLxepHSfVt3av6Sro5">
       <h1 data-page-node-id="T5CSkQCtk2kHaw3fkioQrg">激光气体检测行业 · 竞品跟踪库</h1>
-      <div class="meta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-09-07 ｜ 共 83 家竞品企业 ｜ 深度调研 30+ 家</div>
+      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-09-07 ｜ 版本 v3 ｜ 正在统计…</div>
     </div>
     <div style="display:flex; gap:8px; align-items:center;" data-page-node-id="CzYOWNHJSKetGCmayk28y4">
       <div class="company-tag" data-page-node-id="xilrpaNCrIAZ6fswNnKGDj">我司：艾科感知科技</div>
@@ -292,7 +295,7 @@
         <th onclick="sortBy('patents')" style="width:60px" data-page-node-id="WX3g0OtbK0SRsWZ6wMoi8F">专利<span class="sort-icon" data-page-node-id="TbMQZaDii9FvZNUILFY2lQ">▼</span></th>
         <th style="width:150px" data-page-node-id="1m925sAP4wIuW6R9Q6PVZH">应用领域</th>
         <th onclick="sortBy('threat')" style="width:60px" data-page-node-id="j5C6sxruaMY2gdYmUBWxPh">威胁<span class="sort-icon" data-page-node-id="ScFRsOMGwTZQ9xIcrqq89u">▼</span></th>
-        <th style="width:320px" data-page-node-id="l1dkFnu7mtUUBPpZ8xKUnl">近期动态</th>
+        <th style="width:320px" data-page-node-id="l1dkFnu7mtUUBPpZ8xKUnl">近期动态<span style="font-weight:400;font-size:10px;color:#86909c">（点「来源」查看原文链接）</span></th>
         <th style="width:130px" data-page-node-id="n718a7M7Ex1lYuBz34puW7">官网</th>
         <th style="width:140px" class="action-cell" data-page-node-id="ovmqfS4YA7m7wUQ4fuW08b">操作</th>
       </tr>
@@ -1242,8 +1245,27 @@ function doLogout() {
 document.getElementById('loginPass').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
+// ===== 头部版本戳：便于核对是否最新版（缓存自检） =====
+function updateHeaderMeta() {
+  var rivals = companies.filter(function(c){ return !c.isMyCompany; }).length;
+  var entries = 0, withSrc = 0;
+  companies.forEach(function(c){
+    if(!c.dynamics) return;
+    String(c.dynamics).split(/；|;/).forEach(function(s){
+      s = s.trim(); if(!s) return; entries++;
+      if(/[｜|]\s*https?:\/\/\S+\s*$/.test(s)) withSrc++;
+    });
+  });
+  var el = document.getElementById('headerMeta');
+  if(!el) return;
+  var d = new Date();
+  var y = d.getFullYear(), mo = ('0'+(d.getMonth()+1)).slice(-2), dd = ('0'+d.getDate()).slice(-2);
+  el.innerHTML = '数据版本 v3（'+y+'-'+mo+'-'+dd+'，来源链接功能）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
+}
+
 // ===== INIT =====
 checkLogin();
+updateHeaderMeta();
 initLocationFilter();
 initProductFilter();
 renderTable(companies);
