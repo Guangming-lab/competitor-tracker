@@ -57,7 +57,7 @@
   .h-scrollbar-track::-webkit-scrollbar-thumb { background:#b0b0b0; border-radius:7px; }
   .h-scrollbar-track::-webkit-scrollbar-thumb:hover { background:#999; }
   .h-scrollbar-content { height:1px; }
-  table { width:100%; border-collapse:collapse; background:var(--surface); min-width:3200px; }
+  table { width:100%; border-collapse:separate; border-spacing:0; background:var(--surface); min-width:3200px; }
   thead { position:sticky; top:0; z-index:10; }
   th { background:#f7f8fa; border-bottom:2px solid var(--border-strong); padding:10px 10px; font-size:11px; font-weight:600; color:var(--text-secondary); text-align:left; white-space:nowrap; cursor:pointer; user-select:none; position:relative; letter-spacing:0.3px; }
   th:hover { background:#eef0f3; color:var(--primary); }
@@ -70,6 +70,17 @@
   tr:hover { background:#f7f9ff; }
   tr.my-company { background:linear-gradient(90deg,var(--purple-bg),#fff0f5)!important; }
   tr.my-company td:first-child { border-left:3px solid var(--purple); }
+
+  /* ===== 冻结前两列（序号 + 公司名称） ===== */
+  #dataTable th:nth-child(1), #dataTable td:nth-child(1) { position:sticky; left:0; z-index:6; background:var(--surface); }
+  #dataTable th:nth-child(2), #dataTable td:nth-child(2) { position:sticky; left:var(--col1-w, 46px); z-index:6; background:var(--surface); }
+  #dataTable td:nth-child(2), #dataTable th:nth-child(2) { box-shadow:4px 0 8px -4px rgba(0,0,0,0.18); }
+  #dataTable thead th:nth-child(1), #dataTable thead th:nth-child(2) { z-index:12; background:#f7f8fa; }
+  #dataTable thead th:nth-child(1):hover, #dataTable thead th:nth-child(2):hover { background:#eef0f3; }
+  #dataTable tbody tr:hover td:nth-child(1), #dataTable tbody tr:hover td:nth-child(2) { background:#f7f9ff; }
+  #dataTable tbody tr.my-company td:nth-child(1), #dataTable tbody tr.my-company td:nth-child(2) { background:var(--purple-bg); }
+  #dataTable td:nth-child(1) { font-weight:600; color:var(--text-secondary); text-align:center; }
+  #dataTable td:nth-child(2) { min-width:160px; }
 
   /* ===== Badges ===== */
   .badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; white-space:nowrap; line-height:1.5; }
@@ -587,8 +598,16 @@ function renderTable(data) {
     '</tr>';
   }).join('');
   updateStats(data);
+  updateStickyOffsets();
   document.getElementById('footerCount').textContent = '显示 '+data.length+' / '+companies.length+' 家';
 }
+// 冻结列：按第一列实际渲染宽度设置第二列的 left 偏移
+function updateStickyOffsets() {
+  const th = document.querySelector('#dataTable thead th:nth-child(1)');
+  if(!th) return;
+  document.documentElement.style.setProperty('--col1-w', th.getBoundingClientRect().width + 'px');
+}
+window.addEventListener('resize', updateStickyOffsets);
 
 function updateStats(data) {
   document.getElementById('statTotal').textContent = companies.filter(c=>!c.isMyCompany).length;
@@ -988,9 +1007,11 @@ renderTable(companies);
   tw.addEventListener('scroll', function() { hsb.scrollLeft = tw.scrollLeft; });
   hsb.addEventListener('scroll', function() { tw.scrollLeft = hsb.scrollLeft; });
   window.addEventListener('resize', syncWidth);
+  window.addEventListener('resize', updateStickyOffsets);
   syncWidth();
   setTimeout(syncWidth, 300);
-  setTimeout(syncWidth, 1000);
+  setTimeout(updateStickyOffsets, 300);
+  setTimeout(updateStickyOffsets, 1000);
 })();
 
 // Close modal on overlay click
