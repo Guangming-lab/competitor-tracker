@@ -37,7 +37,6 @@
   .toolbar input { width:200px; }
   .toolbar input:focus,.toolbar select:focus { border-color:var(--primary); box-shadow:0 0 0 2px var(--primary-light); }
   .toolbar select { cursor:pointer; }
-  #filterProduct { max-width:240px; }
   .toolbar .spacer { flex:1; }
   .btn { padding:6px 14px; border:none; border-radius:6px; font-size:12px; cursor:pointer; transition:all 0.2s; font-weight:500; }
   .btn:hover { opacity:0.88; transform:translateY(-1px); }
@@ -97,7 +96,18 @@
   .tag-items { display:flex; flex-wrap:wrap; gap:6px; }
   .tag-item { display:inline-flex; align-items:center; gap:5px; padding:5px 10px; border:1px solid var(--border-strong); border-radius:6px; font-size:12px; cursor:pointer; background:#fff; }
   .tag-item:hover { border-color:var(--primary); background:var(--primary-light); }
+  .attr-line { margin-top:3px; }
+  .attr-chip { display:inline-block; padding:0 4px; margin:1px 2px 0 0; border-radius:3px; font-size:9px; line-height:1.7; background:#f2f3f5; color:#86909c; border:1px solid #e5e6eb; white-space:nowrap; font-family:Consolas,Monaco,monospace; }
+  .tag-sec-title { font-size:13px; font-weight:700; color:var(--text-primary); margin:2px 0 12px; padding:6px 0 6px 10px; border-left:3px solid var(--primary); background:var(--primary-light); }
+  .cat-row { margin-bottom:8px; }
+  .cat-head { margin-bottom:4px; }
+  .tag-item.cat { border-color:var(--primary); background:var(--primary-light); font-weight:600; }
+  .cat-name { color:var(--primary); }
+  .cat-subs { display:flex; flex-wrap:wrap; gap:6px; margin-left:20px; padding-left:10px; border-left:1px dashed var(--border-strong); }
+  .tag-item.sub { font-size:11px; padding:4px 8px; background:#fafbfc; }
   .modal-actions { display:flex; justify-content:flex-end; gap:8px; padding:12px 20px; border-top:1px solid var(--border); }
+  #filterProduct { max-width:260px; }
+  #filterAttr { max-width:180px; }
 
   /* ===== Badges ===== */
   .badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; white-space:nowrap; line-height:1.5; }
@@ -128,6 +138,8 @@
   .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.45); z-index:100; justify-content:center; align-items:flex-start; padding:40px 20px; overflow-y:auto; }
   .modal-overlay.show { display:flex; }
   .modal { background:#fff; border-radius:12px; width:100%; max-width:720px; box-shadow:0 8px 32px rgba(0,0,0,0.15); }
+  #tagModal .modal { max-width:900px; }
+  #tagModal .modal-body { max-height:70vh; }
   .modal-header { padding:18px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg,#1c3f6e,#3370ff); border-radius:12px 12px 0 0; }
   .modal-header h2 { font-size:16px; font-weight:600; color:#fff; }
   .modal-close { background:rgba(255,255,255,0.2); border:none; font-size:18px; cursor:pointer; color:#fff; width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:6px; }
@@ -259,6 +271,7 @@
   <select id="filterRelation" onchange="applyFilters()" data-page-node-id="7iBQfqXeKI3gjURQl3ku6x"><option value="" data-page-node-id="g4uMH08IWEf6KF3cHy7dCQ">全部竞争关系</option><option value="直接竞品" data-page-node-id="BWkfHv56tUxocQ2HHevXBK">直接竞品</option><option value="间接竞品" data-page-node-id="Heb452yRHWNuBqO4Yd5iyX">间接竞品</option><option value="待评估" data-page-node-id="vy0TToe84LsNYiHPXKKRGd">待评估</option></select>
   <select id="filterTech" onchange="applyFilters()" data-page-node-id="nE7gQ9hJqs7riDLQWlxXTh"><option value="" data-page-node-id="Pz7AH3DzEJhlPxtWAab1vu">全部技术路线</option><option value="TDLAS" data-page-node-id="p2DPKhlSFqWJ6Empjes0rw">TDLAS</option><option value="激光遥测" data-page-node-id="jp9CiV7bydaj9NDRX8g2eh">激光遥测</option><option value="激光光谱" data-page-node-id="MwEvw5seW0ZGIIqZ0hmo9X">激光光谱</option><option value="光纤传感" data-page-node-id="p0qlFuNpt49VBX4TIeC9Yw">光纤传感</option><option value="电化学" data-page-node-id="bcqpELPJYWjC5CDuiMUetA">电化学</option><option value="红外NDIR" data-page-node-id="HCSDjnjF65tsUJuUg7y2Yc">红外NDIR</option><option value="其他" data-page-node-id="HxOunOYzF15Gg9lB6DWSuE">其他</option></select>
   <select id="filterProduct" onchange="applyFilters()"><option value="">全部产品品类</option></select>
+  <select id="filterAttr" onchange="applyFilters()" title="按供电方式、通信方式、检测气体、资质认证交叉筛选"><option value="">全部交叉属性</option></select>
   <button class="btn btn-outline btn-xs" onclick="resetFilters()" title="清除所有筛选条件">重置</button>
   <div class="spacer" data-page-node-id="qr2oyO9GuhVxUCbTwgx9xi"></div>
   <button class="btn btn-outline" onclick="exportCSV()" data-page-node-id="zJRWTkBPISfSIhI7jj1bG1">导出 CSV</button>
@@ -276,7 +289,7 @@
         <th onclick="sortBy('tech')" style="width:120px" data-page-node-id="AY2b1aO0qBqWkj3Y1D2IXZ">核心技术<span class="sort-icon" data-page-node-id="YMgauIOBz0Ht7RY6307spd">▼</span></th>
         <th onclick="sortBy('listed')" style="width:60px" data-page-node-id="VroFaPc0CeASyQVVVnJhjL">上市<span class="sort-icon" data-page-node-id="UaplcvGdOBHJBkdg1mqtC0">▼</span></th>
         <th style="width:280px" data-page-node-id="YDVRxw29kOWLk3izy3F54k">代表产品</th>
-        <th style="width:200px">产品标签（点击可编辑）</th>
+        <th style="width:220px">产品品类与属性（点击可编辑）</th>
         <th onclick="sortBy('patents')" style="width:60px" data-page-node-id="WX3g0OtbK0SRsWZ6wMoi8F">专利<span class="sort-icon" data-page-node-id="TbMQZaDii9FvZNUILFY2lQ">▼</span></th>
         <th style="width:150px" data-page-node-id="1m925sAP4wIuW6R9Q6PVZH">应用领域</th>
         <th onclick="sortBy('threat')" style="width:60px" data-page-node-id="j5C6sxruaMY2gdYmUBWxPh">威胁<span class="sort-icon" data-page-node-id="ScFRsOMGwTZQ9xIcrqq89u">▼</span></th>
@@ -302,16 +315,16 @@
 <div class="modal-overlay" id="tagModal">
   <div class="modal">
     <div class="modal-header">
-      <h2 id="tagModalTitle">编辑产品标签</h2>
+      <h2 id="tagModalTitle">编辑产品品类与属性</h2>
       <button class="modal-close" onclick="closeTagModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="tag-tip">标签依据各公司官网产品线整理。如发现与实际不符，可直接勾选修正 —— 修改仅保存在本机浏览器，会覆盖内置标签。</div>
-      <div id="tagEditList"></div>
+      <div class="tag-tip">品类与属性依据各公司官网产品线整理。勾选子类会自动勾选所属品类；取消品类会清空其子类。修改仅保存在本机浏览器，会覆盖内置数据。</div>
+      <div id="tagEditList" onchange="onTagListChange(event)"></div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeTagModal()">取消</button>
-      <button class="btn btn-primary" onclick="saveTags()">保存标签</button>
+      <button class="btn btn-primary" onclick="saveTags()">保存品类与属性</button>
     </div>
   </div>
 </div>
@@ -660,157 +673,406 @@ function updateStats(data) {
 
 
 // ===== 产品标签（逐家官网调研标注，key=公司id，值=标签码数组） =====
+// ===== 产品标签：三层体系（大组 > 品类 > 细分子类），key=公司id，值=标签码数组 =====
 const TAG_DEFS = [
   {g:'A · 家用与工商用气安全', items:[
-    {k:'A1', n:'家用激光可燃气体探测器'},
-    {k:'A2', n:'家用非激光报警器'},
-    {k:'A3', n:'工商业点型可燃气体探测器'},
-    {k:'A4', n:'燃气切断阀/自闭阀/调压器'}
+    {k:'A1', n:'家用激光可燃气体探测器', sub:[
+      {k:'A1.1', n:'市电版（220V供电）'},
+      {k:'A1.2', n:'电池版（低功耗干电池/锂电）'},
+      {k:'A1.3', n:'燃气+CO复合式探测器'},
+      {k:'A1.4', n:'联动切断阀套装'}
+    ]},
+    {k:'A2', n:'家用非激光报警器', sub:[
+      {k:'A2.1', n:'半导体式'},
+      {k:'A2.2', n:'催化燃烧式'},
+      {k:'A2.3', n:'红外NDIR式'}
+    ]},
+    {k:'A3', n:'工商业点型可燃气体探测器', sub:[
+      {k:'A3.1', n:'工商业激光点型'},
+      {k:'A3.2', n:'工商业催化/半导体点型'},
+      {k:'A3.3', n:'工商业红外NDIR点型'}
+    ]},
+    {k:'A4', n:'燃气阀门与配套装置', sub:[
+      {k:'A4.1', n:'管道燃气自闭阀'},
+      {k:'A4.2', n:'燃气电磁阀/机械手'},
+      {k:'A4.3', n:'调压器/调压箱'}
+    ]}
   ]},
   {g:'B · 激光泄漏巡检（移动式）', items:[
-    {k:'B1', n:'手持/便携激光遥测仪'},
-    {k:'B2', n:'云台式激光遥测'},
-    {k:'B3', n:'开路式/线型光束激光遥测'},
-    {k:'B4', n:'无人机载激光检测'},
-    {k:'B5', n:'车载/巡检车激光检测'},
-    {k:'B6', n:'机器人/机器狗搭载检测'},
-    {k:'B7', n:'手推车/背包式巡检仪'}
+    {k:'B1', n:'手持/便携激光检测仪', sub:[
+      {k:'B1.1', n:'手持激光遥测仪（远距离）'},
+      {k:'B1.2', n:'手持泵吸式激光检测仪'},
+      {k:'B1.3', n:'手持扩散式激光检漏仪'},
+      {k:'B1.4', n:'便携乙烷/多组分辨识仪'}
+    ]},
+    {k:'B2', n:'云台式激光遥测', sub:[
+      {k:'B2.1', n:'固定云台扫描式'},
+      {k:'B2.2', n:'防爆云台（Ex d）'}
+    ]},
+    {k:'B3', n:'开路式/线型光束激光遥测', sub:[
+      {k:'B3.1', n:'对射式开路激光'},
+      {k:'B3.2', n:'线型光束激光探测器'}
+    ]},
+    {k:'B4', n:'无人机载激光检测', sub:[]},
+    {k:'B5', n:'车载/巡检车激光检测', sub:[
+      {k:'B5.1', n:'车载激光巡检系统'},
+      {k:'B5.2', n:'电动车/两轮车巡检'},
+      {k:'B5.3', n:'无人驾驶巡检车'}
+    ]},
+    {k:'B6', n:'机器人/机器狗搭载检测', sub:[]},
+    {k:'B7', n:'手推车/背包式巡检仪', sub:[]}
   ]},
   {g:'C · 地下与固定监测', items:[
-    {k:'C1', n:'阀门井/地下井室监测'},
-    {k:'C2', n:'埋地管道/管网在线监测'},
-    {k:'C3', n:'固定式点型激光探测器'},
-    {k:'C4', n:'激光气体分析仪（过程/在线）'},
-    {k:'C5', n:'场站/调压柜/厂界监测'}
+    {k:'C1', n:'阀门井/地下井室监测', sub:[
+      {k:'C1.1', n:'阀井激光监测终端'},
+      {k:'C1.2', n:'阀井催化/半导体监测终端'},
+      {k:'C1.3', n:'智能井盖监测终端'}
+    ]},
+    {k:'C2', n:'埋地管网在线监测', sub:[
+      {k:'C2.1', n:'管网哨兵/桩式地面监测'},
+      {k:'C2.2', n:'埋地激光甲烷监测仪'}
+    ]},
+    {k:'C3', n:'固定式点型激光探测器', sub:[
+      {k:'C3.1', n:'工业固定式点型激光'},
+      {k:'C3.2', n:'无线/电池供电固定式激光'}
+    ]},
+    {k:'C4', n:'激光气体分析仪（过程/在线）', sub:[]},
+    {k:'C5', n:'场站/调压柜/厂界监测', sub:[
+      {k:'C5.1', n:'场站/调压柜监测'},
+      {k:'C5.2', n:'厂界/围堰区域监测'}
+    ]}
   ]},
   {g:'D · 核心器件与传感', items:[
-    {k:'D1', n:'激光甲烷传感模组/芯片'},
-    {k:'D2', n:'激光乙烷/多组分/沼气辨识'},
-    {k:'D3', n:'矿用激光甲烷传感器'},
-    {k:'D4', n:'温室气体/CRDS/光腔监测'},
-    {k:'D5', n:'其他气体传感器（CO/O2/H2S等）'}
+    {k:'D1', n:'激光甲烷传感模组/芯片', sub:[
+      {k:'D1.1', n:'激光甲烷模组（TTL/串口）'},
+      {k:'D1.2', n:'激光气体传感芯片/激光器'}
+    ]},
+    {k:'D2', n:'乙烷/多组分/沼气辨识', sub:[]},
+    {k:'D3', n:'矿用激光甲烷', sub:[
+      {k:'D3.1', n:'矿用激光甲烷传感器'},
+      {k:'D3.2', n:'矿用便携/多参数检测仪'}
+    ]},
+    {k:'D4', n:'温室气体/CRDS/光腔监测', sub:[]},
+    {k:'D5', n:'其他气体激光传感（CO/O2/H2S等）', sub:[]}
   ]},
   {g:'E · 其他技术路线', items:[
-    {k:'E1', n:'红外NDIR气体探测器'},
-    {k:'E2', n:'催化燃烧/半导体/电化学'},
-    {k:'E3', n:'PID光离子探测器'},
-    {k:'E4', n:'火焰探测器'},
-    {k:'E5', n:'CEMS/烟气/VOCs在线监测'},
-    {k:'E6', n:'光纤传感/声波声学检测'}
+    {k:'E1', n:'红外NDIR气体探测器', sub:[]},
+    {k:'E2', n:'催化燃烧/半导体探测器', sub:[]},
+    {k:'E3', n:'PID光离子探测器', sub:[]},
+    {k:'E4', n:'火焰探测', sub:[
+      {k:'E4.1', n:'红外/紫外火焰探测器'},
+      {k:'E4.2', n:'图像型/视频火焰探测'}
+    ]},
+    {k:'E5', n:'CEMS/VOCs/烟气监测', sub:[
+      {k:'E5.1', n:'CEMS烟气连续监测'},
+      {k:'E5.2', n:'VOCs在线监测'},
+      {k:'E5.3', n:'DOAS差分光谱分析'}
+    ]},
+    {k:'E6', n:'光纤传感/声学检测', sub:[
+      {k:'E6.1', n:'分布式光纤测温/测振'},
+      {k:'E6.2', n:'声学成像泄漏检测'}
+    ]}
   ]},
   {g:'F · 计量、平台与其他', items:[
-    {k:'F1', n:'燃气表/流量计/计量'},
-    {k:'F2', n:'智慧燃气平台/城市生命线'},
-    {k:'F3', n:'安防视频/热成像/气体成像'},
-    {k:'F4', n:'消防报警系统'},
-    {k:'F5', n:'激光雷达/测绘'}
+    {k:'F1', n:'燃气表/流量计/计量', sub:[
+      {k:'F1.1', n:'燃气表（超声/膜式）'},
+      {k:'F1.2', n:'工业流量计'}
+    ]},
+    {k:'F2', n:'智慧燃气平台/城市生命线', sub:[
+      {k:'F2.1', n:'智慧燃气/SCADA平台'},
+      {k:'F2.2', n:'城市生命线安全监测平台'},
+      {k:'F2.3', n:'北斗/GIS时空数据服务'}
+    ]},
+    {k:'F3', n:'安防视频/热成像/气体成像', sub:[]},
+    {k:'F4', n:'消防报警系统', sub:[]},
+    {k:'F5', n:'激光雷达/测绘', sub:[]}
   ]}
 ];
+
+// key=公司id，值=细分标签码数组（可同时含一级码与子类码；一级码表示有此类但未细分）
 const productTags = {
-  56:["A1"],
-  1:["B1","B3","B4","B5","D2"],
-  2:["C3","C2","D3","F2"],
-  3:["A1","A2","B1","B2","B3","B4","B5","C3","C4","D1","D5","E1","E2","F2"],
-  4:["B1","E1","C3"],
-  5:["B1","B2","C3"],
-  6:["D1"],
-  7:["B1","B4"],
-  8:["D3","B3","B1"],
-  9:["B1","C3","B3","D5"],
-  10:["F5","D1"],
-  11:["F3"],
-  12:["F2"],
-  13:["F1","B6","F2"],
-  14:["C3","B2","B1","A2","A4","E1","E2","E6"],
-  15:["B2","C3","E6","E4"],
-  16:["B5","B4","B7","D4","B1","D2","B2","C1"],
-  17:["B1","B2","C4"],
-  18:["A1"],
-  20:["E3","E2","F2","A4"],
-  21:["E6"],
-  22:["A1","A2","A3","A4","F2"],
-  23:["B1"],
-  24:["C3","F2"],
-  25:["F3"],
-  27:["C3","E4"],
-  28:["B5","B4","B1","D2"],
-  29:["B4","B5","B1","C3","A2","A4"],
-  30:["E1","E3","B3","C3"],
-  31:["C2","A2","A4","C5"],
-  32:["A1","A3","C1","E4","A4","F2","E2"],
-  33:["F1","F2"],
-  34:["F2","C1"],
-  35:["E4","F4"],
-  36:["A3","A1","A2","B1","A4","F2"],
-  37:["E2","D5"],
-  38:["F1","C2","F2"],
-  39:["C2","B5","F2"],
-  40:["F1","C1","A3","F2"],
-  41:["E4","F4","B6"],
-  42:["E4","C3","C1","F4"],
-  43:["B1","C1","C3","A2","F2"],
-  44:["B1","C3","C4","E2"],
-  45:["C1","B1","B3","B5","B7","D2","E1","A2","C3"],
-  46:["A2","C3","B1","F2"],
-  47:["A1","C2","F2"],
-  48:["A1","A3","C1","F1","C2"],
-  49:["C2","B1","C1","C5"],
-  50:["B1","B3","B2","E5"],
-  51:["C2","C1","F2","D5"],
-  52:["B1","B2","B5","D2","C1","C3","A2","C4"],
-  53:["B1","B3","C2","C1","B6"],
-  54:["D1","D5"],
-  55:["D1","D3","D5","D2","B1","E6"],
-  57:["A1"],
-  58:["A1"],
-  59:["A1","D5"],
-  60:["A1"],
-  61:["A1"],
-  62:["A1"],
-  63:["A1","F4"],
-  64:["A1","F4"],
-  65:["A2","A1"],
-  66:["D1"],
-  67:["D1","A1"],
-  68:["D1"],
-  69:["C3","B1","D1"],
-  70:["A3","A1"],
-  71:["C4","E5"],
-  72:["B1","D3","C3","D5"],
-  73:["B1","B4","B6","E6","D5"],
-  74:["E6"],
-  75:["E4","C3","F4","E2"],
-  76:["E5","D4"],
-  77:["B1","B2","C1","E4","A2","A3","B7"],
-  80:["D3","F2"],
-  81:["D3","B1"],
-  82:["E6","E4","F2"],
-  83:["B1","B2","B5"],
-  84:["B1","C4"]
+  56:['A1.1'],
+  1:['B1.1','B1.2','B1.4','B3.2','B4','B5.1','D2'],
+  2:['C3.1','C3.2','D3.1'],
+  3:['A1.1','A2.3','B1.1','B2.1','B3.1','B4','B5.1','C3.1','C4','D1.1','D5','E1','E4.1','F2.1','F2.2'],
+  4:['B1.1','E1','D5'],
+  5:['B1.1','B1.2','B2.1'],
+  6:['D1.1','C3.1'],
+  7:['B1.1'],
+  8:['D3.1','B3.2'],
+  9:['B1.1','B3.2','C3.1','D5'],
+  10:['F5','D1.2'],
+  11:['F3'],
+  12:['F2.1'],
+  13:['F1.2','B6','F2.1'],
+  14:['A1.3','A2','A4.2','B1.1','B2.1','C3.1','E1','E2','E6.1'],
+  15:['B2.2','C3.1','E4.2','E6.1'],
+  16:['B1.4','B2.1','B4','B5.1','B7','C1.1','D2','D4'],
+  17:['B1.1','B2.1','C4'],
+  18:['A1.1'],
+  19:[],
+  20:['A4.3','E2','E3','F2.1'],
+  21:['E6.1'],
+  22:['A1.1','A3','A4.1','A4.3','F2.1'],
+  23:['B1.1'],
+  24:['C3.1','C5.1'],
+  25:['F3'],
+  26:[],
+  27:['A3','E4.1'],
+  28:['B1.1','B1.4','B4','B5.1','B5.2','D2'],
+  29:['A2','A3','A4.2','B1.1','B4','B5.1'],
+  30:['A3.3','B3.2','E1','E3'],
+  31:['A2','A4.2','C2.1','C5.1'],
+  32:['A1.1','A3.1','A4.2','C1.1','E2','E4.1','F2.2'],
+  33:['F1.1','F2.1'],
+  34:['C1','C5.1','F2.1'],
+  35:['E4.2','F4'],
+  36:['A1.1','A2.1','A2.2','A2.3','A3','A4.2','F2.1'],
+  37:['E2'],
+  38:['C2','F1.1','F2.1'],
+  39:['B5.1','B5.3','F2.3'],
+  40:['A3','C1','F1.1','F1.2'],
+  41:['E4.2','F4'],
+  42:['A3','C1.1','E4.1','F4'],
+  43:['A2','A3','B1.1','C1.1'],
+  44:['A3','E1','E2','E5.3'],
+  45:['A2','B1.1','B1.4','B3.1','B5.2','B7','C1.1','C1.2','D2','E1'],
+  46:['A2','A3','D5','E2'],
+  47:['A1.1','C1.3','C3.1','F2.2'],
+  48:['A1.1','A3.1','C1.1','F1.1','F2.1'],
+  49:['B1.1','C2'],
+  50:['B1.1','B2.1','B3.2','E5.2'],
+  51:['C1.3','C3.1','F2.2'],
+  52:['A2.1','A3.2','B1.1','B2.2','B5.1','C1.1','C3.1','C4','D2'],
+  53:['B1.1','B3.1','B6','C1.1','C1.2','C2.2','C5.1','E1','E2','E3'],
+  54:['D1.1','D1.2'],
+  55:['D1.1','D2','D5','E6.1'],
+  57:['A1.1'],
+  58:['A1.1'],
+  59:['A1.1','A1.3'],
+  60:['A1.1'],
+  61:['A1.1'],
+  62:['A1.1'],
+  63:['A1.1','F4'],
+  64:['A1.1','F4'],
+  65:['A1.1','A2.1','A2.2','A2.3'],
+  66:['D1.1'],
+  67:['D1.1'],
+  68:['D1.1'],
+  69:['B1.1','C3.1','D1.1'],
+  70:['A1.1','A3.1'],
+  71:['C4','E5.1'],
+  72:['A3','B1','D3.2','D5','E2'],
+  73:['B1.1','B4','B6','D3.2','D5','E6.2'],
+  74:['E6.1'],
+  75:['A3.2','D5','E4.1','F4'],
+  76:['D4','E5.1','E5.2'],
+  77:['A2','A3','B1.1','B2.1','C1','D5','E4.1'],
+  78:[],
+  79:[],
+  80:['D3.1','F2.1'],
+  81:['B1.1','D3.1'],
+  82:['E4.1','E6.1','F2.2'],
+  83:['B1.1','B2.1','B5.1'],
+  84:['B1.1','E5.1']
+};
+
+// ===== 交叉属性维度（公司级，表示产品线覆盖情况） =====
+const ATTR_DEFS = [
+  {g:'供电方式', items:[
+    {k:'P1', n:'市电220V'},
+    {k:'P2', n:'干电池/一次电池'},
+    {k:'P3', n:'锂电可充电'},
+    {k:'P4', n:'太阳能供电'},
+    {k:'P5', n:'直流24V/POE/工业供电'}
+  ]},
+  {g:'通信方式', items:[
+    {k:'N1', n:'NB-IoT'},
+    {k:'N2', n:'4G Cat.1/4G'},
+    {k:'N3', n:'LoRa'},
+    {k:'N4', n:'蓝牙'},
+    {k:'N5', n:'WiFi'},
+    {k:'N6', n:'有线（RS485/4-20mA）'},
+    {k:'N7', n:'独立式无通信'}
+  ]},
+  {g:'检测气体', items:[
+    {k:'G1', n:'甲烷 CH4'},
+    {k:'G2', n:'乙烷 C2H6（气源辨识）'},
+    {k:'G3', n:'一氧化碳 CO'},
+    {k:'G4', n:'硫化氢 H2S'},
+    {k:'G5', n:'氧气 O2'},
+    {k:'G6', n:'二氧化碳/温室气体'},
+    {k:'G7', n:'VOCs/有机挥发物'},
+    {k:'G8', n:'其他（HF/NH3/C3H8等）'}
+  ]},
+  {g:'资质认证', items:[
+    {k:'S1', n:'消防CCC（家用准入）'},
+    {k:'S2', n:'防爆Ex'},
+    {k:'S3', n:'计量CPA/CMC'},
+    {k:'S4', n:'煤安MA（矿用）'},
+    {k:'S5', n:'SIL功能安全'},
+    {k:'S6', n:'船级社/其他特种'}
+  ]}
+];
+
+// key=公司id，值=属性码数组（仅标注有公开依据或行业准入必然项，未核实不填）
+const companyAttrs = {
+  56:['P1','N2','G1','S1'],
+  1:['P3','G1','G2'],
+  2:['P4','P5','N6','G1','S2'],
+  3:['P1','P5','N6','G1','G2','G3','G4','G5','G8','S1','S2'],
+  4:['P3','G1','S2'],
+  5:['P3','G1'],
+  6:['P5','N6','G1'],
+  7:['P3','G1'],
+  8:['P5','N6','G1','S2','S4'],
+  9:['P5','N6','G1','G3','G4','G6','G8','S2'],
+  10:['G1'],
+  11:[],
+  12:[],
+  13:['P5','N6'],
+  14:['P1','P5','N6','G1','G3','S1','S2'],
+  15:['P5','N6','G1','S2'],
+  16:['P3','G1','G2','G6'],
+  17:['P3','P5','N6','G1'],
+  18:['P1','N1','N2','G1','S1'],
+  19:[],
+  20:['P1','P5','N6','G1'],
+  21:[],
+  22:['P1','N1','N2','G1','S1','S2'],
+  23:['P3','G1'],
+  24:['P5','N6','G1','S2'],
+  25:[],
+  26:[],
+  27:['P5','N6','G1','S2'],
+  28:['P3','G1','G2'],
+  29:['P1','P3','P5','N6','G1','S1','S2'],
+  30:['P5','N6','G1','G7','S2'],
+  31:['P1','P2','N1','G1','S1'],
+  32:['P1','P5','N1','N6','G1','S1','S2','S6'],
+  33:['P2','N1'],
+  34:['P2','N1','G1'],
+  35:[],
+  36:['P1','P5','N1','N6','G1','S1'],
+  37:['P5','N6'],
+  38:['P2','N1','G1'],
+  39:['P3','N2','G1'],
+  40:['P2','P5','N1','N6','G1'],
+  41:[],
+  42:['P2','P5','N6','G1','S2'],
+  43:['P1','P2','P3','N1','G1','S1','S2'],
+  44:['P3','P5','N6','G1','G3','G4','G5','G7','S2'],
+  45:['P2','P3','P5','N6','G1','G2','S1','S2'],
+  46:['P1','P5','N6','G1','S1'],
+  47:['P1','P5','N1','N6','G1','S1'],
+  48:['P1','P5','N1','N6','G1','S1','S3'],
+  49:['P2','P3','N1','G1'],
+  50:['P3','P5','N6','G1','G7','S2'],
+  51:['P2','P5','N1','N6','G1'],
+  52:['P1','P3','P5','N6','G1','G2','S1','S2','S5'],
+  53:['P2','P3','P5','N1','N6','G1','G7','S2'],
+  54:['P5','N6','G1'],
+  55:['P5','N6','G1','G2','G3','G5','G6','S2','S4'],
+  57:['P1','N1','N2','N5','G1','S1'],
+  58:['P1','N1','G1','S1'],
+  59:['P1','N1','N2','G1','G3','S1'],
+  60:['P1','N2','N4','G1','S1'],
+  61:['P1','N1','N2','G1','S1'],
+  62:['P1','N1','N4','G1','S1'],
+  63:['P1','N2','G1','S1'],
+  64:['P1','N2','G1','S1'],
+  65:['P1','N1','N2','N3','N4','N5','G1','S1'],
+  66:['P5','N6','G1'],
+  67:['P5','N6','G1'],
+  68:['P5','N6','G1'],
+  69:['P3','P5','N6','G1','S2'],
+  70:['P1','P5','N6','G1','S1','S2'],
+  71:['P5','N6','G1','G3','G4','G5','S2'],
+  72:['P3','P5','N6','G1','G3','G4','G5','S2','S4'],
+  73:['P3','G1','G3','G4','G5','S2','S4'],
+  74:[],
+  75:['P5','N6','G1','S2'],
+  76:['P5','N6','G3','G6','G7'],
+  77:['P1','P2','P3','P4','N1','N6','G1','S1','S2'],
+  78:[],
+  79:[],
+  80:['P5','N6','G1','S2','S4'],
+  81:['P3','P5','N6','G1','S2','S4'],
+  82:[],
+  83:['P3','G1'],
+  84:['P3','P5','N6','G1']
 };
 
 // ===== PRODUCT TAG FILTER =====
 function getTagOverride() { try { return JSON.parse(localStorage.getItem('competitorTagOverrides') || '{}'); } catch(e) { return {}; } }
 function getTags(c) {
-  const ov = getTagOverride();
-  if (ov[c.id] !== undefined) return ov[c.id];
+  const v = getTagOverride()[c.id];
+  if (v !== undefined) return Array.isArray(v) ? v : (v.t || []);
   return productTags[c.id] || [];
 }
-function tagName(k) { for(const g of TAG_DEFS){ const it = g.items.find(i => i.k === k); if(it) return it.n; } return k; }
+function getAttrs(c) {
+  const v = getTagOverride()[c.id];
+  if (v !== undefined && !Array.isArray(v) && v.a) return v.a;
+  return companyAttrs[c.id] || [];
+}
+function tagInfo(k) {
+  for(const g of TAG_DEFS){
+    for(const it of g.items){
+      if(it.k === k) return {n:it.n, short:it.n, g:g.g};
+      if(it.sub) for(const s of it.sub){ if(s.k === k) return {n:it.n + ' · ' + s.n, short:s.n, g:g.g}; }
+    }
+  }
+  return {n:k, short:k, g:''};
+}
+function tagName(k) { return tagInfo(k).n; }
+function attrName(k) { for(const g of ATTR_DEFS){ const it = g.items.find(i => i.k === k); if(it) return g.g + ' · ' + it.n; } return k; }
+// 选一级码(A1)命中A1与其全部子类；选子类码(A1.1)仅命中该子类
+function tagHit(tags, k) { return tags.some(t => t === k || t.indexOf(k + '.') === 0); }
+function countTag(k) { return companies.filter(c => !c.isMyCompany && tagHit(getTags(c), k)).length; }
 function initProductFilter() {
   const sel = document.getElementById('filterProduct');
   if(!sel) return;
   const keep = sel.value;
-  sel.innerHTML = '<option value="">全部产品标签</option>';
+  sel.innerHTML = '<option value="">全部产品品类</option>';
   TAG_DEFS.forEach(g => {
     const og = document.createElement('optgroup');
     og.label = g.g;
     g.items.forEach(it => {
-      const n = companies.filter(c => !c.isMyCompany && getTags(c).includes(it.k)).length;
+      const n1 = countTag(it.k);
+      if(n1){
+        const o = document.createElement('option');
+        o.value = it.k;
+        o.textContent = it.k + ' ' + it.n + '（' + n1 + '）';
+        og.appendChild(o);
+      }
+      (it.sub || []).forEach(s => {
+        const n2 = countTag(s.k);
+        if(!n2) return;
+        const o = document.createElement('option');
+        o.value = s.k;
+        o.textContent = '　└ ' + s.k + ' ' + s.n + '（' + n2 + '）';
+        og.appendChild(o);
+      });
+    });
+    if(og.children.length) sel.appendChild(og);
+  });
+  if(keep) sel.value = keep;
+  initAttrFilter();
+}
+function initAttrFilter() {
+  const sel = document.getElementById('filterAttr');
+  if(!sel) return;
+  const keep = sel.value;
+  sel.innerHTML = '<option value="">全部交叉属性</option>';
+  ATTR_DEFS.forEach(g => {
+    const og = document.createElement('optgroup');
+    og.label = g.g;
+    g.items.forEach(it => {
+      const n = companies.filter(c => !c.isMyCompany && getAttrs(c).includes(it.k)).length;
       if(!n) return;
       const o = document.createElement('option');
       o.value = it.k;
-      o.textContent = it.n + ' (' + n + ')';
+      o.textContent = it.n + '（' + n + '）';
       og.appendChild(o);
     });
     if(og.children.length) sel.appendChild(og);
@@ -819,23 +1081,45 @@ function initProductFilter() {
 }
 function getTagCell(c) {
   const ts = getTags(c);
-  if(!ts.length) return '<span class="tag-none">未标注</span>';
-  const show = ts.slice(0,3).map(t => '<span class="tag-chip">' + tagName(t) + '</span>').join('');
-  return show + (ts.length > 3 ? '<span class="tag-more">+' + (ts.length - 3) + '</span>' : '');
+  const as = getAttrs(c);
+  if(!ts.length && !as.length) return '<span class="tag-none">未标注</span>';
+  let h = ts.slice(0,4).map(t => { const i = tagInfo(t); return '<span class="tag-chip" title="' + i.n + '">' + i.short + '</span>'; }).join('');
+  if(ts.length > 4) h += '<span class="tag-more" title="' + ts.slice(4).map(tagName).join('、') + '">+' + (ts.length - 4) + '</span>';
+  if(as.length){
+    h += '<div class="attr-line">' + as.slice(0,6).map(a => '<span class="attr-chip" title="' + attrName(a) + '">' + a + '</span>').join('') +
+      (as.length > 6 ? '<span class="tag-more" title="' + as.slice(6).map(attrName).join('、') + '">+' + (as.length - 6) + '</span>' : '') + '</div>';
+  }
+  return h;
 }
 // ===== 标签编辑弹窗 =====
 let currentTagCompanyId = null;
 function openTagModal(id) {
   currentTagCompanyId = id;
   const c = companies.find(x => x.id === id);
-  document.getElementById('tagModalTitle').textContent = c.name + ' · 产品标签';
+  document.getElementById('tagModalTitle').textContent = c.name + ' · 产品品类与交叉属性';
   const cur = getTags(c);
-  let h = '';
+  const cura = getAttrs(c);
+  let h = '<div class="tag-sec-title">产品品类（可多选，能确认时请选到最细一级）</div>';
   TAG_DEFS.forEach(g => {
+    h += '<div class="tag-group"><div class="tag-group-title">' + g.g + '</div>';
+    g.items.forEach(it => {
+      h += '<div class="cat-row"><div class="cat-head"><label class="tag-item cat"><input type="checkbox" data-type="t" data-lv="1" value="' + it.k +
+        '"' + (cur.includes(it.k) ? ' checked' : '') + '><span class="cat-name">' + it.k + ' ' + it.n + '</span></label></div>';
+      if(it.sub && it.sub.length){
+        h += '<div class="cat-subs">' + it.sub.map(s => '<label class="tag-item sub"><input type="checkbox" data-type="t" data-lv="2" data-p="' + it.k +
+          '" value="' + s.k + '"' + (cur.includes(s.k) ? ' checked' : '') + '><span>' + s.k + ' ' + s.n + '</span></label>').join('') + '</div>';
+      }
+      h += '</div>';
+    });
+    h += '</div>';
+  });
+  h += '<div class="tag-sec-title">交叉属性（公司级，表示产品线覆盖能力）</div>';
+  ATTR_DEFS.forEach(g => {
     h += '<div class="tag-group"><div class="tag-group-title">' + g.g + '</div><div class="tag-items">' +
-      g.items.map(it => '<label class="tag-item"><input type="checkbox" value="' + it.k + '"' + (cur.includes(it.k) ? ' checked' : '') + '><span>' + it.n + '</span></label>').join('') +
+      g.items.map(it => '<label class="tag-item"><input type="checkbox" data-type="a" value="' + it.k + '"' + (cura.includes(it.k) ? ' checked' : '') + '><span>' + it.n + '</span></label>').join('') +
       '</div></div>';
   });
+  h += '<div class="tag-tip">说明：属性维度只标注有公开依据或市场准入必然项，未核实一律留空，不做臆测；资质类为常规准入推断，实际以厂家证书为准。</div>';
   document.getElementById('tagEditList').innerHTML = h;
   document.getElementById('tagModal').classList.add('show');
 }
@@ -843,11 +1127,25 @@ function closeTagModal() {
   document.getElementById('tagModal').classList.remove('show');
   currentTagCompanyId = null;
 }
+function onTagListChange(e) {
+  const t = e.target;
+  if(!t || t.type !== 'checkbox' || t.dataset.type !== 't') return;
+  const list = document.getElementById('tagEditList');
+  if(t.dataset.lv === '2' && t.checked){
+    const p = list.querySelector('input[data-type=t][data-lv=1][value="' + t.dataset.p + '"]');
+    if(p) p.checked = true;
+  }
+  if(t.dataset.lv === '1' && !t.checked){
+    list.querySelectorAll('input[data-type=t][data-lv=2][data-p="' + t.value + '"]').forEach(s => { s.checked = false; });
+  }
+}
 function saveTags() {
   if(currentTagCompanyId === null) return;
-  const vals = Array.from(document.querySelectorAll('#tagEditList input[type=checkbox]:checked')).map(b => b.value);
+  const nodes = Array.from(document.querySelectorAll('#tagEditList input[type=checkbox]'));
+  const t = nodes.filter(n => n.dataset.type === 't' && n.checked).map(n => n.value);
+  const a = nodes.filter(n => n.dataset.type === 'a' && n.checked).map(n => n.value);
   const ov = getTagOverride();
-  ov[currentTagCompanyId] = vals;
+  ov[currentTagCompanyId] = {t:t, a:a};
   localStorage.setItem('competitorTagOverrides', JSON.stringify(ov));
   closeTagModal();
   initProductFilter();
@@ -857,7 +1155,7 @@ function saveTags() {
 // ===== FILTERS =====
 function resetFilters() {
   const si = document.getElementById('searchInput'); if(si) si.value = '';
-  ['filterLocation','filterListed','filterThreat','filterRelation','filterTech','filterProduct'].forEach(id => {
+  ['filterLocation','filterListed','filterThreat','filterRelation','filterTech','filterProduct','filterAttr'].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = '';
   });
   applyFilters();
@@ -870,10 +1168,12 @@ function applyFilters() {
   const fRel = document.getElementById('filterRelation').value;
   const fTech = document.getElementById('filterTech').value;
   const fProd = document.getElementById('filterProduct').value;
+  const fAttrEl = document.getElementById('filterAttr');
+  const fAttr = fAttrEl ? fAttrEl.value : '';
 
   let filtered = companies.filter(c => {
     if(search) {
-      const text = (c.name+c.tech+c.products+c.fields+c.dynamics+c.location+' '+getTags(c).map(tagName).join(' ')).toLowerCase();
+      const text = (c.name+c.tech+c.products+c.fields+c.dynamics+c.location+' '+getTags(c).map(tagName).join(' ')+' '+getAttrs(c).map(attrName).join(' ')).toLowerCase();
       if(!text.includes(search)) return false;
     }
     if(fLoc && c.location !== fLoc) return false;
@@ -882,7 +1182,8 @@ function applyFilters() {
     if(fThreat && c.threat !== fThreat) return false;
     if(fRel && c.relation !== fRel) return false;
     if(fTech && !(c.tech && c.tech.includes(fTech))) return false;
-    if(fProd && !getTags(c).includes(fProd)) return false;
+    if(fProd && !tagHit(getTags(c), fProd)) return false;
+    if(fAttr && !getAttrs(c).includes(fAttr)) return false;
     return true;
   });
   renderTable(filtered);
@@ -1121,10 +1422,12 @@ function renderLogList(id) {
 
 // ===== EXPORT =====
 function exportCSV() {
-  const headers = ['序号','公司名称','总部','竞争层级','核心技术','上市','代表产品','专利','应用领域','威胁等级','近期动态','官网'];
+  const headers = ['序号','公司名称','总部','竞争层级','核心技术','上市','代表产品','专利','应用领域','威胁等级','产品品类标签','交叉属性','近期动态','官网'];
   let csv = '\ufeff' + headers.join(',') + '\n';
   companies.filter(c=>!c.isMyCompany).forEach(c => {
-    const row = [c.id, c.name, c.location, c.relation, c.tech, c.listed, c.products, c.patents, c.fields, c.threat, c.dynamics, c.website]
+    const tagStr = getTags(c).map(t => t + ' ' + tagName(t)).join('；');
+    const attrStr = getAttrs(c).map(a => attrName(a)).join('；');
+    const row = [c.id, c.name, c.location, c.relation, c.tech, c.listed, c.products, c.patents, c.fields, c.threat, tagStr, attrStr, c.dynamics, c.website]
       .map(v => { v = (v||'').toString().replace(/"/g,'""'); return '"'+v+'"'; });
     csv += row.join(',') + '\n';
   });
