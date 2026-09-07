@@ -355,6 +355,9 @@
         <div class="log-form-row" data-page-node-id="QEdGWHOwF6gjkWtDzjkgRl">
           <textarea id="logDesc" placeholder="描述动态内容..."></textarea>
         </div>
+        <div class="log-form-row">
+          <input type="url" id="logSource" placeholder="来源链接（可选，如新闻 / 公告 / 招标 URL，会自动变成可点击来源）">
+        </div>
         <div class="log-form-row" data-page-node-id="NaQU9vYU5Qu0q7l4zeE68t">
           <button class="btn btn-primary" onclick="addLog()" data-page-node-id="aN6BC2Uu4jHxNxU3yJIkLq">添加日志</button>
         </div>
@@ -1073,11 +1076,13 @@ function addLog() {
   const date = document.getElementById('logDate').value;
   const type = document.getElementById('logType').value;
   const desc = document.getElementById('logDesc').value.trim();
+  const source = document.getElementById('logSource').value.trim();
   if(!desc) { alert('请输入动态描述'); return; }
   if(!logs[currentLogCompanyId]) logs[currentLogCompanyId] = [];
-  logs[currentLogCompanyId].unshift({date, type, desc, ts:Date.now()});
+  logs[currentLogCompanyId].unshift({date, type, desc, url:source, ts:Date.now()});
   localStorage.setItem('competitorLogs', JSON.stringify(logs));
   document.getElementById('logDesc').value = '';
+  document.getElementById('logSource').value = '';
   renderLogList(currentLogCompanyId);
   applyFilters();
 }
