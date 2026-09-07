@@ -175,6 +175,9 @@
   /* 近期动态：最新一条高亮 */
   .dyn-latest { background:linear-gradient(180deg, transparent 55%, #ffe9cc 55%); color:#a4491f; font-weight:600; padding:0 2px; border-radius:2px; }
   .dyn-new-tag { display:inline-block; background:var(--orange); color:#fff; font-size:9px; font-weight:700; padding:0 4px; border-radius:3px; margin-right:4px; vertical-align:1px; letter-spacing:0.5px; }
+  .dyn-src { display:inline-block; margin-left:4px; color:var(--primary); font-size:10px; font-weight:600; text-decoration:none; border:1px solid var(--primary); border-radius:3px; padding:0 4px; white-space:nowrap; vertical-align:1px; }
+  .dyn-src:hover { background:var(--primary); color:#fff; }
+  .log-desc .dyn-src { font-size:11px; margin-left:6px; }
 
   /* 专利明细 */
   .patent-btn { display:block; margin:3px auto 0; padding:1px 6px; font-size:10px; line-height:1.5; border-radius:10px; border:1px solid var(--border-strong); background:#fff; color:var(--text-secondary); cursor:pointer; white-space:nowrap; }
@@ -622,9 +625,11 @@ function getDynamicsCell(c) {
     }
   });
   return parts.map(function(s, i) {
+    const sp = splitSource(s);
+    const body = escHtml(sp.desc) + renderSource(sp.url);
     return i === bestIdx
-      ? '<span class="dyn-latest"><span class="dyn-new-tag">最新</span>'+escHtml(s.trim())+'</span>'
-      : escHtml(s.trim());
+      ? '<span class="dyn-latest"><span class="dyn-new-tag">最新</span>'+body+'</span>'
+      : body;
   }).join('；');
 }
 function getWebsiteCell(url) {
@@ -1185,7 +1190,7 @@ function renderLogList(id) {
         (isLatest ? '<span class="badge badge-latest">最新</span>' : '') +
         (l.auto ? '<span class="badge badge-auto">自动同步</span>' : '') +
       '</div>' +
-      '<div class="log-desc">'+String(l.desc).replace(/</g,'&lt;')+'</div>' +
+      '<div class="log-desc">'+String(l.desc).replace(/</g,'&lt;')+renderSource(l.url)+'</div>' +
       delBtn +
     '</div>';
   }).join('');
