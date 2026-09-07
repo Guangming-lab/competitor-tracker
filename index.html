@@ -589,6 +589,21 @@ function getPatentCell(company) {
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+function escAttr(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+// 解析动态文本中的来源链接：末尾「｜」+ http(s)://URL 视为来源（可选）
+function splitSource(text) {
+  var m = String(text).match(/(.+?)\s*[｜|]\s*(https?:\/\/[^\s；;]+)\s*$/);
+  if(m) return { desc: m[1].trim(), url: m[2].trim() };
+  return { desc: String(text).trim(), url: '' };
+}
+function renderSource(url) {
+  if(!url) return '';
+  var host = url.replace(/^https?:\/\//,'').replace(/\/$/,'');
+  try { host = new URL(url).host || host; } catch(e) {}
+  return ' <a href="'+escAttr(url)+'" target="_blank" rel="noopener" class="dyn-src" title="来源：'+escAttr(host)+'">来源</a>';
+}
 // 高亮「近期动态」中日期最新的一条
 function getDynamicsCell(c) {
   const raw = c.dynamics || '';
@@ -1091,14 +1106,16 @@ function parseDynamicsLogs(company) {
   return company.dynamics.split(/；|;/).map(function(s){ return s.trim(); })
     .filter(function(s){ return s.length > 0; })
     .map(function(s, i) {
-      var m = s.match(/^(\d{4})[.\-年](\d{1,2})/);
-      var date = '', desc = s;
+      var sp = splitSource(s);
+      var desc = sp.desc;
+      var m = desc.match(/^(\d{4})[.\-年](\d{1,2})/);
+      var date = '', d = desc;
       if(m) {
         date = m[1] + '-' + (m[2].length===1?'0'+m[2]:m[2]);
-        desc = s.slice(m[0].length).replace(/^[月\s]*/, '');
+        d = desc.slice(m[0].length).replace(/^[月\s]*/, '');
       }
       var ts = date ? new Date(date.split('-')[0] + '/' + date.split('-')[1] + '/01').getTime() : 0;
-      return { date: date || '时间未标注', type: guessLogType(desc), desc: desc, auto: true, ts: ts + i };
+      return { date: date || '时间未标注', type: guessLogType(d), desc: d, url: sp.url, auto: true, ts: ts + i };
     });
 }
 function getMergedLogs(id) {
