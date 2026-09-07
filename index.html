@@ -82,6 +82,23 @@
   #dataTable td:nth-child(1) { font-weight:600; color:var(--text-secondary); text-align:center; }
   #dataTable td:nth-child(2) { min-width:160px; }
 
+
+  /* ===== Product Tags ===== */
+  .tag-cell { cursor:pointer; }
+  .tag-cell:hover { background:var(--primary-light); }
+  .tag-chip { display:inline-block; padding:1px 6px; margin:1px 3px 1px 0; border-radius:4px; font-size:10px; line-height:1.6; background:var(--blue-bg); color:var(--blue); border:1px solid #c7dbff; white-space:nowrap; }
+  .tag-chip:nth-of-type(2) { background:var(--teal-bg); color:var(--teal); border-color:#b5ebd8; }
+  .tag-chip:nth-of-type(3) { background:var(--orange-bg); color:var(--orange); border-color:#ffd9b0; }
+  .tag-more { font-size:10px; color:var(--text-secondary); margin-left:2px; }
+  .tag-none { font-size:11px; color:var(--text-tertiary); }
+  .tag-tip { font-size:11px; color:var(--text-secondary); margin-bottom:14px; padding:8px 10px; background:#fffbe6; border-radius:6px; line-height:1.7; }
+  .tag-group { margin-bottom:14px; }
+  .tag-group-title { font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; padding-bottom:4px; border-bottom:1px solid var(--border); }
+  .tag-items { display:flex; flex-wrap:wrap; gap:6px; }
+  .tag-item { display:inline-flex; align-items:center; gap:5px; padding:5px 10px; border:1px solid var(--border-strong); border-radius:6px; font-size:12px; cursor:pointer; background:#fff; }
+  .tag-item:hover { border-color:var(--primary); background:var(--primary-light); }
+  .modal-actions { display:flex; justify-content:flex-end; gap:8px; padding:12px 20px; border-top:1px solid var(--border); }
+
   /* ===== Badges ===== */
   .badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; white-space:nowrap; line-height:1.5; }
   .badge-red { background:var(--red-bg); color:var(--red); }
@@ -259,6 +276,7 @@
         <th onclick="sortBy('tech')" style="width:120px" data-page-node-id="AY2b1aO0qBqWkj3Y1D2IXZ">核心技术<span class="sort-icon" data-page-node-id="YMgauIOBz0Ht7RY6307spd">▼</span></th>
         <th onclick="sortBy('listed')" style="width:60px" data-page-node-id="VroFaPc0CeASyQVVVnJhjL">上市<span class="sort-icon" data-page-node-id="UaplcvGdOBHJBkdg1mqtC0">▼</span></th>
         <th style="width:280px" data-page-node-id="YDVRxw29kOWLk3izy3F54k">代表产品</th>
+        <th style="width:200px">产品标签（点击可编辑）</th>
         <th onclick="sortBy('patents')" style="width:60px" data-page-node-id="WX3g0OtbK0SRsWZ6wMoi8F">专利<span class="sort-icon" data-page-node-id="TbMQZaDii9FvZNUILFY2lQ">▼</span></th>
         <th style="width:150px" data-page-node-id="1m925sAP4wIuW6R9Q6PVZH">应用领域</th>
         <th onclick="sortBy('threat')" style="width:60px" data-page-node-id="j5C6sxruaMY2gdYmUBWxPh">威胁<span class="sort-icon" data-page-node-id="ScFRsOMGwTZQ9xIcrqq89u">▼</span></th>
@@ -278,6 +296,24 @@
 <div class="footer" data-page-node-id="yQD6qFFhjgRKOgHfYGXdnY">
   <span data-page-node-id="M7TlYphVFlIXxpZdGBSIAK">提示：双击单元格可编辑 | 点击表头可排序 | 点击「日志」查看每周自动同步的竞品动态，也可手动补充</span>
   <span id="footerCount" data-page-node-id="UTVW3gbnxqxjijjf66JEEp"></span>
+</div>
+
+<!-- Tag Modal -->
+<div class="modal-overlay" id="tagModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="tagModalTitle">编辑产品标签</h2>
+      <button class="modal-close" onclick="closeTagModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tag-tip">标签依据各公司官网产品线整理。如发现与实际不符，可直接勾选修正 —— 修改仅保存在本机浏览器，会覆盖内置标签。</div>
+      <div id="tagEditList"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeTagModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveTags()">保存标签</button>
+    </div>
+  </div>
 </div>
 
 <!-- Log Modal -->
@@ -353,7 +389,7 @@
 const companies = [
   {id:1, name:"埃尔法(山东)仪器有限公司", location:"山东", relation:"直接竞品", tech:"激光TDLAS/激光遥测/物联网平台", listed:"否", products:"PPB天然气泄漏监测车A20/G20V、激光巡检车A10、巡检无人机U10/U20、PPB检测仪G20、乙烷辨识仪G10E、手持全量程检测仪C10、手持遥测仪L10(200m)、激光线式监测仪P10", patents:"32", fields:"燃气巡检、天然气管道、市政燃气", threat:"高", dynamics:"专注激光吸收光谱16年；量产型激光甲烷巡检无人机全球交付量第一(与DJI合作)；主编JJF(石化)078-2023激光甲烷遥测仪校准规范；累计巡检管道超10万公里；2026.08 密集中标华润系/大庆油田/重庆大学激光乙烷检测仪､无人机激光甲烷巡检仪､云台扫描式激光可燃气体探测器等项目；2026.08 中标深圳投资系统PPB级高精度燃气泄漏检测仪采购；2026.08 中标沈阳康平燃气车载顶置激光甲烷遥测仪(22.19万)、西藏公司激光甲烷检测仪、合肥合燃华润燃气2026-2029年度供应商、遂溪华润燃气等多个项目", website:"http://www.ailf.com.cn/", isMyCompany:false},
   {id:2, name:"安徽中科瀚海光电技术发展有限公司", location:"安徽", relation:"直接竞品", tech:"激光TDLAS/物联网平台", listed:"否", products:"点式激光甲烷探测器(无线/有线)、物联网激光气体泄漏监测仪(太阳能/紧凑型/不锈钢型)、煤矿瓦斯抽采激光监测系统", patents:"", fields:"市政燃气、煤矿瓦斯", threat:"高", dynamics:"专注激光吸收光谱气体检测，产品形态丰富，覆盖市政燃气和煤矿两大场景；2026年西安城市安全论坛展示物联网激光气体泄漏监测仪，核心技术评为\"国内领先、国际先进\"；2026.07 国科瀚海(集团)发布四足机器人一体化激光气体自主巡检方案，极限作业气体侦测机器人获雄安国际机器人大赛优秀奖，亮相工信部保安全促发展创新成果展；2026.08 长飞集团×国科瀚海达成深度战略合作", website:"http://www.hanhaigroup.cn/list-119-1.html", isMyCompany:false},
-  {id:3, name:"汉威科技集团股份有限公司", location:"河南郑州", relation:"直接竞品", tech:"激光TDLAS/激光遥测/电化学/红外NDIR/物联网平台", listed:"是", products:"LMS-8100激光甲烷模块、HRLD600手持遥测仪(150m)、XT-OPGD1000II开路探测器、LiGAS600激光气体分析仪、车载ppb级巡检系统、无人机激光遥测仪、云台扫描监测系统、气体探测激光器(CH4/C2H6/O2/H2S/HF/CO)", patents:"1251", fields:"工业安全、燃气、石油化工、环保监测", threat:"高", dynamics:"2025年激光甲烷模块国内出货量18.3%居首；LMS-8100中石化2025框架中标率63.2%；VCSEL国产化自供率78%；2025Q1 TDLAS营收同比+58.3%占传感器35.1%；2026.08发布HRLD600手持遥测仪和LiGAS600分析仪；2024年获国家制造业单项冠军；2026.02中标西安华润燃气手持激光甲烷遥距检测仪项目；2026.05中标宁波奉化华润兴光燃气厂站激光云台采购(40万)；2026.06中标安丘华润燃气手持式激光甲烷遥测仪采购；2026.07 发布LiGAS600激光气体分析仪；2026.08 参展MICONEX 2026合肥(第34届多国仪器仪表展)，展位A168，LiGAS600获十佳新品；2026.08 发布L4级自动驾驶智慧燃气巡检无人车并在天津滨海落地运营；2026.09 中标哈尔滨中庆燃气家用可燃气体探测器采购(960万)；2026.09 中标大连华润燃气手持检漏仪采购；2026.09 中标中石化南京工程公司项目；2026.09 中标中石化石油机械三机分公司项目；2026.09 中标合肥合燃华润2026-2029年度供应商(125.5万)；2026.09 中标新材料公司便携式检测仪五合一采购；2026半年报推出融合激光TDLAS+半导体的高可靠性矿用激光甲烷传感器；发布JT-KBA8电池款激光家用探测器", website:"http://www.hanwei.cn/", isMyCompany:false},
+  {id:3, name:"汉威科技集团股份有限公司", location:"河南郑州", relation:"直接竞品", tech:"激光TDLAS/激光遥测/电化学/红外NDIR/物联网平台", listed:"是", products:"LMS-8100激光甲烷模块、HRLD600手持遥测仪(150m)、XT-OPGD1000II开路探测器、LiGAS600激光气体分析仪、车载ppb级巡检系统、无人机激光遥测仪、云台扫描监测系统、气体探测激光器(CH4/C2H6/O2/H2S/HF/CO)、JT-KWA/KWD/JT-KWE激光家用可燃气体探测器(1653nm、TEC双向温控、±2%LEL、11s响应、10年寿命)、JT-KBA6红外家用探测器、FRLD200云台扫描式激光甲烷探测器、GTQ-WD6200固定式气体探测器、FD10火焰探测器", patents:"1251", fields:"工业安全、燃气、石油化工、环保监测", threat:"高", dynamics:"2025年激光甲烷模块国内出货量18.3%居首；LMS-8100中石化2025框架中标率63.2%；VCSEL国产化自供率78%；2025Q1 TDLAS营收同比+58.3%占传感器35.1%；2026.08发布HRLD600手持遥测仪和LiGAS600分析仪；2024年获国家制造业单项冠军；2026.02中标西安华润燃气手持激光甲烷遥距检测仪项目；2026.05中标宁波奉化华润兴光燃气厂站激光云台采购(40万)；2026.06中标安丘华润燃气手持式激光甲烷遥测仪采购；2026.07 发布LiGAS600激光气体分析仪；2026.08 参展MICONEX 2026合肥(第34届多国仪器仪表展)，展位A168，LiGAS600获十佳新品；2026.08 发布L4级自动驾驶智慧燃气巡检无人车并在天津滨海落地运营；2026.09 中标哈尔滨中庆燃气家用可燃气体探测器采购(960万)；2026.09 中标大连华润燃气手持检漏仪采购；2026.09 中标中石化南京工程公司项目；2026.09 中标中石化石油机械三机分公司项目；2026.09 中标合肥合燃华润2026-2029年度供应商(125.5万)；2026.09 中标新材料公司便携式检测仪五合一采购；2026半年报推出融合激光TDLAS+半导体的高可靠性矿用激光甲烷传感器；发布JT-KBA8电池款激光家用探测器", website:"http://www.hanwei.cn/", isMyCompany:false},
   {id:4, name:"青岛澳瑞德电子有限公司", location:"山东青岛", relation:"直接竞品", tech:"激光TDLAS", listed:"否", products:"ARD2000/ARD2100/ARD3000/ARD4000/ARD4100/ARD-MINI激光甲烷遥测仪、红外可燃气体探测器、有毒气体探测器", patents:"15+", fields:"市政燃气、石油化工、天然气", threat:"高", dynamics:"产品线覆盖200m/150m/120m多距离遥测；ARD4100续航12h+，IP68，0.05s响应；ARD3000新一代超高灵敏度；母公司澳波泰克安全设备；2026.01中标兖州华润燃气2026年激光甲烷检漏仪采购项目；2026.04中标贵州燃气集团习水县金桥燃气激光甲烷遥测仪采购(11.2万)；2026.07 授权实用新型专利'一种地埋式网管泄露检测装置'；2026.08 中标中国石化销售华南分公司在线可燃有毒气体检测器采购", website:"https://www.qdallred.com/", isMyCompany:false},
   {id:5, name:"大连易卓激光科技有限公司", location:"辽宁大连", relation:"直接竞品", tech:"激光遥测/激光TDLAS", listed:"否", products:"激光甲烷遥测仪YZ-RX-Pro、云台式激光甲烷探测器YZ-PTX-Opti、泵吸式激光气体检测仪YZ-PSX-T12", patents:"20", fields:"工业安全、甲烷检测、燃气巡检", threat:"高", dynamics:"产品线覆盖遥测、云台、泵吸多形态，大连本地激光气体检测核心厂商；国家级高新技术企业、国家级科技型中小企业；2025.06获得激光甲烷遥测仪(YZ-RX-Ultra)外观设计专利；新增痕量激光分析模块YZ-MP-T1/T12、激光遥测模块YZ-MR-Pro/Ultra、点式激光探头YZ-MF(S)-100L等产品线；提供OEM/ODM解决方案", website:"https://www.dlyizhuo.com/", isMyCompany:false},
   {id:6, name:"大连向量集传技术有限公司", location:"辽宁大连", relation:"直接竞品", tech:"激光TDLAS/激光遥测", listed:"否", products:"激光气体传感核心组件及整机产品", patents:"", fields:"天然气管道、油气田、燃气", threat:"高", dynamics:"大连本地激光光谱核心企业；客户含中石油、中海油、国家管网、新奥、港华、华润；入围能源一号网、长输管网；应用于中俄/中哈天然气管道；2026.06 中标泰州华润燃气管线及附属设施检漏(车检)业务外包；2026.06 中标广西平果广投燃气场站AI激光智能巡检平台(46.8万)；2026.08 新增中标/入围北京燃气集团高精准泄漏检测设备、东莞新奥PPB级激光巡检电动车采购；2026.08 中标合肥合燃华润燃气2026-2029年度燃气泄漏检测设备供应商；2026.08 中标大连市普兰店区老旧管网改造项目(235.38万)", website:"http://www.vectorset.cn/", isMyCompany:false},
@@ -372,7 +408,7 @@ const companies = [
   {id:19, name:"北京慧瀑泰智能科技有限公司", location:"北京", relation:"待评估", tech:"待调研（无官网）", listed:"否", products:"待调研", patents:"", fields:"待调研", threat:"未评估", dynamics:"网络搜索未找到该公司相关信息，疑似公司规模较小或名称有误，建议核对企业全称后再次尝试", website:"", isMyCompany:false},
   {id:20, name:"成都安可信电子股份有限公司", location:"四川成都", relation:"间接竞品", tech:"电化学/PID/其他", listed:"否", products:"泵吸式PID气体探测器、热裂解电化学探测器、燃气报警控制系统、智能调压器", patents:"", fields:"市政燃气、工业安全", threat:"中", dynamics:"2026.07热裂解电化学探测器获评四川首台套重大技术装备；产品通过SIL2认证；客户含中燃集团等17家市政燃气企业；未见激光产品线", website:"http://www.action98.com", isMyCompany:false},
   {id:21, name:"上海波汇科技股份有限公司", location:"上海", relation:"间接竞品", tech:"光纤传感", listed:"否", products:"光纤传感系列产品(测温/测振)", patents:"", fields:"光纤温度/振动监测", threat:"低", dynamics:"主营光纤传感技术(测温/测振)，非激光气体检测直接竞品；官网新闻更新至2022年", website:"http://www.bandweaver.cn/index.php", isMyCompany:false},
-  {id:22, name:"陕西大唐燃气安全科技股份有限公司", location:"陕西", relation:"间接竞品", tech:"燃气自闭阀/调压器为主，含激光式家用探测器", listed:"否", products:"管道燃气自闭阀、瓶装液化石油气调压器、城镇燃气调压器、物联网LPG瓶组供气柜、家用可燃气体探测器DT580（激光式）、工商业可燃气体报警控制系统", patents:"", fields:"户内燃气安全、城镇燃气、餐饮工商用气", threat:"低", dynamics:"待调研，从公司名称推测主营燃气安全产品；2007年成立，注册资金1.61亿，员工1000+，4万㎡科研场地；子公司大唐光电、北京城市云途安全科技；2026.07亮相燃气安全研讨会推冷阴极X光检测技术", website:"http://www.shanxidatang.cn/", isMyCompany:false},
+  {id:22, name:"陕西大唐燃气安全科技股份有限公司", location:"陕西", relation:"直接竞品", tech:"激光TDLAS（家用激光可燃气体探测器）+燃气自闭阀/调压器", listed:"否", products:"管道燃气自闭阀、瓶装液化石油气调压器、城镇燃气调压器、物联网LPG瓶组供气柜、家用可燃气体探测器DT580（激光式）、工商业可燃气体报警控制系统、JT-DT-YD4N02/DT580激光甲烷家用可燃气体探测器(TDLAS、功耗0.5W、寿命10年、Φ105×46mm、NB-IoT/4G Cat.1)", patents:"", fields:"户内燃气安全、城镇燃气、餐饮工商用气", threat:"高", dynamics:"待调研，从公司名称推测主营燃气安全产品；2007年成立，注册资金1.61亿，员工1000+，4万㎡科研场地；子公司大唐光电、北京城市云途安全科技；2026.07亮相燃气安全研讨会推冷阴极X光检测技术", website:"http://www.shanxidatang.cn/", isMyCompany:false},
   {id:23, name:"合肥朗伯光电传感技术有限公司", location:"安徽合肥", relation:"直接竞品", tech:"激光TDLAS/激光遥测", listed:"否", products:"便携式甲烷激光遥感探测仪", patents:"", fields:"燃气巡检、甲烷检测", threat:"高", dynamics:"联合中科院合肥物质科学研究院开发；检测距离100m(最远200m)，响应0.1秒，重量0.8kg；可便携/车载巡检；2024.11中标蚌埠市燃气安全数智化物联设施更新迭代项目；连续多年纳税人信用A级；拥有多项激光遥感探测仪专利", website:"http://www.lbhopes.com/products.asp", isMyCompany:false},
   {id:24, name:"天津市极光创新智能科技有限公司", location:"天津", relation:"直接竞品", tech:"激光TDLAS/物联网平台", listed:"否", products:"点式激光甲烷检测器、智能厂站平台", patents:"24", fields:"工业燃气、城市燃气、化工", threat:"中", dynamics:"2016年创立于美国休斯顿，2019年进入中国；天津总部+研发生产中心，团队30余人；2026.05 授权发明专利'一种激光甲烷检测器的光功率自适应调节方法及系统'；2026.07 中标沧州华润燃气厂站激光云台采购", website:"https://www.auroraiiot.com/", isMyCompany:false},
   {id:25, name:"浙江大华技术股份有限公司", location:"浙江杭州", relation:"间接竞品", tech:"视频监控/热成像", listed:"是", products:"视频监控设备、热成像产品", patents:"11000+", fields:"安防监控", threat:"低", dynamics:"以视频监控为核心，非激光气体检测直接竞品", website:"http://www.dahuatech.com/", isMyCompany:false},
@@ -382,11 +418,11 @@ const companies = [
   {id:29, name:"临沂市安福电子有限公司", location:"山东临沂", relation:"直接竞品", tech:"催化燃烧/电化学为主，含激光甲烷遥测产品线", listed:"否", products:"无人机载激光甲烷遥测仪、车载激光甲烷遥测仪、MLT5100便携式激光甲烷遥测仪、BTYQ系列便携式气体检测仪、GTYQ系列固定式探测器、ZBK气体报警控制器、家用气体报警器、燃气电磁阀", patents:"8+", fields:"燃气、石油化工、冶金焦化、制药、消防储运", threat:"中", dynamics:"待调研，建议核实公司主营业务及产品线；2000年成立，高新技术企业，专注安全监控20余年；电气火灾监控和消防电源监控为主业之一；2025年发布ESG报告", website:"http://www.zglyaf.com/", isMyCompany:false},
   {id:30, name:"深圳市诺安智能股份有限公司", location:"广东深圳", relation:"间接竞品", tech:"红外NDIR/电化学/PID/其他", listed:"否", products:"红外气体探测器(InfraSense-101/IR500系列)、PID光离子探测器、线型光束探测器XT-TDLScan200、气体报警控制器", patents:"220", fields:"石化、冶金、燃气、工业安全", threat:"中", dynamics:"220+项专利软著，参编多项国家标准；以红外NDIR和PID技术为主；XT-TDLScan200线型光束产品名称含TDL需进一步确认是否激光路线；2026年便携气体探测器新国标系列上市", website:"https://www.nuoan.com", isMyCompany:false},
   {id:31, name:"吉林省百瑞生科技发展有限公司", location:"吉林", relation:"间接竞品", tech:"管道声学及流体力学+物联网感知（非激光）", listed:"否", products:"管网哨兵系列（桩式/地面式/壁挂式燃气监测）、调压柜智能监测单元、家用可燃气体探测器JT-FG6010、援臂阀门执行器、昆仑石系列", patents:"100+", fields:"城市燃气管网、天然气调压站门站、地下密闭空间、末端用气场所", threat:"低", dynamics:"待调研，建议核实公司主营业务及产品线；国家级高新技术企业，国内少数研究管道声学及管道流体力学的机构；首创管网哨兵城市燃气全场景智能感知；研发生产基地2万㎡，5个实验室3个测试中心；员工120余人，研发30余人（研究生以上65%）；700+企业应用验证；2026.02举办十五周年年会", website:"http://www.barisetech.com/", isMyCompany:false},
-  {id:32, name:"威海市乐家电子科技有限公司", location:"山东威海", relation:"间接竞品", tech:"激光传感器（家用/工商业/船载/阀井）+传统气敏", listed:"否", products:"激光传感器系列（家用激光、工商业激光、船载激光、阀井激光）、市政燃气报警器、火焰探测报警器、电磁阀、燃气安全监管系统、城市生命线监管系统、环境监测产品", patents:"", fields:"城市燃气、石油石化、天然气、化工、钢铁、医药、家庭", threat:"中", dynamics:"待调研，建议核实公司主营业务及产品线；2008年成立，留学生企业、高新技术企业、省级专精特新；16年专注，2.5万㎡生产基地，年产200多万套，全国8大分公司3大生产基地；众多政府工程及事业单位指定供应商；2023年中标昆仑能源家用燃气报警器集采；专利零点漂移自修正", website:"https://www.e-alert.cn", isMyCompany:false},
+  {id:32, name:"威海市乐家电子科技有限公司", location:"山东威海", relation:"直接竞品", tech:"激光TDLAS（家用/工商业/船载/阀井激光传感器）+传统气敏", listed:"否", products:"激光传感器系列（家用激光、工商业激光、船载激光、阀井激光）、市政燃气报警器、火焰探测报警器、电磁阀、燃气安全监管系统、城市生命线监管系统、环境监测产品", patents:"", fields:"城市燃气、石油石化、天然气、化工、钢铁、医药、家庭", threat:"中", dynamics:"待调研，建议核实公司主营业务及产品线；2008年成立，留学生企业、高新技术企业、省级专精特新；16年专注，2.5万㎡生产基地，年产200多万套，全国8大分公司3大生产基地；众多政府工程及事业单位指定供应商；2023年中标昆仑能源家用燃气报警器集采；专利零点漂移自修正", website:"https://www.e-alert.cn", isMyCompany:false},
   {id:33, name:"杭州先锋电子技术股份有限公司", location:"浙江杭州", relation:"间接竞品", tech:"超声波/膜式燃气计量+智慧燃气平台（非激光）", listed:"是", products:"智能燃气表、超声波燃气表、无线远传膜式燃气表、智慧燃气解决方案与平台", patents:"", fields:"城市燃气计量、智慧燃气、燃气公司数字化", threat:"低", dynamics:"上市企业，待调研具体产品线及激光业务情况；杭州先锋电子（股票代码002767），2015年深交所上市；1991年成立，注册资金1.5亿，员工800余人，占地35亩；服务全国30多个省市、1200多家燃气公司、5000万台在线终端", website:"https://www.innover.com", isMyCompany:false},
   {id:34, name:"四川九门科技股份有限公司", location:"四川成都", relation:"间接竞品", tech:"物联网平台/SCADA", listed:"是", products:"云SCADA平台、GIS管网系统、巡检系统、多功能监控终端、阀井监控终端、调压器监控终端、智能差压式加臭机", patents:"100+", fields:"智慧燃气、智慧水务、管网信息化", threat:"低", dynamics:"2010年成立，新三板上市(871861)；国家级专精特新小巨人；聚焦智慧燃气软件平台和物联网终端；日处理数据逾1000万条；中标邵阳市天然气管网项目(2600万+)", website:"https://www.scadacc.com", isMyCompany:false},
   {id:35, name:"合肥科大立安安全技术有限责任公司", location:"安徽合肥", relation:"间接竞品", tech:"火灾探测/消防工程（辰安科技体系，非气体检测）", listed:"否", products:"线型光束感烟火灾探测器、图像型火灾探测器、消防工程与维保服务、智慧消防系统、智能消防栓", patents:"", fields:"消防、城市安全、隧道与大型公共建筑", threat:"低", dynamics:"待调研，科大系企业，建议核实消防/安全领域产品线；合肥科大立安，依托中科大火灾科学国家重点实验室，与清华合肥院深度合作；关联辰安科技（旗下有可燃气体智能监测仪，主攻城市生命线燃气专项）；经典案例含人民大会堂、中央电视台、水立方、国家大剧院", website:"https://www.kdlian.com", isMyCompany:false},
-  {id:36, name:"四川希尔得科技有限公司", location:"四川", relation:"间接竞品", tech:"催化燃烧/半导体/电化学（无激光产品线）", listed:"否", products:"GTY-SD2130等工商业点型气体探测器、气体报警控制器、家用可燃气体探测器（SD6106系列）、便携式探测器、燃气安全阀SD7701、慧厨卫士AI预警系统", patents:"66", fields:"工商业用气、家庭用气、城市地下管网、石油化工、市政", threat:"低", dynamics:"待调研，建议核实公司主营业务及产品线；2016年成立，注册资金3074万，厂区约7000㎡，年产能300万台；四川省专精特新中小企业、成都市企业技术中心；2023年获四方光电战略投资，收购四川萱源自控；入围华润、昆仑、中燃、新奥、深圳燃气等合格供应商；德国专利2项+国内专利66项、软著26项", website:"https://www.sc-shield.com/", isMyCompany:false},
+  {id:36, name:"四川希尔得科技有限公司", location:"四川", relation:"直接竞品", tech:"激光TDLAS（家用探测器可选激光式）+激光云台/遥测仪+催化燃烧/半导体/电化学", listed:"否", products:"GTY-SD2130等工商业点型气体探测器、气体报警控制器、家用可燃气体探测器（SD6106系列）、便携式探测器、燃气安全阀SD7701、慧厨卫士AI预警系统（SD6106系列家用探测器可选激光式、红外吸收式、半导体式、催化燃烧式）", patents:"66", fields:"工商业用气、家庭用气、城市地下管网、石油化工、市政", threat:"中", dynamics:"待调研，建议核实公司主营业务及产品线；2016年成立，注册资金3074万，厂区约7000㎡，年产能300万台；四川省专精特新中小企业、成都市企业技术中心；2023年获四方光电战略投资，收购四川萱源自控；入围华润、昆仑、中燃、新奥、深圳燃气等合格供应商；德国专利2项+国内专利66项、软著26项", website:"https://www.sc-shield.com/", isMyCompany:false},
   {id:37, name:"宝鸡科传传感器有限公司", location:"陕西宝鸡", relation:"待评估", tech:"传感器/物联网", listed:"否", products:"智能传感器(电化学/气体)、物联网终端产品", patents:"", fields:"工业监测、环境监测", threat:"未评估", dynamics:"网络搜索显示主营传感器、智能仪表及物联网解决方案，具备智能化传感器批量化生产能力(年产量60万套+)，未找到与激光气体检测直接相关的产品信息", website:"", isMyCompany:false},
   {id:38, name:"青岛积成电子股份有限公司", location:"山东青岛", relation:"间接竞品", tech:"超声波计量/燃气安全/物联网", listed:"是", products:"第三代超声波燃气表、燃气泄漏监测终端、R1000超声波水表、智慧燃气安全解决方案", patents:"128", fields:"智慧燃气、智慧水务、燃气安全", threat:"低", dynamics:"2026.03参展华为中国合作伙伴大会，联合华为打造智慧燃气安全一体化方案(融入鸿蒙生态)；2026.03发布第三代超声流量计量模组；2026.03获燃气检测设备专利；2026.06助力青岛能源集团发布\"青能e安\"燃气安全大模型；国家级专精特新小巨人", website:"https://www.qdies.com", isMyCompany:false},
   {id:39, name:"北京讯腾智慧科技股份有限公司", location:"北京", relation:"直接竞品", tech:"北斗高精准燃气泄漏检测+L4无人驾驶巡检车", listed:"否", products:"北斗高精准燃气泄漏检测系统、L4级智能无人驾驶燃气巡检车、时空大数据开发平台、城市安全源数据服务平台、北斗精准服务网", patents:"", fields:"城市燃气管网、城市安全、时空数据服务", threat:"中", dynamics:"待调研，建议核实公司主营业务及产品线；北京讯腾智慧科技（讯腾智科），2004年成立，国家级专精特新小巨人，自然资源部导航与位置服务重点实验室共建单位，设院士专家工作站（孙家栋、戚发轫等）；建成北斗基准站超3600座；31万GB北斗数据获双证；2026.06北斗精准服务赋能天津燃气安全治理", website:"https://www.cnten.com/", isMyCompany:false},
@@ -395,14 +431,14 @@ const companies = [
   {id:42, name:"明志消防", location:"待确认", relation:"间接竞品", tech:"火焰探测+可燃气体探测（地下井室款用TDLAS）", listed:"否", products:"红外/紫外火焰探测器（GW100IR2N、GW100IR3等）、火灾报警综合盘、可燃气体探测器与报警器、GDS气体检测报警系统、七氟丙烷灭火系统、地下空间物联网可燃气体检测设备（激光光谱TDLAS）", patents:"", fields:"石油化工、燃气、电力冶金、加油加气站、矿井、地下管廊与阀门井", threat:"低", dynamics:"济南明志消防科技有限公司，2012年成立，法定代表人史小燕；产品通过消防CCC认证与防爆合格证，ISO9001认证；旗下另有huozaitanceqi.com站点；激光TDLAS仅用于地下空间可燃气体检测一款产品", website:"http://www.aefire.com/products/113.html", isMyCompany:false},
   {id:43, name:"安赛科", location:"待确认", relation:"直接竞品", tech:"激光TDLAS（遥测仪+地下管井探测装置）", listed:"否", products:"激光甲烷遥测仪BT-ASL150（150m）/50m型、地下管井TDLAS探测装置、固定式气体探测器、可燃及有毒有害气体探测器、家用可燃气体探测器、气体监测报警控制系统", patents:"", fields:"燃气巡检、地下管井、工商业与家庭用气安全", threat:"中", dynamics:"山西安赛科安全技术有限公司，2014年成立；产品自主研发自主封测，硬件设计、软件算法到整机组装全链条自主可控；2026.05推出家用探测器JTM-AS04双气联防；2026.01推出工商业智能检测设备GTY-AS05X", website:"http://www.asec-china.com/", isMyCompany:false},
   {id:44, name:"逸云天（深圳市逸云天电子有限公司）", location:"广东深圳", relation:"间接竞品", tech:"电化学/红外NDIR/PID/DOAS/其他", listed:"否", products:"MS104K/MS400/MS500/MS600便携式气体检测仪、PTM600手提气体分析仪、MIC-300/MIC-500S/MIC-600固定式气体探测器、MIC2000气体报警控制器、DOAS2000/DOAS3000差分紫外光谱分析仪", patents:"71", fields:"石油化工、燃气、环保、冶金、消防", threat:"低", dynamics:"2006年成立，国家高新技术企业、深圳专精特新小巨人；可检测气体超500种；2026.05参展第五届长三角应急展，展示无线互联监测系统；与清华、西交大等14所高校合作；71项专利+27项软著", website:"https://www.yiyuntian.com/", isMyCompany:false},
-  {id:45, name:"中安探测", location:"待确认", relation:"直接竞品", tech:"催化燃烧/激光双传感器方案", listed:"否", products:"BT-S370阀门井可燃气体探测器（催化燃烧/激光双传感器，IP68，电池18个月）、加油站款探测器、气体报警控制器、可燃气体探测器全系列", patents:"", fields:"城市燃气阀门井、天然气管网阀室、石油化工储罐区、地下管廊、市政与供热管网", threat:"中", dynamics:"河南中安电子探测技术有限公司（中安探测）；BT-S370通过防爆CNEx22.2100X、消防CCC 2025081801001892、计量PA 2024C163-41；提供免费校准、终身维修、以旧换新、上门安装，支持OEM/ODM", website:"http://www.zatc-china.com/proinfo/269.html", isMyCompany:false},
+  {id:45, name:"中安探测", location:"待确认", relation:"直接竞品", tech:"催化燃烧/激光双传感器方案", listed:"否", products:"BT-S370阀门井可燃气体探测器（催化燃烧/激光双传感器，IP68，电池18个月）、加油站款探测器、气体报警控制器、可燃气体探测器全系列、S350KS开路式激光甲烷检测报警系统、S350AS便携式激光甲烷遥测仪、S350D电动车燃气巡检仪、S330F便携式乙烷辨识仪、S330T手推车燃气巡检仪、GT-QD6330双光源红外气体探测器、JT/JY-ZJ205家用燃气报警器(非激光)", patents:"", fields:"城市燃气阀门井、天然气管网阀室、石油化工储罐区、地下管廊、市政与供热管网", threat:"中", dynamics:"河南中安电子探测技术有限公司（中安探测）；BT-S370通过防爆CNEx22.2100X、消防CCC 2025081801001892、计量PA 2024C163-41；提供免费校准、终身维修、以旧换新、上门安装，支持OEM/ODM", website:"http://www.zatc-china.com/proinfo/269.html", isMyCompany:false},
   {id:46, name:"科雷特", location:"待确认", relation:"间接竞品", tech:"电化学/催化燃烧/其他", listed:"否", products:"家用可燃气体探测器、点型可燃/有毒气体探测器、便携式四合一气体检测仪、报警控制器", patents:"", fields:"工业安全、家用燃气", threat:"低", dynamics:"传统气体检测设备厂商，以电化学/催化燃烧技术为主，未见激光产品线；激光气体智能监测装置C0100（GTYQ-CO100，燃气阀井检测），工业用途；另有域名 greatopt.com", website:"http://www.co-light.net/list.asp?typeid=6&sortid=11", isMyCompany:false},
   {id:47, name:"唐山旭华智能科技有限公司", location:"河北唐山", relation:"直接竞品", tech:"激光TDLAS/物联网平台", listed:"否", products:"家用可燃气体探测器(第三代/激光)、气体监测终端(激光甲烷)、智能井盖监测终端、智能压力监测仪、城市生命线安全风险监测平台", patents:"33", fields:"燃气安全、城市生命线、智慧管网", threat:"中", dynamics:"2016年成立，河北省瞪羚企业、专精特新；第三代可燃气体探测器销量超20万台；年销售额超8000万；与唐山燃气、天津新兴燃气战略合作；激光甲烷传感器+多模态融合预警；续航3-5年；120+项知识产权；2026.01商标获\"河北省著名品牌\"称号；2025.10唐山劳动日报报道\"城市防护网\"守护万家平安；2025.09获省创新创业大赛二等奖；2026.05 授权发明专利'一种家用可燃气体探测器'；2026.06 授权发明专利'一种用于地下密闭空间可燃气体监测装置'；2026.07 发布可燃气体智能监测仪/燃气哨兵；2026.07 中标邯郸市永年区燃气阀门井气体检测设备采购及安装；2026.08 发布云台扫描式激光甲烷遥测仪等多款新产品；2026.08 发布基于TDLAS激光传感技术的燃气安全综合监测解决方案；2026.08 推出可燃气体监测仪(激光传感器,IP68防护,5年续航,多模态融合预警)", website:"https://www.sunvua.com/", isMyCompany:false},
   {id:48, name:"金卡智能集团股份有限公司", location:"浙江温州", relation:"直接竞品", tech:"激光TDLAS/物联网平台", listed:"是", products:"家用/工商业激光报警器(TDLAS)、密闭空间可燃气体检测仪、燃气多维数据采集器(扩散式激光甲烷)、超声燃气表、无线远传膜式燃气表", patents:"995", fields:"数字燃气、燃气安全、智慧家庭", threat:"中", dynamics:"2026.05激光报警器通过星闪认证(行业首个)，与上海海思合作；2026.07参展中燃协安全委大会，展示安全智慧厨房方案(量子加密+星闪+鸿蒙+AI)；2026.07中标杭州天然气2026-2028年物联网超声波燃气表采购(429.81万)；2026.05参展Enlit Africa 2026；四大场景：数字燃气/水务/能源/过程；哈萨克斯坦智能燃气表合同8.9亿元(2029年前交付)；布局氢能计量产品(制氢/掺氢/输氢/加注)；深度融合DeepSeek、通义千问AI大模型；2026.08 中标深圳能源燃气投资控股2026-2027年燃气表集中采购(2086.75万)；2026.07 参编两项可燃气体探测器强制性国标；2026.09 参展2026新燃气新智汇新业态展览(郑州,展位A07)；发布行业首款量子加密+星闪技术融合报警器(集成激光探测+星闪短距通讯+物联网远传)；2026半年报推出激光报警器/工业及商业用途点型可燃气体探测器/密闭空间可燃气体检测仪/燃气多维数据采集器等终端", website:"https://www.jinka.cn/", isMyCompany:false},
   {id:49, name:"北京光感慧智", location:"北京", relation:"直接竞品", tech:"激光TDLAS/物联网平台", listed:"否", products:"智能管网远程监测仪、激光甲烷检测仪", patents:"", fields:"燃气阀井、调压柜、地下空间", threat:"中", dynamics:"基于TDLAS技术，可测甲烷/温湿度/水位，支持NB-IoT/4G，抗结露抗水淹，适用于燃气阀井、调压柜等场景；北京市专精特新企业、国家高新技术企业；2026年产线扩建完成，交付能力提升；参与北京3.51亿元燃气改造项目；产品新增固定式激光气体分析仪3.0、探入式激光甲烷分析仪；核心团队自2006年深耕激光气体检测；2026.05 一种基于光波导的耐高温漫反射气体测量装置专利公开；参展江苏盛泽纺织机械及印花工业展览会；2026.07 白山市居民燃气管网智慧化安全监测项目中标候选人(第二名,1748.44万)；2026.07 公开发明专利《基于量子传感的激光雷达气体遥测系统》", website:"http://www.gghzlaser.com/", isMyCompany:false},
   {id:50, name:"深圳润越环保", location:"广东深圳", relation:"潜在竞争", tech:"激光TDLAS（遥测仪/开路式云台/线性光束）", listed:"否", products:"便携式激光甲烷遥测仪（TDLAS，0-100000ppm·m）、RY-JJY工业线性光束可燃气体探测器、开路式激光甲烷云台监测系统、VOCs与大气/水质在线监测产品", patents:"", fields:"天然气石油管道、城市管廊、环保在线监测、石化化工", threat:"低", dynamics:"待调研，建议核实公司主营业务及产品线；深圳市润越环保科技有限公司，2021年成立，注册资本10万元，微型民营企业；主业为环保物联网在线分析仪器（扬尘、VOCs、水质、油烟等），激光甲烷产品为延伸品类", website:"http://runyueep.com/product_view_712.html", isMyCompany:false},
   {id:51, name:"万宾科技", location:"福建厦门", relation:"直接竞品", tech:"激光TDLAS/物联网平台", listed:"否", products:"EN500-CG第四代可燃气体监测仪(TDLAS)、EN401-MG智能气体监测仪、智能井盖传感器EN100-C、智能水质监测仪EN400-WQ、燃气管网监测系统", patents:"40", fields:"城市生命线、燃气管网、地下管廊", threat:"中", dynamics:"中国首批城市生命线智能监测仪器提供商；EN500-CG采用TDLAS激光光谱吸收，对甲烷唯一选择性，4G/5G通信，IP68防护，超低功耗；EN401-MG集成激光甲烷传感+温湿度+水浸检测+BLE/NFC；2026.07成都燃气管网监测方案落地(ppm级激光泄漏监测+毫秒级压力感知)；推出燃气哨兵监测仪EN100-C-FG(TDLAS+三轴倾角监测0.01°分辨率)；2026.07岳阳燃气管网安全监测规模化部署；2026.08 福州城市生命线工程燃气管网监测设备规模化部署；第四代可燃气体监测仪EN500-CG迭代；2026.08 灵璧县城市生命线安全工程中标可燃气体智能监测仪674套(414.51万)；2026.06 东莞燃气安全一张网(激光监测+AI识别)；2026.04 参展第二届城市基础设施生命线大会(厦门)；2026.05 参展全国桥梁高峰论坛发布桥梁安全数智化新品", website:"https://www.witbee.cn/", isMyCompany:false},
-  {id:52, name:"优倍安", location:"待确认", relation:"直接竞品", tech:"激光TDLAS（手持/云台/巡检车全套）+传统气敏", listed:"否", products:"LGC-200手持激光燃气泄漏巡检仪（TDLAS 1654nm）、LGT-200智能云台式激光甲烷遥测仪（防爆+SIL2）、CC2100-PPD01燃气巡检车（TDLAS中红外+长光程吸收池，甲烷乙烷双组分区分天然气与沼气）、GRTU-2000阀门井燃气泄漏监测终端、GT-M100/M300点型探测器、B10/B30便携式检测仪、K100/K300/K600报警控制器、氧化锆与露点分析仪", patents:"", fields:"燃气巡检、城市生命线、电力电子冶金化工石油煤炭、消防医药科研", threat:"高", dynamics:"深圳市优倍安科技有限公司，位于深圳龙华区；2个生产基地，可检测500种气体，出口80多个国家和地区，1000+代理经销网点；客户含中石化、中石油、中国移动、华润燃气、中国中铁；连续五年通过五星级售后服务体系认证", website:"https://www.youbeian.net/product/265.html", isMyCompany:false},
+  {id:52, name:"优倍安", location:"待确认", relation:"直接竞品", tech:"激光TDLAS（手持/云台/巡检车全套）+传统气敏", listed:"否", products:"LGC-200手持激光燃气泄漏巡检仪（TDLAS 1654nm）、LGT-200智能云台式激光甲烷遥测仪（防爆+SIL2）、CC2100-PPD01燃气巡检车（TDLAS中红外+长光程吸收池，甲烷乙烷双组分区分天然气与沼气）、GRTU-2000阀门井燃气泄漏监测终端、GT-M100/M300点型探测器、B10/B30便携式检测仪、K100/K300/K600报警控制器、氧化锆与露点分析仪、GTY-HD3000/JT-HD3020/JT-HD3030家用可燃气体探测器(半导体气敏元件，非激光)、氧化锆与露点分析仪；系河南驰诚电气成员子公司", patents:"", fields:"燃气巡检、城市生命线、电力电子冶金化工石油煤炭、消防医药科研", threat:"高", dynamics:"深圳市优倍安科技有限公司，位于深圳龙华区；2个生产基地，可检测500种气体，出口80多个国家和地区，1000+代理经销网点；客户含中石化、中石油、中国移动、华润燃气、中国中铁；连续五年通过五星级售后服务体系认证", website:"https://www.youbeian.net/product/265.html", isMyCompany:false},
   {id:53, name:"重庆旭欧科技", location:"重庆", relation:"直接竞品", tech:"激光TDLAS（全系列遥测仪+埋地/井室监测）", listed:"否", products:"XO-HS1000/HS1200/SH3000/SH2000激光甲烷遥测仪、XO-HS1100手持式激光遥感甲烷检测仪、XO-HS2000开路式激光甲烷检测仪、XO-SH370埋地激光甲烷监测报警仪、XO-HS1606地下井室可燃气体监测终端（可选催化/半导体/激光/红外/PID）、XO-BT866场站巡检机器人、无线管网压力监测终端", patents:"", fields:"燃气管网巡检、阀门井与地下密闭空间、调压站门站、石油石化场站", threat:"中", dynamics:"待调研，建议核实公司主营业务及产品线；重庆旭欧科技有限公司，位于重庆市九龙坡区渝州路；激光甲烷产品线覆盖手持、便携、开路式、埋地、井室全形态；产品支持4G/5G/NB无线传输与GPS北斗定位，云平台监测", website:"http://www.xuouyiqi.com/", isMyCompany:false},
   {id:54, name:"合肥清芯传感科技有限公司", location:"安徽合肥", relation:"直接竞品", tech:"激光TDLAS/其他", listed:"否", products:"Q/N/H/G/Y系列激光甲烷传感器(QXCG100/102/103/104/105、H308/H408、N206/207/208/209、GJQ103)、激光气体传感芯片", patents:"28", fields:"地下空间、工商餐饮、家庭燃气、煤矿安全", threat:"高", dynamics:"2022年成立，清华合肥公共安全研究院支撑；专注激光气体传感芯片自主设计；累计出货近200万套，服务百余家客户；安徽省专精特新+首台套重大技术装备(国际先进)；2026.04深圳传感器展首发H408低功耗激光甲烷传感器(功耗直降超百倍)；2026.01获合肥工业精品称号；2026.06 发布智造硬核护航精益生产体系；2026.08参展MICONEX 2026(合肥)展示超低功耗传感器；2026.08新华社专题报道电池版激光家用可燃气体探测器和低功耗传感器；参编多项标准；承担两项国家重点研发计划专项；2026.05 中标湖北省城市生命线公司仓庚系列甲烷激光传感物资采购(与郑州炜盛电子联合中标)", website:"https://www.tsingsensor.com/", isMyCompany:false},
   {id:55, name:"山东微感光电子股份有限公司", location:"山东济南", relation:"直接竞品", tech:"激光TDLAS/激光遥测/光纤传感/其他", listed:"是", products:"GJGX100(M)-H3激光甲烷模块、MSP100J(M)-H激光甲烷模块、MSP1000CO激光CO模块、MSP100O2激光O2模块、激光乙烷/CO2传感器、便携式报警仪、光纤分布式传感系统", patents:"30+", fields:"矿山安全、燃气安全、工业制造、环境监测", threat:"高", dynamics:"2004年成立中英合资；2026.07正式挂牌新三板(微感股份875179)；矿山安全激光甲烷市占率前列；多波长自适应激光光谱技术；30+发明专利；国家级专精特新小巨人+制造业单项冠军；2026.07激光气体智能传感器模块入选\"泉城好品\"；2026.06参加中国油气田与长输管道无人场站建设技术交流会；2025.09参展SENSOR CHINA；2026.04参展深圳传感器展(低功耗激光甲烷)；2026.06参展德国纽伦堡SENSOR+TEST；2023-2024营收8053万→1.015亿，毛利率49.27%，净利润1450万；2026.04 太原煤炭展N203展位展示激光气体传感矩阵与矿山安全光纤传感解决方案；2026.06 山东省光学工程学会调研显示超低功耗激光甲烷传感器模块市占率70%+；2026.07 中标中石化安全工程研究院分布式热阻分析及动态响应标定系统采购；2026.07 参展中国油气田与长输管道无人场站建设技术交流会；2026.06 中标内蒙古智能煤炭分布式光纤温度在线监测系统(33.8万)；2026.07 龙煤鸡西矿业2026年省级煤矿安全改造补助项目第一批设备(34.59万部分)；2026.04 煤科院本安型激光甲烷传感器模块单一来源采购(567万)", website:"https://www.iss-ms.com/", isMyCompany:false},
@@ -420,7 +456,7 @@ const companies = [
   {id:67, name:"湖南星硕传感科技有限公司", location:"湖南长沙", relation:"潜在竞争", tech:"激光TDLAS（家用激光甲烷传感器模组）", listed:"待确认", products:"MGLH2184 家用激光甲烷传感器（TTL串口模组）", patents:"", fields:"家用燃气探测器核心器件", threat:"中", dynamics:"调研等级C（工业模组/激光传感）；甲烷CH4，TDLAS，量程ppm级，寿命≥10年，宽电压3.3–5V，TTL串口输出", website:"https://www.hnsensor.com.cn", isMyCompany:false},
   {id:68, name:"成都盛瑟传感技术有限公司", location:"四川成都", relation:"潜在竞争", tech:"激光TDLAS（点式激光甲烷传感器）", listed:"待确认", products:"点式激光甲烷传感器（模组）", patents:"", fields:"家用与工商业燃气探测器核心器件", threat:"中", dynamics:"调研等级C（工业模组/激光传感）；甲烷CH4，TDLAS，响应≤10s，IP68", website:"https://www.sensorcd.com", isMyCompany:false},
   {id:69, name:"江苏苏仪集团有限公司", location:"江苏", relation:"潜在竞争", tech:"激光TDLAS（工业整机与模组）", listed:"待确认", products:"固定式激光甲烷报警仪、激光甲烷遥测仪、GT-SY-2200 TTL激光模组", patents:"", fields:"煤矿、石化、场站", threat:"中", dynamics:"调研等级C（工业模组/激光传感）；激光甲烷产品为工业整机/模组，用于煤矿、石化、场站，无家用整机", website:"http://www.suyifenxi.com/", isMyCompany:false},
-  {id:70, name:"深圳市吉凯达科技有限公司", location:"广东深圳", relation:"间接竞品", tech:"激光TDLAS（工商业点型探测器）", listed:"待确认", products:"工商及商业用途点型激光甲烷探测器", patents:"", fields:"工商业用气安全", threat:"低", dynamics:"调研等级D（工业专用/无家用）；仅有工商业点型激光甲烷探测器，未发现家用激光产品", website:"http://www.jikaida.com", isMyCompany:false},
+  {id:70, name:"深圳市吉凯达科技有限公司", location:"广东深圳", relation:"直接竞品", tech:"激光TDLAS（JT-JKD-852-J家用激光探测器+工商业点型）", listed:"待确认", products:"工商及商业用途点型激光甲烷探测器、JT-JKD-852-J家庭激光式可燃气体探测器", patents:"", fields:"工商业用气安全", threat:"高", dynamics:"调研等级D（工业专用/无家用）；仅有工商业点型激光甲烷探测器，未发现家用激光产品", website:"http://www.jikaida.com", isMyCompany:false},
   {id:71, name:"北京雪迪龙科技股份有限公司", location:"北京", relation:"间接竞品", tech:"激光TDLAS（工业气体分析仪）", listed:"是", products:"MODEL 4030Ex 等工业TDLAS激光气体分析仪", patents:"", fields:"煤矿、工业过程、排放监测", threat:"低", dynamics:"调研等级D（工业专用/无家用）；仅工业TDLAS激光气体分析仪，用于煤矿、过程分析与排放监测，无家用产品；深交所上市（002658）", website:"https://www.chsdl.com", isMyCompany:false},
   {id:72, name:"河南卓安电子科技有限公司（卓安电子 ZADZ）", location:"河南郑州", relation:"直接竞品", tech:"激光TDLAS便携仪+多参数气体检测仪", listed:"否", products:"便携式激光甲烷检测报警仪（TDLAS，免校准，温度压力补偿）、单一/二合一/多参数（三~六合一）气体检测仪、矿用泵吸式多参数气体测定器、泵吸式与固定式气体探测器、固定式气体控制器", patents:"", fields:"冶金、煤矿井下、非煤矿山、石油化工、环保、市政", threat:"中", dynamics:"调研等级D（工业专用/无家用）；具体产品信息待补充；2018年成立，郑州高新区杜英街，注册资本1010万，员工26人，研发5-10人；产品取得防爆、煤安、矿安认证；便携式激光甲烷检测报警仪对甲烷具唯一选择性，不受水汽与交叉气体干扰", website:"http://www.zadz.net/", isMyCompany:false},
   {id:73, name:"北京凌天智能装备集团股份有限公司", location:"北京", relation:"直接竞品", tech:"激光遥测+智能无人装备（机器人/四足机器狗/无人机）", listed:"待确认", products:"激光甲烷遥测仪MLT5100（120米）、无人机载防爆激光遥测仪、AI防爆声学成像泄漏检测仪、防爆消防灭火侦察机器人、辅助侦察四足机器狗、多用途侦检无人机、有毒有害气体检测仪、多参数气体测定器CD4-4G/CD10A、激光远程位移监测仪、防爆双路无线激光倾角余震监测仪", patents:"", fields:"应急救援、消防、油气田与城市管网巡检、矿山煤矿、地震与隧道救援、防汛抢险、危化与辐射、行政执法", threat:"中", dynamics:"调研等级D（工业专用/无家用）；主营智能装备与应急救援，具体气体检测产品待补充；北京凌天智能装备集团股份有限公司，高新技术企业，具备知识产权与政府科研项目背景；2025.04发布无人机载防爆激光遥测仪（油气田到城市管网）；激光甲烷遥测仪MLT5100与临沂安福电子型号同名，疑为同一代工来源", website:"https://www.bjltsj.com/", isMyCompany:false},
@@ -589,6 +625,7 @@ function renderTable(data) {
       '<td class="product-text">'+(c.tech||'-')+'</td>' +
       '<td style="text-align:center">'+getListedBadge(c.listed)+'</td>' +
       '<td class="product-text" contenteditable="true">'+(c.products||'')+'</td>' +
+      '<td class="tag-cell" onclick="openTagModal('+c.id+')" title="点击编辑产品标签">'+getTagCell(c)+'</td>' +
       '<td style="text-align:center">'+getPatentCell(c)+'</td>' +
       '<td class="field-text" contenteditable="true">'+(c.fields||'')+'</td>' +
       '<td style="text-align:center">'+getThreatBadge(c.threat)+'</td>' +
@@ -621,58 +658,200 @@ function updateStats(data) {
   document.getElementById('statLogs').textContent = totalLogs;
 }
 
-// ===== PRODUCT CATEGORY FILTER =====
-const PRODUCT_CATEGORIES = [
-  {g:'激光气体检测 · 产品形态', items:[
-    {label:'家用激光可燃气体探测器', kw:['家用','报警器','报警仪','JT-','可燃气体探测器','独立式','住宅','厨房']},
-    {label:'手持/便携激光遥测仪', kw:['手持','便携','遥测仪','巡检仪','检漏仪','检测报警仪','手提','背负']},
-    {label:'云台/固定式激光遥测', kw:['云台','开路式','对射','扫描式','线型','线式','远距离','遥测装置','固定式激光']},
-    {label:'无人机载激光检测', kw:['无人机','机载','多旋翼','系留','机载遥测']},
-    {label:'车载/巡检车/机器人', kw:['车载','巡检车','检测车','巡逻车','无人车','顶置','车顶','巡检机器人','机器狗','机器人']},
-    {label:'阀门井/地下井室监测', kw:['阀门井','阀井','地下井','井室','地下空间','地下管','埋地','窨井','井盖','阀室']},
-    {label:'激光传感模组/芯片/传感器', kw:['模组','模块','芯片','敏感元件','激光器','传感芯片','探头','光源','传感器','核心组件','整机']},
-    {label:'乙烷/多组分/沼气辨识', kw:['乙烷','多组分','双组分','沼气','多气体','组分辨识','辨识']}
+
+// ===== 产品标签（逐家官网调研标注，key=公司id，值=标签码数组） =====
+const TAG_DEFS = [
+  {g:'A · 家用与工商用气安全', items:[
+    {k:'A1', n:'家用激光可燃气体探测器'},
+    {k:'A2', n:'家用非激光报警器'},
+    {k:'A3', n:'工商业点型可燃气体探测器'},
+    {k:'A4', n:'燃气切断阀/自闭阀/调压器'}
   ]},
-  {g:'其他检测技术', items:[
-    {label:'工业点式/固定式气体探测', kw:['点式','点型','变送器','气体探测器','气体检测仪','固定式气体','有毒气体','可燃气体探测器','报警控制器','气体报警','工商业']},
-    {label:'红外NDIR/催化燃烧/半导体', kw:['NDIR','红外','催化燃烧','半导体','电化学','PID','热导','催化']},
-    {label:'CEMS/环保温室气体监测', kw:['CEMS','烟气','温室气体','排放','VOC','碳监测','扬尘','空气质量','大气']},
-    {label:'火焰探测/火灾报警', kw:['火焰','火灾','烟感','温感','消防报警','消防设备']},
-    {label:'光纤/声波/声学泄漏检测', kw:['光纤','声波','声学','超声','听漏','管道声学','振动']},
-    {label:'煤矿/矿山安全监测', kw:['矿用','矿山','煤矿','瓦斯','矿井','井下','非煤矿']},
-    {label:'安防视频/热成像', kw:['视频监控','热成像','摄像机','成像','安防']}
+  {g:'B · 激光泄漏巡检（移动式）', items:[
+    {k:'B1', n:'手持/便携激光遥测仪'},
+    {k:'B2', n:'云台式激光遥测'},
+    {k:'B3', n:'开路式/线型光束激光遥测'},
+    {k:'B4', n:'无人机载激光检测'},
+    {k:'B5', n:'车载/巡检车激光检测'},
+    {k:'B6', n:'机器人/机器狗搭载检测'},
+    {k:'B7', n:'手推车/背包式巡检仪'}
   ]},
-  {g:'周边与系统', items:[
-    {label:'燃气表/计量仪表', kw:['燃气表','流量计','计量表','膜式','超声波表','计量']},
-    {label:'监测平台/城市生命线', kw:['平台','城市生命线','监测平台','智慧燃气','物联网平台','软件','大模型','系统解决方案','管网监测','信息化','解决方案']}
+  {g:'C · 地下与固定监测', items:[
+    {k:'C1', n:'阀门井/地下井室监测'},
+    {k:'C2', n:'埋地管道/管网在线监测'},
+    {k:'C3', n:'固定式点型激光探测器'},
+    {k:'C4', n:'激光气体分析仪（过程/在线）'},
+    {k:'C5', n:'场站/调压柜/厂界监测'}
+  ]},
+  {g:'D · 核心器件与传感', items:[
+    {k:'D1', n:'激光甲烷传感模组/芯片'},
+    {k:'D2', n:'激光乙烷/多组分/沼气辨识'},
+    {k:'D3', n:'矿用激光甲烷传感器'},
+    {k:'D4', n:'温室气体/CRDS/光腔监测'},
+    {k:'D5', n:'其他气体传感器（CO/O2/H2S等）'}
+  ]},
+  {g:'E · 其他技术路线', items:[
+    {k:'E1', n:'红外NDIR气体探测器'},
+    {k:'E2', n:'催化燃烧/半导体/电化学'},
+    {k:'E3', n:'PID光离子探测器'},
+    {k:'E4', n:'火焰探测器'},
+    {k:'E5', n:'CEMS/烟气/VOCs在线监测'},
+    {k:'E6', n:'光纤传感/声波声学检测'}
+  ]},
+  {g:'F · 计量、平台与其他', items:[
+    {k:'F1', n:'燃气表/流量计/计量'},
+    {k:'F2', n:'智慧燃气平台/城市生命线'},
+    {k:'F3', n:'安防视频/热成像/气体成像'},
+    {k:'F4', n:'消防报警系统'},
+    {k:'F5', n:'激光雷达/测绘'}
   ]}
 ];
-function productMatchText(c) {
-  return ((c.products||'') + ' ' + (c.fields||'') + ' ' + (c.tech||'')).toLowerCase();
+const productTags = {
+  56:["A1"],
+  1:["B1","B3","B4","B5","D2"],
+  2:["C3","C2","D3","F2"],
+  3:["A1","A2","B1","B2","B3","B4","B5","C3","C4","D1","D5","E1","E2","F2"],
+  4:["B1","E1","C3"],
+  5:["B1","B2","C3"],
+  6:["D1"],
+  7:["B1","B4"],
+  8:["D3","B3","B1"],
+  9:["B1","C3","B3","D5"],
+  10:["F5","D1"],
+  11:["F3"],
+  12:["F2"],
+  13:["F1","B6","F2"],
+  14:["C3","B2","B1","A2","A4","E1","E2","E6"],
+  15:["B2","C3","E6","E4"],
+  16:["B5","B4","B7","D4","B1","D2","B2","C1"],
+  17:["B1","B2","C4"],
+  18:["A1"],
+  20:["E3","E2","F2","A4"],
+  21:["E6"],
+  22:["A1","A2","A3","A4","F2"],
+  23:["B1"],
+  24:["C3","F2"],
+  25:["F3"],
+  27:["C3","E4"],
+  28:["B5","B4","B1","D2"],
+  29:["B4","B5","B1","C3","A2","A4"],
+  30:["E1","E3","B3","C3"],
+  31:["C2","A2","A4","C5"],
+  32:["A1","A3","C1","E4","A4","F2","E2"],
+  33:["F1","F2"],
+  34:["F2","C1"],
+  35:["E4","F4"],
+  36:["A3","A1","A2","B1","A4","F2"],
+  37:["E2","D5"],
+  38:["F1","C2","F2"],
+  39:["C2","B5","F2"],
+  40:["F1","C1","A3","F2"],
+  41:["E4","F4","B6"],
+  42:["E4","C3","C1","F4"],
+  43:["B1","C1","C3","A2","F2"],
+  44:["B1","C3","C4","E2"],
+  45:["C1","B1","B3","B5","B7","D2","E1","A2","C3"],
+  46:["A2","C3","B1","F2"],
+  47:["A1","C2","F2"],
+  48:["A1","A3","C1","F1","C2"],
+  49:["C2","B1","C1","C5"],
+  50:["B1","B3","B2","E5"],
+  51:["C2","C1","F2","D5"],
+  52:["B1","B2","B5","D2","C1","C3","A2","C4"],
+  53:["B1","B3","C2","C1","B6"],
+  54:["D1","D5"],
+  55:["D1","D3","D5","D2","B1","E6"],
+  57:["A1"],
+  58:["A1"],
+  59:["A1","D5"],
+  60:["A1"],
+  61:["A1"],
+  62:["A1"],
+  63:["A1","F4"],
+  64:["A1","F4"],
+  65:["A2","A1"],
+  66:["D1"],
+  67:["D1","A1"],
+  68:["D1"],
+  69:["C3","B1","D1"],
+  70:["A3","A1"],
+  71:["C4","E5"],
+  72:["B1","D3","C3","D5"],
+  73:["B1","B4","B6","E6","D5"],
+  74:["E6"],
+  75:["E4","C3","F4","E2"],
+  76:["E5","D4"],
+  77:["B1","B2","C1","E4","A2","A3","B7"],
+  80:["D3","F2"],
+  81:["D3","B1"],
+  82:["E6","E4","F2"],
+  83:["B1","B2","B5"],
+  84:["B1","C4"]
+};
+
+// ===== PRODUCT TAG FILTER =====
+function getTagOverride() { try { return JSON.parse(localStorage.getItem('competitorTagOverrides') || '{}'); } catch(e) { return {}; } }
+function getTags(c) {
+  const ov = getTagOverride();
+  if (ov[c.id] !== undefined) return ov[c.id];
+  return productTags[c.id] || [];
 }
-function findProductCat(label) {
-  for(const g of PRODUCT_CATEGORIES) {
-    const it = g.items.find(i => i.label === label);
-    if(it) return it.kw;
-  }
-  return null;
-}
+function tagName(k) { for(const g of TAG_DEFS){ const it = g.items.find(i => i.k === k); if(it) return it.n; } return k; }
 function initProductFilter() {
   const sel = document.getElementById('filterProduct');
   if(!sel) return;
-  PRODUCT_CATEGORIES.forEach(g => {
+  const keep = sel.value;
+  sel.innerHTML = '<option value="">全部产品标签</option>';
+  TAG_DEFS.forEach(g => {
     const og = document.createElement('optgroup');
     og.label = g.g;
     g.items.forEach(it => {
-      const n = companies.filter(c => it.kw.some(k => productMatchText(c).includes(k.toLowerCase()))).length;
+      const n = companies.filter(c => !c.isMyCompany && getTags(c).includes(it.k)).length;
       if(!n) return;
       const o = document.createElement('option');
-      o.value = it.label;
-      o.textContent = it.label + ' (' + n + ')';
+      o.value = it.k;
+      o.textContent = it.n + ' (' + n + ')';
       og.appendChild(o);
     });
     if(og.children.length) sel.appendChild(og);
   });
+  if(keep) sel.value = keep;
+}
+function getTagCell(c) {
+  const ts = getTags(c);
+  if(!ts.length) return '<span class="tag-none">未标注</span>';
+  const show = ts.slice(0,3).map(t => '<span class="tag-chip">' + tagName(t) + '</span>').join('');
+  return show + (ts.length > 3 ? '<span class="tag-more">+' + (ts.length - 3) + '</span>' : '');
+}
+// ===== 标签编辑弹窗 =====
+let currentTagCompanyId = null;
+function openTagModal(id) {
+  currentTagCompanyId = id;
+  const c = companies.find(x => x.id === id);
+  document.getElementById('tagModalTitle').textContent = c.name + ' · 产品标签';
+  const cur = getTags(c);
+  let h = '';
+  TAG_DEFS.forEach(g => {
+    h += '<div class="tag-group"><div class="tag-group-title">' + g.g + '</div><div class="tag-items">' +
+      g.items.map(it => '<label class="tag-item"><input type="checkbox" value="' + it.k + '"' + (cur.includes(it.k) ? ' checked' : '') + '><span>' + it.n + '</span></label>').join('') +
+      '</div></div>';
+  });
+  document.getElementById('tagEditList').innerHTML = h;
+  document.getElementById('tagModal').classList.add('show');
+}
+function closeTagModal() {
+  document.getElementById('tagModal').classList.remove('show');
+  currentTagCompanyId = null;
+}
+function saveTags() {
+  if(currentTagCompanyId === null) return;
+  const vals = Array.from(document.querySelectorAll('#tagEditList input[type=checkbox]:checked')).map(b => b.value);
+  const ov = getTagOverride();
+  ov[currentTagCompanyId] = vals;
+  localStorage.setItem('competitorTagOverrides', JSON.stringify(ov));
+  closeTagModal();
+  initProductFilter();
+  applyFilters();
 }
 
 // ===== FILTERS =====
@@ -691,11 +870,10 @@ function applyFilters() {
   const fRel = document.getElementById('filterRelation').value;
   const fTech = document.getElementById('filterTech').value;
   const fProd = document.getElementById('filterProduct').value;
-  const prodKw = fProd ? findProductCat(fProd) : null;
 
   let filtered = companies.filter(c => {
     if(search) {
-      const text = (c.name+c.tech+c.products+c.fields+c.dynamics+c.location).toLowerCase();
+      const text = (c.name+c.tech+c.products+c.fields+c.dynamics+c.location+' '+getTags(c).map(tagName).join(' ')).toLowerCase();
       if(!text.includes(search)) return false;
     }
     if(fLoc && c.location !== fLoc) return false;
@@ -704,10 +882,7 @@ function applyFilters() {
     if(fThreat && c.threat !== fThreat) return false;
     if(fRel && c.relation !== fRel) return false;
     if(fTech && !(c.tech && c.tech.includes(fTech))) return false;
-    if(prodKw) {
-      const pt = productMatchText(c);
-      if(!prodKw.some(k => pt.includes(k.toLowerCase()))) return false;
-    }
+    if(fProd && !getTags(c).includes(fProd)) return false;
     return true;
   });
   renderTable(filtered);
@@ -1021,8 +1196,11 @@ document.getElementById('logModal').addEventListener('click', function(e) {
 document.getElementById('patentModal').addEventListener('click', function(e) {
   if(e.target === this) closePatentModal();
 });
+document.getElementById('tagModal').addEventListener('click', function(e) {
+  if(e.target === this) closeTagModal();
+});
 document.addEventListener('keydown', function(e) {
-  if(e.key === 'Escape') { closeLogModal(); closePatentModal(); }
+  if(e.key === 'Escape') { closeLogModal(); closePatentModal(); closeTagModal(); }
 });
 </script>
 </body>
