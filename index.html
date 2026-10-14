@@ -315,32 +315,15 @@
   #tagModal .modal { max-width:900px; }
   #tagModal .modal-body { max-height:70vh; }
 
-  /* ===== 产品品类管理弹窗（独立密码） ===== */
-  #categoryModal .modal { max-width:840px; }
-  #categoryModal .modal-body { max-height:72vh; }
+  /* ===== 标签编辑弹窗密码门（独立密码） ===== */
   .cat-pwd-box { max-width:380px; margin:14px auto 4px; text-align:center; }
   .cat-pwd-icon { font-size:34px; margin-bottom:10px; }
   .cat-pwd-tip { font-size:13px; color:var(--text-secondary); margin-bottom:18px; line-height:1.7; }
-  #catPwdInput { width:100%; padding:11px 14px; border:1px solid var(--border-strong); border-radius:10px; font-size:15px; outline:none; margin-bottom:12px; background:#fff; color:var(--text); }
-  #catPwdInput:focus { border-color:var(--primary); box-shadow:var(--ring); }
+  #tagPwdInput { width:100%; padding:11px 14px; border:1px solid var(--border-strong); border-radius:10px; font-size:15px; outline:none; margin-bottom:12px; background:#fff; color:var(--text); }
+  #tagPwdInput:focus { border-color:var(--primary); box-shadow:var(--ring); }
   .cat-pwd-error { display:none; color:var(--red); font-size:12px; margin-bottom:10px; }
   .cat-pwd-error.show { display:block; }
   .cat-pwd-box .btn { width:100%; margin-bottom:8px; }
-  .cat-tip { font-size:12px; color:var(--text-secondary); margin-bottom:12px; line-height:1.7; }
-  .cat-group-block { border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-bottom:14px; background:#fbfdff; }
-  .cat-group-head { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
-  .cat-group-title-input { flex:1; font-size:14px; font-weight:700; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px; outline:none; background:#fff; color:var(--text); }
-  .cat-group-title-input:focus { border-color:var(--primary); box-shadow:var(--ring); }
-  .cat-group-del { background:none; border:1px solid rgba(220,38,38,0.3); color:var(--red); border-radius:7px; cursor:pointer; padding:6px 10px; font-size:12px; flex-shrink:0; }
-  .cat-group-del:hover { background:rgba(220,38,38,0.1); }
-  .cat-item-row { display:flex; gap:8px; align-items:center; margin-bottom:7px; padding:6px 8px; background:#fff; border:1px solid var(--border); border-radius:8px; }
-  .cat-item-key { font-family:var(--mono); font-size:12px; color:var(--text-tertiary); width:46px; flex-shrink:0; }
-  .cat-name-input { flex:1.15; padding:6px 9px; border:1px solid var(--border-strong); border-radius:7px; font-size:13px; outline:none; background:#fff; color:var(--text); }
-  .cat-name-input:focus { border-color:var(--primary); box-shadow:var(--ring); }
-  .cat-attr-input { flex:1.5; padding:6px 9px; border:1px solid var(--border-strong); border-radius:7px; font-size:12px; outline:none; color:var(--text-secondary); background:#fff; }
-  .cat-attr-input:focus { border-color:var(--primary); box-shadow:var(--ring); }
-  .cat-del-btn { background:none; border:1px solid rgba(220,38,38,0.3); color:var(--red); border-radius:7px; cursor:pointer; padding:5px 8px; font-size:12px; flex-shrink:0; }
-  .cat-del-btn:hover { background:rgba(220,38,38,0.1); }
   .modal-header { padding:18px 24px; border-bottom:1px solid rgba(6,182,212,0.22); display:flex; justify-content:space-between; align-items:center; background:linear-gradient(120deg, #f0f8ff, #e2efff); border-radius:14px 14px 0 0; position:relative; }
   .modal-header::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:linear-gradient(90deg,transparent,rgba(6,182,212,0.8),transparent); box-shadow:0 0 12px rgba(6,182,212,0.4); }
   .modal-header h2 { font-size:17px; font-weight:700; color:#0f1f3a; letter-spacing:0.5px; }
@@ -459,7 +442,7 @@
   <div class="header-top" data-page-node-id="XdKm7RtQ0C8KSi562nrh91">
     <div data-page-node-id="bTGRBLxepHSfVt3av6Sro5">
       <h1 data-page-node-id="T5CSkQCtk2kHaw3fkioQrg">激光气体检测行业 · 竞品跟踪库</h1>
-      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-14 14:50 ｜ 版本 v11 ｜ 正在统计…</div>
+      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-14 15:16 ｜ 版本 v12 ｜ 正在统计…</div>
     </div>
     <div style="display:flex; gap:8px; align-items:center;" data-page-node-id="CzYOWNHJSKetGCmayk28y4">
       <button class="logout-btn" onclick="doLogout()" data-page-node-id="ab3Z87hfR7JOshPUEpKXhw">退出登录</button>
@@ -486,7 +469,6 @@
   <select id="filterProduct" onchange="applyFilters()"><option value="">全部产品种类</option></select>
   <button class="btn btn-outline btn-xs" onclick="resetFilters()" title="清除所有筛选条件">重置</button>
   <div class="spacer" data-page-node-id="qr2oyO9GuhVxUCbTwgx9xi"></div>
-  <button class="btn btn-outline" onclick="openCategoryModal()" title="编辑产品品类库（需独立密码）">品类管理</button>
   <button class="btn btn-outline" onclick="exportCSV()" data-page-node-id="zJRWTkBPISfSIhI7jj1bG1">导出 CSV</button>
   <button class="btn btn-success" onclick="addRow()" data-page-node-id="eLGXrK4kavmZ7LzQWbpK6y">+ 添加竞品</button>
 </div>
@@ -528,52 +510,33 @@
   <span id="footerCount" data-page-node-id="UTVW3gbnxqxjijjf66JEEp"></span>
 </div>
 
-<!-- Tag Modal -->
+<!-- Tag Modal（每家公司产品种类标签，独立密码保护） -->
 <div class="modal-overlay" id="tagModal">
   <div class="modal">
     <div class="modal-header">
       <h2 id="tagModalTitle">编辑产品种类标签</h2>
       <button class="modal-close" onclick="closeTagModal()">✕</button>
     </div>
-    <div class="modal-body">
-      <div class="tag-tip">标签依据各公司官网产品中心逐家核对整理（2026-09-07 全量核实一轮）。一家公司有几种产品就打几个标签，如与实际不符可直接勾选修正 —— 修改仅保存在本机浏览器，会覆盖内置标签。</div>
+    <div class="modal-body" id="tagPwdLayer">
+      <div class="cat-pwd-box">
+        <div class="cat-pwd-icon">锁</div>
+        <p class="cat-pwd-tip">编辑该公司产品种类标签需输入独立密码（与页面登录密码不同）。</p>
+        <input type="password" id="tagPwdInput" placeholder="请输入标签编辑密码" autocomplete="off" onkeydown="if(event.key==='Enter')verifyTagPwd()">
+        <div class="cat-pwd-error" id="tagPwdError">密码错误，请重试</div>
+        <button class="btn btn-primary" onclick="verifyTagPwd()">确认并进入</button>
+        <button class="btn btn-outline" onclick="closeTagModal()">取消</button>
+      </div>
+    </div>
+    <div class="modal-body" id="tagEditLayer" style="display:none;">
       <div id="tagEditList"></div>
     </div>
-    <div class="modal-actions">
+    <div class="modal-actions" id="tagEditActions" style="display:none;">
       <button class="btn btn-outline" onclick="closeTagModal()">取消</button>
       <button class="btn btn-primary" onclick="saveTags()">保存种类标签</button>
     </div>
   </div>
 </div>
 
-<!-- 产品品类管理弹窗（独立密码） -->
-<div class="modal-overlay" id="categoryModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="catModalTitle">产品品类管理</h2>
-      <button class="modal-close" onclick="closeCategoryModal()">✕</button>
-    </div>
-    <div class="modal-body" id="catPwdLayer">
-      <div class="cat-pwd-box">
-        <div class="cat-pwd-icon">锁</div>
-        <p class="cat-pwd-tip">编辑产品品类库需输入独立管理密码（与页面登录密码不同）。</p>
-        <input type="password" id="catPwdInput" placeholder="请输入品类管理密码" autocomplete="off" onkeydown="if(event.key==='Enter')verifyCatPwd()">
-        <div class="cat-pwd-error" id="catPwdError">密码错误，请重试</div>
-        <button class="btn btn-primary" onclick="verifyCatPwd()">确认并进入</button>
-        <button class="btn btn-outline" onclick="closeCategoryModal()">取消</button>
-      </div>
-    </div>
-    <div class="modal-body" id="catEditLayer" style="display:none;">
-      <div class="cat-tip">编辑品类名称、为品类补充属性说明，或新增/删除品类与分组。保存后全表筛选即时生效，仅保存在本机浏览器。</div>
-      <div id="catGroupList"></div>
-      <button class="btn btn-outline btn-sm" onclick="addCatGroup()">＋ 新增分组</button>
-    </div>
-    <div class="modal-actions" id="catEditActions" style="display:none;">
-      <button class="btn btn-outline" onclick="closeCategoryModal()">取消</button>
-      <button class="btn btn-primary" onclick="saveCategoryDefs()">保存品类库</button>
-    </div>
-  </div>
-</div>
 
 <!-- Log Modal -->
 <div class="modal-overlay" id="logModal" data-page-node-id="u0naUXCSdhEcj2Ea4N2DIC">
@@ -1012,34 +975,7 @@ function updateStats(data) {
 // ===== 产品标签（逐家官网调研标注，key=公司id，值=标签码数组） =====
 // ===== 产品标签：三层体系（大组 > 品类 > 细分子类），key=公司id，值=标签码数组 =====
 // ===== 产品种类标签（key=公司id，值=种类码数组；一家公司有几种产品就打几个标签，筛选任一种类均可命中） =====
-// 产品品类库管理密码（与登录密码 admin/aico2026 独立）
-const CATEGORY_EDIT_PASSWORD = 'cat2026';
-// 品类库可被本机覆盖：localStorage key competitorTagDefsOverride
-let _catDefsCache = null;
-function normalizeTagDefs(defs) {
-  const used = {};
-  return (defs || []).map(function(g){
-    let code = (g.code || (g.g || 'G').trim().charAt(0) || 'G').toUpperCase();
-    let c = code;
-    while(used[c]) { c = String.fromCharCode(c.charCodeAt(0) + 1); }
-    used[c] = true;
-    return {
-      code: c,
-      g: g.g || c,
-      items: (g.items || []).map(function(it){ return { k: it.k, n: it.n, a: it.a || '' }; })
-    };
-  });
-}
-function setTagDefsCache(v) { _catDefsCache = v; }
-function getTagDefs() {
-  if(_catDefsCache) return _catDefsCache;
-  try {
-    const raw = localStorage.getItem('competitorTagDefsOverride');
-    if(raw) { const v = JSON.parse(raw); if(Array.isArray(v) && v.length) { _catDefsCache = normalizeTagDefs(v); return _catDefsCache; } }
-  } catch(e) {}
-  _catDefsCache = normalizeTagDefs(TAG_DEFS);
-  return _catDefsCache;
-}
+
 
 const TAG_DEFS = [
   {g:'A · 家用与工商用气安全', items:[
@@ -1192,11 +1128,11 @@ function getTags(c) {
   const v = getTagOverride()[c.id];
   let arr = (v !== undefined) ? (Array.isArray(v) ? v : (v.t || [])) : (productTags[c.id] || []);
   const valid = {};
-  getTagDefs().forEach(function(g){ g.items.forEach(function(it){ valid[it.k] = true; }); });
+  TAG_DEFS.forEach(function(g){ g.items.forEach(function(it){ valid[it.k] = true; }); });
   return arr.filter(function(k){ return valid[k]; });
 }
 function tagInfo(k) {
-  for(const g of getTagDefs()){
+  for(const g of TAG_DEFS){
     const it = g.items.find(i => i.k === k);
     if(it) return {n:it.n, g:g.g};
   }
@@ -1211,7 +1147,7 @@ function initProductFilter() {
   if(!sel) return;
   const keep = sel.value;
   sel.innerHTML = '<option value="">全部产品种类</option>';
-  getTagDefs().forEach(g => {
+  TAG_DEFS.forEach(g => {
     const og = document.createElement('optgroup');
     og.label = g.g;
     g.items.forEach(it => {
@@ -1242,23 +1178,53 @@ function getTagCell(c) {
   if(ts.length > 5) h += '<span class="tag-more" title="' + ts.slice(5).map(tagName).join('、') + '">+' + (ts.length - 5) + '</span>';
   return h;
 }
-// ===== 标签编辑弹窗 =====
+// ===== 标签编辑弹窗（每家公司产品种类标签，独立密码保护） =====
+// 标签编辑密码：与页面登录 admin/aico2026 独立的专用密码
+const TAG_EDIT_PASSWORD = 'tag2026';
 let currentTagCompanyId = null;
 function openTagModal(id) {
   currentTagCompanyId = id;
-  const c = companies.find(x => x.id === id);
+  const pwdEl = document.getElementById('tagPwdInput');
+  if(pwdEl) pwdEl.value = '';
+  const errEl = document.getElementById('tagPwdError');
+  if(errEl) errEl.classList.remove('show');
+  const unlocked = sessionStorage.getItem('tagUnlocked') === '1';
+  if(unlocked) renderTagEditor();
+  document.getElementById('tagPwdLayer').style.display = unlocked ? 'none' : '';
+  document.getElementById('tagEditLayer').style.display = unlocked ? '' : 'none';
+  document.getElementById('tagEditActions').style.display = unlocked ? '' : 'none';
+  document.getElementById('tagModal').classList.add('show');
+  if(!unlocked) setTimeout(function(){ const el = document.getElementById('tagPwdInput'); if(el) el.focus(); }, 60);
+}
+function verifyTagPwd() {
+  const v = document.getElementById('tagPwdInput').value;
+  if(v === TAG_EDIT_PASSWORD) {
+    sessionStorage.setItem('tagUnlocked', '1');
+    renderTagEditor();
+    document.getElementById('tagPwdLayer').style.display = 'none';
+    document.getElementById('tagEditLayer').style.display = '';
+    document.getElementById('tagEditActions').style.display = '';
+  } else {
+    const errEl = document.getElementById('tagPwdError');
+    if(errEl) errEl.classList.add('show');
+    document.getElementById('tagPwdInput').value = '';
+    document.getElementById('tagPwdInput').focus();
+  }
+}
+function renderTagEditor() {
+  const c = companies.find(function(x){ return x.id === currentTagCompanyId; });
+  if(!c) return;
   document.getElementById('tagModalTitle').textContent = c.name + ' · 产品种类标签';
   const cur = getTags(c);
   let h = '<div class="tag-sec-title">该公司经营哪些产品种类？可多选，有几个选几个</div>';
   h += '<div class="tag-tip src-line">内置标签标注依据：<b>' + SRC_TEXT[getTagSource(c)] + '</b>（' + (getTagSource(c) === 'WEB' ? '已打开该公司官网产品中心逐条核对' : (getTagSource(c) === 'FAIL' ? '官网打不开且公开渠道无产品信息，需线下核实' : '官网未能直接抓取，依据招标/行业站/企业库等公开信息')) + '）</div>';
-  getTagDefs().forEach(g => {
+  TAG_DEFS.forEach(function(g){
     h += '<div class="tag-group"><div class="tag-group-title">' + g.g + '</div><div class="tag-items">' +
-      g.items.map(it => '<label class="tag-item"><input type="checkbox" data-type="t" value="' + it.k + '"' + (cur.indexOf(it.k) !== -1 ? ' checked' : '') + '><span>' + it.n + '</span></label>').join('') +
+      g.items.map(function(it){ return '<label class="tag-item"><input type="checkbox" data-type="t" value="' + it.k + '"' + (cur.indexOf(it.k) !== -1 ? ' checked' : '') + '><span>' + it.n + '</span></label>'; }).join('') +
       '</div></div>';
   });
   h += '<div class="tag-tip">说明：一家公司有多种产品就打多个标签，筛选时任选其中一种都能把这家公司筛出来。标签依据官网产品线整理，可自行勾选修正，修改仅保存在本机浏览器。</div>';
   document.getElementById('tagEditList').innerHTML = h;
-  document.getElementById('tagModal').classList.add('show');
 }
 function closeTagModal() {
   document.getElementById('tagModal').classList.remove('show');
@@ -1266,151 +1232,14 @@ function closeTagModal() {
 }
 function saveTags() {
   if(currentTagCompanyId === null) return;
-  const nodes = Array.from(document.querySelectorAll('#tagEditList input[type=checkbox]'));
-  const t = nodes.filter(n => n.checked).map(n => n.value);
+  const nodes = Array.prototype.slice.call(document.querySelectorAll('#tagEditList input[type=checkbox]'));
+  const t = nodes.filter(function(n){ return n.checked; }).map(function(n){ return n.value; });
   const ov = getTagOverride();
   ov[currentTagCompanyId] = t;
   localStorage.setItem('competitorTagOverrides', JSON.stringify(ov));
   closeTagModal();
   initProductFilter();
   applyFilters();
-}
-
-// ===== 产品品类管理弹窗（独立密码） =====
-function openCategoryModal() {
-  document.getElementById('catPwdInput').value = '';
-  document.getElementById('catPwdError').classList.remove('show');
-  document.getElementById('catPwdLayer').style.display = '';
-  document.getElementById('catEditLayer').style.display = 'none';
-  document.getElementById('catEditActions').style.display = 'none';
-  if(sessionStorage.getItem('catUnlocked') === '1') renderCategoryEditor();
-  document.getElementById('categoryModal').classList.add('show');
-  if(sessionStorage.getItem('catUnlocked') !== '1') {
-    setTimeout(function(){ document.getElementById('catPwdInput').focus(); }, 60);
-  }
-}
-function verifyCatPwd() {
-  const v = document.getElementById('catPwdInput').value;
-  if(v === CATEGORY_EDIT_PASSWORD) {
-    sessionStorage.setItem('catUnlocked', '1');
-    renderCategoryEditor();
-  } else {
-    document.getElementById('catPwdError').classList.add('show');
-    document.getElementById('catPwdInput').value = '';
-    document.getElementById('catPwdInput').focus();
-  }
-}
-function closeCategoryModal() {
-  document.getElementById('categoryModal').classList.remove('show');
-}
-function escapeAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function renderCategoryEditor() {
-  document.getElementById('catPwdLayer').style.display = 'none';
-  document.getElementById('catEditLayer').style.display = '';
-  document.getElementById('catEditActions').style.display = '';
-  const defs = getTagDefs();
-  let h = '';
-  defs.forEach(function(g, gi){
-    h += '<div class="cat-group-block" data-gi="' + gi + '" data-code="' + g.code + '">';
-    h += '<div class="cat-group-head"><input class="cat-group-title-input" value="' + escapeAttr(g.g) + '" placeholder="分组名称"><button class="cat-group-del" onclick="delCatGroup(' + gi + ')">删除分组</button></div>';
-    g.items.forEach(function(it){
-      h += '<div class="cat-item-row" data-k="' + it.k + '">';
-      h += '<span class="cat-item-key">' + it.k + '</span>';
-      h += '<input class="cat-name-input" value="' + escapeAttr(it.n) + '" placeholder="品类名称">';
-      h += '<input class="cat-attr-input" value="' + escapeAttr(it.a || '') + '" placeholder="属性说明（可选）">';
-      h += '<button class="cat-del-btn" onclick="delCatItem(this)">删除</button>';
-      h += '</div>';
-    });
-    h += '<button class="btn btn-outline btn-sm" onclick="addCatItem(' + gi + ')">＋ 本组新增品类</button>';
-    h += '</div>';
-  });
-  document.getElementById('catGroupList').innerHTML = h;
-}
-function addCatItem(gi) {
-  const block = document.querySelector('#catGroupList .cat-group-block[data-gi="' + gi + '"]');
-  if(!block) return;
-  const row = document.createElement('div');
-  row.className = 'cat-item-row';
-  row.dataset.k = '__new_' + gi + '_' + Date.now();
-  row.innerHTML = '<span class="cat-item-key">新</span>' +
-    '<input class="cat-name-input" placeholder="品类名称">' +
-    '<input class="cat-attr-input" placeholder="属性说明（可选）">' +
-    '<button class="cat-del-btn" onclick="delCatItem(this)">删除</button>';
-  block.insertBefore(row, block.querySelector('.btn-outline.btn-sm'));
-}
-function addCatGroup() {
-  const block = document.createElement('div');
-  block.className = 'cat-group-block';
-  const gi = 'NG_' + Date.now();
-  block.dataset.gi = gi;
-  block.dataset.code = '';
-  block.innerHTML = '<div class="cat-group-head"><input class="cat-group-title-input" placeholder="分组名称（如：G · 新类别）"><button class="cat-group-del" onclick="delCatGroup(\'' + gi + '\')">删除分组</button></div>' +
-    '<button class="btn btn-outline btn-sm" onclick="addCatItem(\'' + gi + '\')">＋ 本组新增品类</button>';
-  document.getElementById('catGroupList').appendChild(block);
-}
-function delCatItem(btn) {
-  const row = btn.closest('.cat-item-row');
-  if(row) row.parentNode.removeChild(row);
-}
-function delCatGroup(gi) {
-  const block = document.querySelector('#catGroupList .cat-group-block[data-gi="' + gi + '"]');
-  if(block && confirm('确定删除该分组及其下所有品类？')) block.parentNode.removeChild(block);
-}
-function saveCategoryDefs() {
-  const beforeKeys = {};
-  getTagDefs().forEach(function(g){ g.items.forEach(function(it){ beforeKeys[it.k] = true; }); });
-  const blocks = document.querySelectorAll('#catGroupList .cat-group-block');
-  const groups = [];
-  blocks.forEach(function(block){
-    const gTitle = block.querySelector('.cat-group-title-input').value.trim();
-    const reqCode = block.dataset.code || (gTitle.trim().charAt(0) || 'G').toUpperCase();
-    const items = [];
-    block.querySelectorAll('.cat-item-row').forEach(function(row){
-      const n = row.querySelector('.cat-name-input').value.trim();
-      const a = row.querySelector('.cat-attr-input').value.trim();
-      if(!n) return;
-      items.push({ k: row.dataset.k, n: n, a: a });
-    });
-    groups.push({ reqCode: reqCode, g: gTitle, items: items });
-  });
-  if(!groups.length) { alert('品类库不能为空'); return; }
-  const used = {};
-  groups.forEach(function(g){
-    let c = g.reqCode;
-    while(used[c]) c = String.fromCharCode(c.charCodeAt(0) + 1);
-    used[c] = true; g.code = c;
-  });
-  groups.forEach(function(g){
-    let maxNum = 0;
-    g.items.forEach(function(it){ const m = /(\d+)$/.exec(it.k); if(m) maxNum = Math.max(maxNum, parseInt(m[1], 10)); });
-    g.items.forEach(function(it){ if(it.k.indexOf('__new_') === 0){ maxNum += 1; it.k = g.code + maxNum; } });
-  });
-  const allKeys = {};
-  for(let i=0;i<groups.length;i++){
-    for(let j=0;j<groups[i].items.length;j++){
-      const k = groups[i].items[j].k;
-      if(allKeys[k]){ alert('品类编码重复：' + k + '，请检查'); return; }
-      allKeys[k] = true;
-    }
-  }
-  const newDefs = normalizeTagDefs(groups.map(function(g){ return { code:g.code, g:g.g, items:g.items }; }));
-  localStorage.setItem('competitorTagDefsOverride', JSON.stringify(newDefs));
-  setTagDefsCache(newDefs);
-  const removed = Object.keys(beforeKeys).filter(function(k){ return !allKeys[k]; });
-  if(removed.length) {
-    const ov = getTagOverride();
-    let changed = false;
-    Object.keys(ov).forEach(function(id){
-      const arr = Array.isArray(ov[id]) ? ov[id] : (ov[id].t || []);
-      const f = arr.filter(function(k){ return removed.indexOf(k) === -1; });
-      if(f.length !== arr.length){ ov[id] = f; changed = true; }
-    });
-    if(changed) localStorage.setItem('competitorTagOverrides', JSON.stringify(ov));
-  }
-  closeCategoryModal();
-  initProductFilter();
-  applyFilters();
-  alert('产品品类库已保存（仅本机浏览器生效，刷新后仍在）');
 }
 
 // ===== 动态分类标签筛选（复用日志 guessLogType 自动归类） =====
@@ -1771,7 +1600,7 @@ document.getElementById('loginPass').addEventListener('keydown', function(e) { i
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
 // ===== 头部版本戳：便于核对是否最新版（缓存自检） =====
-var BUILD_TIME = '2026-10-14 14:50';  // 数据更新时间（每次部署时更新，精确到分钟）
+var BUILD_TIME = '2026-10-14 15:16';  // 数据更新时间（每次部署时更新，精确到分钟）
 function updateHeaderMeta() {
   var rivals = companies.length;
   var entries = 0, withSrc = 0;
@@ -1784,7 +1613,7 @@ function updateHeaderMeta() {
   });
   var el = document.getElementById('headerMeta');
   if(!el) return;
-  el.innerHTML = '数据版本 v11（'+BUILD_TIME+'，科技风界面）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
+  el.innerHTML = '数据版本 v12（'+BUILD_TIME+'，科技风界面）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
 }
 
 // ===== INIT =====
