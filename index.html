@@ -442,7 +442,7 @@
   <div class="header-top" data-page-node-id="XdKm7RtQ0C8KSi562nrh91">
     <div data-page-node-id="bTGRBLxepHSfVt3av6Sro5">
       <h1 data-page-node-id="T5CSkQCtk2kHaw3fkioQrg">激光气体检测行业 · 竞品跟踪库</h1>
-      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-14 15:16 ｜ 版本 v12 ｜ 正在统计…</div>
+      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-14 16:14 ｜ 版本 v13 ｜ 正在统计…</div>
     </div>
     <div style="display:flex; gap:8px; align-items:center;" data-page-node-id="CzYOWNHJSKetGCmayk28y4">
       <button class="logout-btn" onclick="doLogout()" data-page-node-id="ab3Z87hfR7JOshPUEpKXhw">退出登录</button>
@@ -469,7 +469,6 @@
   <select id="filterProduct" onchange="applyFilters()"><option value="">全部产品种类</option></select>
   <button class="btn btn-outline btn-xs" onclick="resetFilters()" title="清除所有筛选条件">重置</button>
   <div class="spacer" data-page-node-id="qr2oyO9GuhVxUCbTwgx9xi"></div>
-  <button class="btn btn-outline" onclick="exportCSV()" data-page-node-id="zJRWTkBPISfSIhI7jj1bG1">导出 CSV</button>
   <button class="btn btn-success" onclick="addRow()" data-page-node-id="eLGXrK4kavmZ7LzQWbpK6y">+ 添加竞品</button>
 </div>
 
@@ -1554,22 +1553,6 @@ function renderLogList(id) {
 }
 
 // ===== EXPORT =====
-function exportCSV() {
-  const headers = ['序号','公司名称','总部','竞争层级','核心技术','上市','代表产品','专利','应用领域','威胁等级','产品种类标签','近期动态','官网'];
-  let csv = '\ufeff' + headers.join(',') + '\n';
-  companies.forEach(c => {
-    const tagStr = getTags(c).map(t => tagName(t)).join('；');
-    const row = [c.id, c.name, c.location, c.relation, c.tech, c.listed, c.products, c.patents, c.fields, c.threat, tagStr, c.dynamics, c.website]
-      .map(v => { v = (v||'').toString().replace(/"/g,'""'); return '"'+v+'"'; });
-    csv += row.join(',') + '\n';
-  });
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = '竞品跟踪表_激光气体检测行业_20260814.csv';
-  a.click();
-}
-
 // ===== LOGIN =====
 const LOGIN_USER = 'admin';
 const LOGIN_PASS = 'aico2026';
@@ -1600,7 +1583,7 @@ document.getElementById('loginPass').addEventListener('keydown', function(e) { i
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
 // ===== 头部版本戳：便于核对是否最新版（缓存自检） =====
-var BUILD_TIME = '2026-10-14 15:16';  // 数据更新时间（每次部署时更新，精确到分钟）
+var BUILD_TIME = '2026-10-14 16:14';  // 数据更新时间（每次部署时更新，精确到分钟）
 function updateHeaderMeta() {
   var rivals = companies.length;
   var entries = 0, withSrc = 0;
@@ -1613,7 +1596,7 @@ function updateHeaderMeta() {
   });
   var el = document.getElementById('headerMeta');
   if(!el) return;
-  el.innerHTML = '数据版本 v12（'+BUILD_TIME+'，科技风界面）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
+  el.innerHTML = '数据版本 v13（'+BUILD_TIME+'，科技风界面）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
 }
 
 // ===== INIT =====
