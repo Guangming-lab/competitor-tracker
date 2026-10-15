@@ -449,7 +449,7 @@
   <div class="header-top" data-page-node-id="XdKm7RtQ0C8KSi562nrh91">
     <div data-page-node-id="bTGRBLxepHSfVt3av6Sro5">
       <h1 data-page-node-id="T5CSkQCtk2kHaw3fkioQrg">激光气体检测行业 · 竞品跟踪库</h1>
-      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-15 08:47 ｜ 版本 v15 ｜ 正在统计…</div>
+      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-15 09:15 ｜ 版本 v16 ｜ 正在统计…</div>
     </div>
     <div style="display:flex; gap:8px; align-items:center;" data-page-node-id="CzYOWNHJSKetGCmayk28y4">
       <button class="logout-btn" onclick="doLogout()" data-page-node-id="ab3Z87hfR7JOshPUEpKXhw">退出登录</button>
@@ -1370,7 +1370,7 @@ function initLocationFilter() {
 
 // ===== ADD / DELETE =====
 function addRow() {
-  if(sessionStorage.getItem('tagUnlocked') === 'true') { addRowCore(); }
+  if(sessionStorage.getItem('tagUnlocked') === '1') { addRowCore(); }
   else { openAddPwdModal(); }
 }
 function addRowCore() {
@@ -1394,7 +1394,7 @@ function closeAddPwdModal() {
 function verifyAddPwd() {
   const v = document.getElementById('addPwdInput').value.trim();
   if(v === TAG_EDIT_PASSWORD) {
-    sessionStorage.setItem('tagUnlocked', 'true');
+    sessionStorage.setItem('tagUnlocked', '1');
     closeAddPwdModal();
     addRowCore();
   } else {
@@ -1624,6 +1624,7 @@ function doLogin() {
 }
 function doLogout() {
   sessionStorage.removeItem('competitorLoggedIn');
+  sessionStorage.removeItem('tagUnlocked');
   document.getElementById('loginOverlay').classList.remove('hidden');
   document.getElementById('loginUser').value = '';
   document.getElementById('loginPass').value = '';
@@ -1632,7 +1633,7 @@ document.getElementById('loginPass').addEventListener('keydown', function(e) { i
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
 // ===== 头部版本戳：便于核对是否最新版（缓存自检） =====
-var BUILD_TIME = '2026-10-15 08:47';  // 数据更新时间（每次部署时更新，精确到分钟）
+var BUILD_TIME = '2026-10-15 09:15';  // 数据更新时间（每次部署时更新，精确到分钟）
 function updateHeaderMeta() {
   var rivals = companies.length;
   var entries = 0, withSrc = 0;
@@ -1645,7 +1646,7 @@ function updateHeaderMeta() {
   });
   var el = document.getElementById('headerMeta');
   if(!el) return;
-  el.innerHTML = '数据版本 v15（'+BUILD_TIME+'，科技风界面）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
+  el.innerHTML = '数据版本 v16（'+BUILD_TIME+'，科技风界面）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
 }
 
 // ===== INIT =====
