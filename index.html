@@ -450,7 +450,7 @@
   <div class="header-top" data-page-node-id="XdKm7RtQ0C8KSi562nrh91">
     <div data-page-node-id="bTGRBLxepHSfVt3av6Sro5">
       <h1 data-page-node-id="T5CSkQCtk2kHaw3fkioQrg">激光气体检测行业 · 竞品跟踪库</h1>
-      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-15 11:47 ｜ 版本 v17 ｜ 正在统计…</div>
+      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-15 13:20 ｜ 版本 v18 ｜ 正在统计…</div>
     </div>
     <div style="display:flex; gap:8px; align-items:center;" data-page-node-id="CzYOWNHJSKetGCmayk28y4">
       <button class="logout-btn" onclick="doLogout()" data-page-node-id="ab3Z87hfR7JOshPUEpKXhw">退出登录</button>
@@ -1484,7 +1484,7 @@ function openPatentModal(id) {
   document.getElementById('patentFooter').innerHTML =
     '<a href="https://www.qcc.com/web/search?key='+q+'" target="_blank" class="btn btn-outline">企查查查全部专利</a>' +
     '<a href="https://www.tianyancha.com/search?key='+q+'" target="_blank" class="btn btn-outline">天眼查查全部专利</a>' +
-    '<a href="https://www.pss-system.gov.cn/sipopublicsearch/portal/uiIndex.shtml" target="_blank" class="btn btn-outline">国家知识产权局检索</a>';
+    '<a href="https://pss-system.cponline.cnipa.gov.cn/" target="_blank" class="btn btn-outline">国家知识产权局检索</a>';
   document.getElementById('patentModal').classList.add('show');
 }
 function closePatentModal() {
@@ -1643,7 +1643,7 @@ document.getElementById('loginPass').addEventListener('keydown', function(e) { i
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
 // ===== 头部版本戳：便于核对是否最新版（缓存自检） =====
-var BUILD_TIME = '2026-10-15 11:47';  // 数据更新时间（每次部署时更新，精确到分钟）
+var BUILD_TIME = '2026-10-15 13:20';  // 数据更新时间（每次部署时更新，精确到分钟）
 function updateHeaderMeta() {
   var rivals = companies.length;
   var entries = 0, withSrc = 0;
@@ -1656,7 +1656,7 @@ function updateHeaderMeta() {
   });
   var el = document.getElementById('headerMeta');
   if(!el) return;
-  el.innerHTML = '数据版本 v17（'+BUILD_TIME+'，科技风界面）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
+  el.innerHTML = '数据版本 v18（'+BUILD_TIME+'，科技风界面）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
 }
 
 // ===== INIT =====
