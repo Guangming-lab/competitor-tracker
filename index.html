@@ -215,10 +215,13 @@
     .h-scrollbar-track { display:none !important; }
     .table-wrapper {
       -webkit-overflow-scrolling:touch; overflow-x:auto; overflow-y:auto;
-      touch-action:auto; overscroll-behavior:contain;
+      touch-action:none; overscroll-behavior:contain;
       margin:0 8px 14px; padding-bottom:14px;
     }
-    table { min-width:3200px; }
+    /* 移动端不要强制 3200px：否则浏览器会把多余宽度均匀撑大每一列，
+       导致冻结的"公司名称"列被撑到 250px+，几乎占满屏宽、右侧只剩一条缝。
+       改为按自然列宽布局，表格仍远宽于屏、可横滑，冻结列回到约 200px。 */
+    .table-wrapper table { width:auto; min-width:auto; }
     .mobile-scroll-hint {
       display:flex; align-items:center; justify-content:center; gap:6px;
       margin:0 8px 8px; padding:7px 12px; border-radius:10px;
@@ -1661,7 +1664,7 @@ document.getElementById('loginPass').addEventListener('keydown', function(e) { i
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
 // ===== 头部版本戳：便于核对是否最新版（缓存自检） =====
-var BUILD_TIME = '2026-10-16 10:57';  // 数据更新时间（每次部署时更新，精确到分钟）
+var BUILD_TIME = '2026-10-16 11:23';  // 数据更新时间（每次部署时更新，精确到分钟）
 function updateHeaderMeta() {
   var rivals = companies.length;
   var entries = 0, withSrc = 0;
@@ -1704,32 +1707,32 @@ renderTable(companies);
   setTimeout(updateStickyOffsets, 1000);
 })();
 
-// ===== 安卓钉钉/微信等 WebView 横向滑动兜底 =====
-// 钉钉、微信等内置 WebView 常吞掉横向 touchmove 手势（当返回/切换），导致 overflow-x 横滑失效。
-// 检测到横向滑动意图时手动 scrollLeft 并 preventDefault，把横向手势抢回给表格；竖向仍交原生。
+// ===== 移动端触摸滑动（双向，纯 JS 接管）=====
+// 原生横向滚动在部分手机浏览器/钉钉 WebView 会被手势路由或轴线锁定吃掉（尤其表格同时需要竖向滚动时，
+// 浏览器常把斜向/含纵向分量的滑动锁成竖向，横向永远不触发）。这里用 touch-action:none 把双轴手势
+// 完全交给 JS：按手指原始位移同时驱动 scrollLeft/scrollTop，彻底摆脱浏览器原生手势冲突；
+// 单指才接管，多指（如缩放）不干预；touchstart 不 preventDefault，点按/排序/编辑等点击照常。
 (function() {
   var tw = document.getElementById('tableWrapper');
   if(!tw) return;
-  var sx=0, sy=0, lx=0, ly=0, dir=null, decided=false;
+  tw.style.touchAction = 'none'; // 双保险：确保该容器原生手势被禁用，全部由 JS 接管
+  var lx = 0, ly = 0, active = false;
   tw.addEventListener('touchstart', function(e){
-    if(e.touches.length !== 1){ dir=null; decided=false; return; }
-    sx = lx = e.touches[0].pageX;
-    sy = ly = e.touches[0].pageY;
-    dir=null; decided=false;
+    if(e.touches.length !== 1){ active = false; return; }
+    active = true;
+    lx = e.touches[0].pageX; ly = e.touches[0].pageY;
   }, {passive:true});
   tw.addEventListener('touchmove', function(e){
-    if(e.touches.length !== 1) return;
+    if(!active || e.touches.length !== 1) return;
     var x = e.touches[0].pageX, y = e.touches[0].pageY;
-    if(!decided){
-      var dx = Math.abs(x-sx), dy = Math.abs(y-sy);
-      if(dx > 6 || dy > 6){ dir = (dx > dy) ? 'h' : 'v'; decided = true; }
-    }
-    if(dir === 'h'){
-      tw.scrollLeft += (lx - x);
-      if(e.cancelable) e.preventDefault();
-    }
+    var dx = x - lx, dy = y - ly;
+    if(dx !== 0) tw.scrollLeft -= dx;  // 手指左移→内容左移→scrollLeft 增大，露出右侧列
+    if(dy !== 0) tw.scrollTop  -= dy;
     lx = x; ly = y;
+    if(e.cancelable) e.preventDefault();
   }, {passive:false});
+  tw.addEventListener('touchend', function(){ active = false; }, {passive:true});
+  tw.addEventListener('touchcancel', function(){ active = false; }, {passive:true});
 })();
 
 // Close modal on overlay click
