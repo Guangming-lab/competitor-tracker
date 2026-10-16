@@ -218,7 +218,7 @@
       touch-action:auto; overscroll-behavior:contain;
       margin:0 8px 14px; padding-bottom:14px;
     }
-    table { min-width:auto; }
+    table { min-width:3200px; }
     .mobile-scroll-hint {
       display:flex; align-items:center; justify-content:center; gap:6px;
       margin:0 8px 8px; padding:7px 12px; border-radius:10px;
@@ -1661,7 +1661,7 @@ document.getElementById('loginPass').addEventListener('keydown', function(e) { i
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
 // ===== 头部版本戳：便于核对是否最新版（缓存自检） =====
-var BUILD_TIME = '2026-10-16 10:45';  // 数据更新时间（每次部署时更新，精确到分钟）
+var BUILD_TIME = '2026-10-16 10:57';  // 数据更新时间（每次部署时更新，精确到分钟）
 function updateHeaderMeta() {
   var rivals = companies.length;
   var entries = 0, withSrc = 0;
