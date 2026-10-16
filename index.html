@@ -498,7 +498,7 @@
   <div class="header-top" data-page-node-id="XdKm7RtQ0C8KSi562nrh91">
     <div data-page-node-id="bTGRBLxepHSfVt3av6Sro5">
       <h1 data-page-node-id="T5CSkQCtk2kHaw3fkioQrg">激光气体检测行业 · 竞品跟踪库</h1>
-      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-15 13:20 ｜ 版本 v18 ｜ 正在统计…</div>
+      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-16 14:15 ｜ 版本 v18 ｜ 正在统计…</div>
     </div>
     <div style="display:flex; gap:8px; align-items:center;" data-page-node-id="CzYOWNHJSKetGCmayk28y4">
       <button class="logout-btn" onclick="doLogout()" data-page-node-id="ab3Z87hfR7JOshPUEpKXhw">退出登录</button>
@@ -603,15 +603,15 @@
 <div class="modal-overlay" id="addPwdModal">
   <div class="modal">
     <div class="modal-header">
-      <h2>添加竞品 · 操作验证</h2>
+      <h2 id="addPwdTitle">操作验证</h2>
       <button class="modal-close" onclick="closeAddPwdModal()">✕</button>
     </div>
     <div class="modal-body">
       <div class="add-pwd-box">
-        <div class="add-pwd-tip">添加竞品需输入操作密码（与编辑产品种类标签密码相同）</div>
+        <div class="add-pwd-tip">请输入操作密码（与添加竞品、编辑产品种类标签密码相同）</div>
         <input type="password" id="addPwdInput" placeholder="请输入操作密码" autocomplete="off" onkeydown="if(event.key==='Enter')verifyAddPwd()">
         <div class="add-pwd-error" id="addPwdError">密码错误，请重试</div>
-        <button class="btn btn-primary" onclick="verifyAddPwd()">确认并添加</button>
+        <button class="btn btn-primary" onclick="verifyAddPwd()">确认</button>
         <button class="btn btn-outline" onclick="closeAddPwdModal()">取消</button>
       </div>
     </div>
@@ -1270,6 +1270,7 @@ function getTagCell(c) {
 // ===== 标签编辑弹窗（每家公司产品种类标签，独立密码保护） =====
 // 标签编辑密码：与页面登录 admin/aico2026 独立的专用密码
 const TAG_EDIT_PASSWORD = 'tag2026';
+var pendingAction = null;  // 待密码验证后执行的操作（添加/删除竞品共用同一密码门）
 let currentTagCompanyId = null;
 function openTagModal(id) {
   currentTagCompanyId = id;
@@ -1447,6 +1448,7 @@ function addRowCore() {
   }, 100);
 }
 function openAddPwdModal() {
+  document.getElementById('addPwdTitle').textContent = '添加竞品 · 操作验证';
   document.getElementById('addPwdInput').value = '';
   document.getElementById('addPwdError').style.display = 'none';
   document.getElementById('addPwdModal').classList.add('show');
@@ -1460,12 +1462,22 @@ function verifyAddPwd() {
   if(v === TAG_EDIT_PASSWORD) {
     sessionStorage.setItem('tagUnlocked', '1');
     closeAddPwdModal();
-    addRowCore();
+    const act = pendingAction || addRowCore;
+    pendingAction = null;
+    act();
   } else {
     document.getElementById('addPwdError').style.display = 'block';
   }
 }
 function deleteRow(id) {
+  if(sessionStorage.getItem('tagUnlocked') === '1') { deleteRowCore(id); }
+  else {
+    document.getElementById('addPwdTitle').textContent = '删除竞品 · 操作验证';
+    pendingAction = () => deleteRowCore(id);
+    openAddPwdModal();
+  }
+}
+function deleteRowCore(id) {
   const c = companies.find(c=>c.id===id);
   if(!c) return;
   if(!confirm('确认删除「'+c.name+'」？\n该公司的所有动态日志也将被删除，操作不可撤销。')) return;
@@ -1697,7 +1709,7 @@ document.getElementById('loginPass').addEventListener('keydown', function(e) { i
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
 // ===== 头部版本戳：便于核对是否最新版（缓存自检） =====
-var BUILD_TIME = '2026-10-16 13:47';  // 数据更新时间（每次部署时更新，精确到分钟）
+var BUILD_TIME = '2026-10-16 14:15';  // 数据更新时间（每次部署时更新，精确到分钟）
 function updateHeaderMeta() {
   var rivals = companies.length;
   var entries = 0, withSrc = 0;
