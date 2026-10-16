@@ -211,6 +211,7 @@
   .h-scrollbar-track::-webkit-scrollbar-thumb:hover { background:#9fb6d8; }
   .h-scrollbar-content { height:1px; }
   .mobile-scroll-hint { display:none; }
+  .mobile-hscroll { display:none; }
   @media (max-width: 820px) {
     .h-scrollbar-track { display:none !important; }
     .table-wrapper {
@@ -229,6 +230,29 @@
       color:var(--primary); font-size:12.5px; font-weight:600; letter-spacing:0.3px;
     }
     .mobile-scroll-hint .swipe-ico { font-size:15px; }
+    /* 移动端横向滚动控件：钉钉等 WebView 吞掉横滑手势，用可点按的翻屏按钮+进度条兜底 */
+    .mobile-hscroll {
+      display:flex; align-items:center; gap:8px;
+      margin:0 8px 10px; padding:8px 10px; border-radius:12px;
+      background:var(--panel-solid); border:1px solid var(--border);
+      box-shadow:var(--shadow-sm);
+    }
+    .mh-btn {
+      flex:0 0 auto; width:40px; height:40px; border:none; border-radius:10px;
+      background:linear-gradient(135deg,var(--cyan-bright),var(--primary)); color:#fff;
+      font-size:22px; font-weight:700; line-height:1; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 2px 8px rgba(37,99,235,0.28);
+    }
+    .mh-btn:active { transform:translateY(1px); }
+    .mh-track {
+      flex:1 1 auto; position:relative; height:10px; border-radius:6px;
+      background:rgba(37,99,235,0.12); overflow:hidden;
+    }
+    .mh-thumb {
+      position:absolute; top:0; left:0; height:100%; min-width:36px;
+      border-radius:6px; background:linear-gradient(135deg,var(--cyan-bright),var(--primary));
+    }
   }
   table { width:100%; border-collapse:separate; border-spacing:0; background:var(--panel-solid); min-width:3200px; }
   thead { position:sticky; top:0; z-index:10; }
@@ -505,6 +529,11 @@
 </div>
 
 <div class="mobile-scroll-hint"><span class="swipe-ico">↔</span> 左右滑动查看公司全部信息（序号、公司名称已固定左侧）</div>
+<div class="mobile-hscroll" id="mobileHScroll" data-page-node-id="mobileHScroll">
+  <button type="button" class="mh-btn" id="mhLeft" aria-label="向左翻屏">‹</button>
+  <div class="mh-track" id="mhTrack"><div class="mh-thumb" id="mhThumb"></div></div>
+  <button type="button" class="mh-btn" id="mhRight" aria-label="向右翻屏">›</button>
+</div>
 <div class="table-wrapper" id="tableWrapper" data-page-node-id="k8HQmGjj1DIAglSeaHHYiA">
   <table id="dataTable" data-page-node-id="pYuTpff4n2PExDuARmh6RL">
     <thead data-page-node-id="hr6DItwtRbFW3xDeQtAKRS">
@@ -1733,6 +1762,42 @@ renderTable(companies);
   }, {passive:false});
   tw.addEventListener('touchend', function(){ active = false; }, {passive:true});
   tw.addEventListener('touchcancel', function(){ active = false; }, {passive:true});
+})();
+
+// ===== 移动端横向滚动控件（钉钉等 WebView 吞掉横滑手势，用"点按"兜底；原生浏览器横滑仍可用）=====
+(function() {
+  var tw = document.getElementById('tableWrapper');
+  var bar = document.getElementById('mobileHScroll');
+  var track = document.getElementById('mhTrack');
+  var thumb = document.getElementById('mhThumb');
+  var left = document.getElementById('mhLeft');
+  var right = document.getElementById('mhRight');
+  if(!tw || !bar || !track || !thumb || !left || !right) return;
+  function maxScroll(){ return Math.max(0, tw.scrollWidth - tw.clientWidth); }
+  function step(){ return Math.max(200, Math.round(tw.clientWidth * 0.8)); }
+  function updateThumb(){
+    var ms = maxScroll();
+    if(ms <= 0){ thumb.style.width = '100%'; thumb.style.left = '0'; return; }
+    var ratio = tw.scrollLeft / ms;
+    var trackW = track.clientWidth;
+    var thumbW = Math.max(36, Math.round(tw.clientWidth / tw.scrollWidth * trackW));
+    var maxLeft = trackW - thumbW;
+    thumb.style.width = thumbW + 'px';
+    thumb.style.left = (ratio * maxLeft) + 'px';
+  }
+  left.addEventListener('click', function(){ tw.scrollLeft = Math.max(0, tw.scrollLeft - step()); });
+  right.addEventListener('click', function(){ tw.scrollLeft = Math.min(maxScroll(), tw.scrollLeft + step()); });
+  track.addEventListener('click', function(e){
+    var rect = track.getBoundingClientRect();
+    var ratio = (e.clientX - rect.left) / rect.width;
+    ratio = Math.max(0, Math.min(1, ratio));
+    tw.scrollLeft = ratio * maxScroll();
+  });
+  tw.addEventListener('scroll', updateThumb, {passive:true});
+  window.addEventListener('resize', updateThumb);
+  updateThumb();
+  setTimeout(updateThumb, 300);
+  setTimeout(updateThumb, 1000);
 })();
 
 // Close modal on overlay click
