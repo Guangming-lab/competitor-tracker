@@ -425,6 +425,8 @@
   .dyn-src:hover { background:var(--primary); border-color:var(--primary); color:#fff; box-shadow:0 2px 8px rgba(37,99,235,0.30); }
   .log-desc .dyn-src { font-size:12px; margin-left:6px; }
   .dyn-no-src { display:inline-block; margin-left:4px; color:var(--text-tertiary); font-size:11px; opacity:.72; white-space:nowrap; vertical-align:1px; }
+  .dyn-date { display:inline-block; margin-right:5px; color:#334e68; background:rgba(100,116,139,0.12); border:1px solid rgba(100,116,139,0.22); font-size:11px; font-weight:700; padding:0 5px; border-radius:4px; white-space:nowrap; vertical-align:1px; font-variant-numeric:tabular-nums; }
+  .dyn-undated { display:inline-block; margin-left:2px; color:var(--text-tertiary); font-size:11px; opacity:.7; }
 
   /* 专利明细 */
   .patent-btn { display:block; margin:3px auto 0; padding:2px 8px; font-size:11px; line-height:1.5; border-radius:999px; border:1px solid var(--border-strong); background:#ffffff; color:var(--text-secondary); cursor:pointer; white-space:nowrap; transition:all .15s ease; }
@@ -498,7 +500,7 @@
   <div class="header-top" data-page-node-id="XdKm7RtQ0C8KSi562nrh91">
     <div data-page-node-id="bTGRBLxepHSfVt3av6Sro5">
       <h1 data-page-node-id="T5CSkQCtk2kHaw3fkioQrg">激光气体检测行业 · 竞品跟踪库</h1>
-      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-19 08:55 ｜ 版本 v19 ｜ 正在统计…</div>
+      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-19 09:45 ｜ 版本 v19 ｜ 正在统计…</div>
     </div>
     <div style="display:flex; gap:8px; align-items:center;" data-page-node-id="CzYOWNHJSKetGCmayk28y4">
       <button class="logout-btn" onclick="doLogout()" data-page-node-id="ab3Z87hfR7JOshPUEpKXhw">退出登录</button>
@@ -870,6 +872,7 @@ function renderSource(url) {
 // 高亮「近期动态」中日期最新的一条
 // 近期动态列：按时间排序（默认倒序，最新在上）+ 每条均带来源标识
 function getDynamicsCell(c) {
+  const CY = new Date().getFullYear();   // 当前年份：近期动态只显示本年度
   const raw = c.dynamics || '';
   if(!raw) return '';
   const parts = raw.split(/；|;/).map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
@@ -877,26 +880,34 @@ function getDynamicsCell(c) {
     const sp = splitSource(s);
     const desc = sp.desc;
     const m = desc.match(/^(\d{4})[.\-年](\d{1,2})/);
-    let date = '', d = desc, ts = 0;
+    let date = '', d = desc, ts = 0, year = 0;
     if(m) {
+      year = parseInt(m[1], 10);
       date = m[1] + '-' + (m[2].length === 1 ? '0'+m[2] : m[2]);
       d = desc.slice(m[0].length).replace(/^[月\s]*/, '');
       ts = new Date(date.split('-')[0] + '/' + date.split('-')[1] + '/01').getTime();
     }
-    return { desc: d, url: sp.url, ts: ts };
+    return { date: date, year: year, desc: d, url: sp.url, ts: ts };
   });
-  // 按时间倒序（新→旧），无日期（ts=0）排到末尾
-  items.sort(function(a, b){ return b.ts - a.ts; });
-  let maxTs = 0; items.forEach(function(it){ if(it.ts > maxTs) maxTs = it.ts; });
-  let firstMaxIdx = -1; items.forEach(function(it, idx){ if(it.ts === maxTs && firstMaxIdx === -1) firstMaxIdx = idx; });
-  return items.map(function(it, idx) {
-    let body = escHtml(it.desc) + renderSource(it.url);
+  // 只显示当前年份（CY）的动态；无日期的作为"背景信息"暂不列入动态流
+  const yItems = items.filter(function(it){ return it.year === CY; });
+  const undated = items.filter(function(it){ return it.year === 0; });
+  // 当前年份内按时间倒序（新→旧），无日期（ts=0）排到末尾
+  yItems.sort(function(a, b){ return b.ts - a.ts; });
+  let maxTs = 0; yItems.forEach(function(it){ if(it.ts > maxTs) maxTs = it.ts; });
+  let firstMaxIdx = -1; yItems.forEach(function(it, idx){ if(it.ts === maxTs && firstMaxIdx === -1) firstMaxIdx = idx; });
+  let html = yItems.map(function(it, idx) {
+    let body = '<span class="dyn-date">'+it.date+'</span>' + escHtml(it.desc) + renderSource(it.url);
     if(!it.url) body += ' <span class="dyn-no-src">未注来源</span>';
     if(maxTs > 0 && idx === firstMaxIdx) {
       return '<span class="dyn-latest"><span class="dyn-new-tag">最新</span>'+body+'</span>';
     }
     return body;
   }).join('；');
+  if(undated.length && yItems.length) {
+    html += ' <span class="dyn-undated">（另有 '+undated.length+' 条未标注日期的背景信息，已隐藏）</span>';
+  }
+  return html;
 }
 function getWebsiteCell(url) {
   if(!url) return '<span class="no-website">暂无官网</span>';
@@ -1604,20 +1615,22 @@ document.getElementById('loginPass').addEventListener('keydown', function(e) { i
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
 // ===== 头部版本戳：便于核对是否最新版（缓存自检） =====
-var BUILD_TIME = '2026-10-19 08:55';  // 数据更新时间（每次部署时更新，精确到分钟）
+var BUILD_TIME = '2026-10-19 09:45';  // 数据更新时间（每次部署时更新，精确到分钟）
 function updateHeaderMeta() {
   var rivals = companies.length;
+  var CY = new Date().getFullYear();
   var entries = 0, withSrc = 0;
   companies.forEach(function(c){
     if(!c.dynamics) return;
     String(c.dynamics).split(/；|;/).forEach(function(s){
-      s = s.trim(); if(!s) return; entries++;
-      if(/[｜|]\s*https?:\/\/\S+\s*$/.test(s)) withSrc++;
+      s = s.trim(); if(!s) return;
+      var mm = s.match(/^(\d{4})[.\-年](\d{1,2})/);
+      if(mm && parseInt(mm[1],10) === CY) { entries++; if(/[｜|]\s*https?:\/\/\S+\s*$/.test(s)) withSrc++; }
     });
   });
   var el = document.getElementById('headerMeta');
   if(!el) return;
-  el.innerHTML = '数据版本 v19（'+BUILD_TIME+'，科技风界面，移动端可横滑）｜ 竞品 '+rivals+' 家 ｜ 近期动态 '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
+  el.innerHTML = '数据版本 v19（'+BUILD_TIME+'，科技风界面，移动端可横滑）｜ 竞品 '+rivals+' 家 ｜ 近期动态(本年) '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
 }
 
 // ===== INIT =====
