@@ -500,7 +500,7 @@
   <div class="header-top" data-page-node-id="XdKm7RtQ0C8KSi562nrh91">
     <div data-page-node-id="bTGRBLxepHSfVt3av6Sro5">
       <h1 data-page-node-id="T5CSkQCtk2kHaw3fkioQrg">激光气体检测行业 · 竞品跟踪库</h1>
-      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-19 13:45 ｜ 版本 v19 ｜ 正在统计…</div>
+      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-19 13:55 ｜ 版本 v19 ｜ 正在统计…</div>
     </div>
     <div style="display:flex; gap:8px; align-items:center;" data-page-node-id="CzYOWNHJSKetGCmayk28y4">
       <button class="logout-btn" onclick="doLogout()" data-page-node-id="ab3Z87hfR7JOshPUEpKXhw">退出登录</button>
@@ -1106,7 +1106,9 @@ const productTags = {
 81:['B1','C4','D2','D3','D5','E6','F1'],
 82:['C2','E4','E6','F2'],
 83:['B1','B5','C1','C2','C5','D2','F1'],
-84:['A3','C4','D5','E1','E5']
+84:['A3','C4','D5','E1','E5'],
+85:['B1','C1','C5','D1','F2'],
+86:['C1','C5','F2']
 };
 // 标注依据：WEB=官网产品页核实；SEARCH=第三方公开信息核实；FAIL=官网与公开渠道均无法获取
 const tagSource = {
@@ -1116,7 +1118,7 @@ const tagSource = {
 37:'FAIL',38:'WEB',39:'WEB',40:'WEB',41:'WEB',42:'SEARCH',43:'WEB',44:'WEB',45:'WEB',46:'WEB',47:'WEB',48:'WEB',
 49:'SEARCH',50:'SEARCH',51:'WEB',52:'WEB',53:'SEARCH',54:'WEB',55:'WEB',57:'WEB',58:'WEB',59:'WEB',60:'WEB',
 61:'SEARCH',62:'SEARCH',63:'SEARCH',64:'SEARCH',65:'WEB',66:'WEB',67:'SEARCH',68:'SEARCH',69:'SEARCH',70:'SEARCH',71:'SEARCH',72:'SEARCH',
-73:'WEB',74:'SEARCH',75:'SEARCH',76:'WEB',77:'WEB',78:'SEARCH',79:'WEB',80:'SEARCH',81:'WEB',82:'WEB',83:'WEB',84:'WEB'
+73:'WEB',74:'SEARCH',75:'SEARCH',76:'WEB',77:'WEB',78:'SEARCH',79:'WEB',80:'SEARCH',81:'WEB',82:'WEB',83:'WEB',84:'WEB',85:'WEB',86:'WEB'
 };
 
 // ===== PRODUCT TAG FILTER =====
@@ -1617,7 +1619,7 @@ document.getElementById('loginPass').addEventListener('keydown', function(e) { i
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
 // ===== 头部版本戳：便于核对是否最新版（缓存自检） =====
-var BUILD_TIME = '2026-10-19 13:45';  // 数据更新时间（每次部署时更新，精确到分钟）
+var BUILD_TIME = '2026-10-19 13:55';  // 数据更新时间（每次部署时更新，精确到分钟）
 function updateHeaderMeta() {
   var rivals = companies.length;
   var CY = new Date().getFullYear();
