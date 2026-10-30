@@ -447,6 +447,8 @@
   .dynamic-text { font-size:13px; line-height:1.6; color:#4a5468; }
   .dynamic-text strong { color:var(--text); }
   .product-text { font-size:13px; line-height:1.6; color:#4a5468; }
+  .product-readonly { background:rgba(148,163,184,0.06); cursor:default; }
+  .product-readonly:hover { background:rgba(148,163,184,0.10); }
   .field-text { font-size:13px; color:#4a5468; }
   .patent-num { font-weight:700; color:var(--primary); font-variant-numeric:tabular-nums; font-family:var(--mono); }
   .patent-unknown { color:var(--text-tertiary); font-size:12px; }
@@ -500,7 +502,7 @@
   <div class="header-top" data-page-node-id="XdKm7RtQ0C8KSi562nrh91">
     <div data-page-node-id="bTGRBLxepHSfVt3av6Sro5">
       <h1 data-page-node-id="T5CSkQCtk2kHaw3fkioQrg">激光气体检测行业 · 竞品跟踪库</h1>
-      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-30 13:35 ｜ 版本 v23 ｜ 正在统计…</div>
+      <div class="meta" id="headerMeta" data-page-node-id="jtcB2EJCQ1S7yxgYcEDD6O">数据更新：2026-10-30 14:53 ｜ 版本 v24 ｜ 产品种类下拉/标签格改以文件为准·代表产品列只读</div>
     </div>
     <div style="display:flex; gap:8px; align-items:center;" data-page-node-id="CzYOWNHJSKetGCmayk28y4">
       <button class="logout-btn" onclick="doLogout()" data-page-node-id="ab3Z87hfR7JOshPUEpKXhw">退出登录</button>
@@ -995,7 +997,7 @@ function renderTable(data) {
       '<td>'+getRelationBadge(c.relation)+'</td>' +
       '<td class="product-text">'+(c.tech||'-')+'</td>' +
       '<td style="text-align:center">'+getListedBadge(c.listed)+'</td>' +
-      '<td class="product-text" contenteditable="true">'+(c.products||'')+'</td>' +
+      '<td class="product-text product-readonly" title="代表产品为只读字段，不可更改">'+(c.products||'')+'</td>' +
       '<td class="tag-cell" onclick="openTagModal('+c.id+')" title="点击编辑产品标签">'+getTagCell(c)+'</td>' +
       '<td style="text-align:center">'+getPatentCell(c)+'</td>' +
       '<td class="field-text" contenteditable="true">'+(c.fields||'')+'</td>' +
@@ -1296,10 +1298,10 @@ const tagSource = {
 };
 
 // ===== PRODUCT TAG FILTER =====
-function getTagOverride() { try { return JSON.parse(localStorage.getItem('competitorTagOverrides') || '{}'); } catch(e) { return {}; } }
 function getTags(c) {
-  const v = getTagOverride()[c.id];
-  let arr = (v !== undefined) ? (Array.isArray(v) ? v : (v.t || [])) : (productTags[c.id] || []);
+  // 始终以文件 productTags 为准（不再读取本机 localStorage 覆盖），
+  // 保证『标签内容更改 → 明细分类随之改变』单一数据源，避免本机旧覆盖造成下拉/标签格与文件不一致
+  let arr = productTags[c.id] || [];
   const valid = {};
   TAG_DEFS.forEach(function(g){ g.items.forEach(function(it){ valid[it.k] = true; }); });
   return arr.filter(function(k){ return valid[k]; });
@@ -1397,7 +1399,7 @@ function renderTagEditor() {
       g.items.map(function(it){ return '<label class="tag-item"><input type="checkbox" data-type="t" value="' + it.k + '"' + (cur.indexOf(it.k) !== -1 ? ' checked' : '') + '><span>' + it.n + '</span></label>'; }).join('') +
       '</div></div>';
   });
-  h += '<div class="tag-tip">说明：一家公司有多种产品就打多个标签，筛选时任选其中一种都能把这家公司筛出来。标签依据官网产品线整理，可自行勾选修正，修改仅保存在本机浏览器。</div>';
+  h += '<div class="tag-tip">说明：一家公司有多种产品就打多个标签，筛选时任选其中一种都能把这家公司筛出来。标签依据官网产品线整理；如需修正请在源文件更新，本弹窗的勾选仅对本次浏览会话有效，刷新后还原为源文件标签。</div>';
   document.getElementById('tagEditList').innerHTML = h;
 }
 function closeTagModal() {
@@ -1408,9 +1410,9 @@ function saveTags() {
   if(currentTagCompanyId === null) return;
   const nodes = Array.prototype.slice.call(document.querySelectorAll('#tagEditList input[type=checkbox]'));
   const t = nodes.filter(function(n){ return n.checked; }).map(function(n){ return n.value; });
-  const ov = getTagOverride();
-  ov[currentTagCompanyId] = t;
-  localStorage.setItem('competitorTagOverrides', JSON.stringify(ov));
+  // 仅修改当前会话内存中的 productTags，不写 localStorage，刷新后还原为源文件标签，
+  // 避免本机覆盖残留导致下拉/标签格与文件不一致
+  productTags[currentTagCompanyId] = t;
   closeTagModal();
   initProductFilter();
   applyFilters();
@@ -1793,7 +1795,7 @@ document.getElementById('loginPass').addEventListener('keydown', function(e) { i
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
 // ===== 头部版本戳：便于核对是否最新版（缓存自检） =====
-var BUILD_TIME = '2026-10-30 13:35';  // 数据更新时间（每次部署时更新，精确到分钟）
+var BUILD_TIME = '2026-10-30 14:53';  // 数据更新时间（每次部署时更新，精确到分钟）
 function updateHeaderMeta() {
   var rivals = companies.length;
   var CY = new Date().getFullYear();
@@ -1808,7 +1810,7 @@ function updateHeaderMeta() {
   });
   var el = document.getElementById('headerMeta');
   if(!el) return;
-  el.innerHTML = '数据版本 v23（'+BUILD_TIME+'，科技风界面，移动端可横滑）｜ 竞品 '+rivals+' 家 ｜ 近期动态(本年) '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
+  el.innerHTML = '数据版本 v24（'+BUILD_TIME+'，科技风界面，移动端可横滑）｜ 竞品 '+rivals+' 家 ｜ 近期动态(本年) '+entries+' 条 ｜ 带可点击来源 '+withSrc+' 条';
 }
 
 // ===== INIT =====
